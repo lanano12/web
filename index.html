@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Surreal Neon Universe</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+        font-family: 'Orbitron', sans-serif;
+        color: white;
+        overflow-x: hidden;
+        background: black;
+        perspective: 1000px;
+        transition: filter 0.5s ease;
+    }
+
+    /* Background canvases */
+    #bg, #matrix, #rainbow {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: -3;
+    }
+    #matrix { z-index: -2; }
+    #rainbow { z-index: -1; pointer-events: none; }
+
+    /* Header & Nav */
+    header {
+        text-align: center;
+        padding: 100px 20px;
+        background: rgba(0,0,0,0.3);
+    }
+    header h1 {
+        font-size: 3.5rem;
+        text-shadow: 0 0 20px cyan;
+        animation: colorShift 8s infinite linear;
+    }
+    @keyframes colorShift {
+        0% { color: cyan; }
+        25% { color: magenta; }
+        50% { color: yellow; }
+        75% { color: lime; }
+        100% { color: cyan; }
+    }
+    nav {
+        display: flex; justify-content: center; flex-wrap: wrap;
+        gap: 20px; padding: 20px;
+        background: rgba(0,0,0,0.5);
+        position: sticky; top: 0; z-index: 10;
+    }
+    nav button {
+        text-decoration: none;
+        color: white;
+        padding: 10px 20px;
+        border: 2px solid cyan;
+        border-radius: 30px;
+        transition: transform 0.3s, box-shadow 0.3s;
+        background: transparent;
+        font-size: 1rem;
+        cursor: pointer;
+    }
+    nav button:hover {
+        transform: scale(1.2) rotate(5deg);
+        background: cyan;
+        color: black;
+        box-shadow: 0 0 20px cyan;
+    }
+
+    /* Sections */
+    section { padding: 100px 20px; text-align: center; }
+    h2 { text-shadow: 0 0 15px magenta; }
+
+    /* Non-Euclidean Cube */
+    #weirdCube {
+        width: 200px; height: 200px;
+        margin: 50px auto;
+        transform-style: preserve-3d;
+        animation: impossibleSpin 6s infinite linear;
+    }
+    .face {
+        position: absolute;
+        width: 200px; height: 200px;
+        background: rgba(255,255,255,0.1);
+        border: 2px solid white;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 2rem;
+        box-shadow: 0 0 20px white;
+    }
+    .front  { transform: rotateY(0deg) translateZ(100px); }
+    .back   { transform: rotateY(180deg) translateZ(100px); }
+    .right  { transform: rotateY(90deg) translateZ(100px); }
+    .left   { transform: rotateY(-90deg) translateZ(100px); }
+    .top    { transform: rotateX(90deg) translateZ(100px); }
+    .bottom { transform: rotateX(-90deg) translateZ(100px); }
+    @keyframes impossibleSpin {
+        0% { transform: rotateX(0deg) rotateY(0deg); }
+        50% { transform: rotateX(720deg) rotateY(360deg); }
+        100% { transform: rotateX(0deg) rotateY(0deg); }
+    }
+
+    /* Hyperdrive zoom overlay */
+    #hyperZoom {
+        position: fixed; top: 0; left: 0;
+        width: 100%; height: 100%;
+        display: none; align-items: center; justify-content: center;
+        background: black; z-index: 9999;
+        font-size: 15vw; color: lime; text-shadow: 0 0 20px lime;
+        animation: zoomIn 1s forwards;
+    }
+    @keyframes zoomIn {
+        0% { transform: scale(1); opacity: 0.3; filter: blur(0px);}
+        100% { transform: scale(20); opacity: 1; filter: blur(2px);}
+    }
+
+    /* Easter eggs */
+    .floating {
+        position: fixed;
+        font-size: 2rem;
+        animation: drift 10s linear forwards;
+        pointer-events: none;
+    }
+    @keyframes drift {
+        from { transform: translate(0,0) rotate(0deg); opacity: 1; }
+        to { transform: translate(200px,-300px) rotate(720deg); opacity: 0; }
+    }
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+<canvas id="matrix"></canvas>
+<canvas id="rainbow"></canvas>
+<div id="hyperZoom">あ</div>
+
+<header>
+    <h1>🌌 Lee's 🐒 Universe 🌌</h1>
+    <p>Welcome to the desert of the real. Press the buttons. See what happens.</p>
+</header>
+
+<nav>
+    <button onclick="startHyperdrive()">Hyperdrive</button>
+    <button onclick="warpReality()">Reality Warp</button>
+    <button onclick="rainbowExplosion()">Rainbow Explosion</button>
+    <button onclick="timeGlitch()">Time Glitch</button>
+</nav>
+
+<section>
+    <h2>Pocket Universe</h2>
+    <div id="weirdCube">
+        <div class="face front">🚀</div>
+        <div class="face back">🦸‍♂️</div>
+        <div class="face right">🐒</div>
+        <div class="face left">🏃‍♂</div>
+        <div class="face top">🐹</div>
+        <div class="face bottom">🚴</div>
+    </div>
+</section>
+
+<footer>
+    &copy; 2025 Lee Monkey | Press everything.
+</footer>
+
+<script>
+    /* Particle background */
+    const bg = document.getElementById("bg"), ctx = bg.getContext("2d");
+    bg.width = innerWidth; bg.height = innerHeight;
+    let particles = [];
+    class Particle {
+        constructor() {
+            this.x = Math.random() * bg.width;
+            this.y = Math.random() * bg.height;
+            this.size = Math.random() * 3 + 1;
+            this.speedX = Math.random() * 1 - 0.5;
+            this.speedY = Math.random() * 1 - 0.5;
+            this.color = "white";
+        }
+        update() { this.x += this.speedX; this.y += this.speedY; if (this.size > 0.2) this.size -= 0.02; }
+        draw() { ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2); ctx.fillStyle=this.color; ctx.fill(); }
+    }
+    function initParticles() { for(let i=0;i<200;i++) particles.push(new Particle()); }
+    function animateParticles() {
+        ctx.clearRect(0,0,bg.width,bg.height);
+        particles.forEach((p,i)=>{p.update();p.draw(); if(p.size<=0.2) particles[i]=new Particle();});
+        requestAnimationFrame(animateParticles);
+    }
+    initParticles(); animateParticles();
+
+    /* Matrix rain */
+    const matrix = document.getElementById("matrix"), mtx = matrix.getContext("2d");
+    matrix.width = innerWidth; matrix.height = innerHeight;
+    const letters = "アカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const fontSize = 16, columns = matrix.width / fontSize, drops = Array(Math.floor(columns)).fill(1);
+    function drawMatrix() {
+        mtx.fillStyle = "rgba(0,0,0,0.05)";
+        mtx.fillRect(0,0,matrix.width,matrix.height);
+        mtx.fillStyle = "lime"; mtx.font = fontSize+"px monospace";
+        for (let i=0;i<drops.length;i++) {
+            const text = letters.charAt(Math.floor(Math.random()*letters.length));
+            mtx.fillText(text,i*fontSize,drops[i]*fontSize);
+            if (drops[i]*fontSize > matrix.height && Math.random()>0.975) drops[i]=0;
+            drops[i]++;
+        }
+    }
+    setInterval(drawMatrix,33);
+
+    /* Rainbow canvas */
+    const rainbow = document.getElementById("rainbow"), rtx = rainbow.getContext("2d");
+    rainbow.width = innerWidth; rainbow.height = innerHeight;
+    let rainbowParticles = [];
+    class RainbowParticle {
+        constructor(x,y) {
+            this.x=x; this.y=y;
+            this.size=Math.random()*5+2;
+            this.color=`hsl(${Math.random()*360},100%,50%)`;
+            this.speedX=(Math.random()-0.5)*5;
+            this.speedY=(Math.random()-0.5)*5;
+        }
+        update(){this.x+=this.speedX;this.y+=this.speedY;this.size*=0.95;}
+        draw(){rtx.beginPath();rtx.arc(this.x,this.y,this.size,0,Math.PI*2);rtx.fillStyle=this.color;rtx.fill();}
+    }
+    function animateRainbow(){
+        rtx.clearRect(0,0,rainbow.width,rainbow.height);
+        rainbowParticles.forEach((p,i)=>{p.update();p.draw(); if(p.size<0.5) rainbowParticles.splice(i,1);});
+        requestAnimationFrame(animateRainbow);
+    }
+    animateRainbow();
+
+    /* Effects */
+    const hyperZoom = document.getElementById("hyperZoom");
+    const whoosh = new Audio("https://cdn.pixabay.com/download/audio/2023/01/15/audio_matrix-whoosh.mp3?filename=matrix-whoosh.mp3");
+
+    function startHyperdrive() {
+        const char = letters.charAt(Math.floor(Math.random()*letters.length));
+        hyperZoom.textContent = char;
+        whoosh.currentTime=0; whoosh.play();
+        hyperZoom.style.display="flex";
+        setTimeout(()=>{hyperZoom.style.display="none";},1000);
+    }
+
+function warpReality() {
+    const effects = [
+        { transform: "rotateX(30deg) rotateY(30deg) scale(1.1)" },
+        { transform: "rotateZ(180deg) scale(1)" },
+        { transform: "perspective(600px) rotateY(180deg) scale(0.8)" },
+        { transform: "skewX(20deg) skewY(10deg) scale(1.2)" },
+        { transform: "rotateX(720deg) rotateZ(45deg) scale(0.5)" },
+        { transform: "translateZ(200px) rotateY(60deg) rotateX(40deg)" },
+        { transform: "rotateX(25deg) rotateY(25deg) skewX(15deg) scale(0.9)" },
+        { transform: "rotateX(-30deg) rotateY(180deg) scale(1.3)" }
+    ];
+
+    const filters = [
+        "blur(2px) hue-rotate(90deg)",
+        "contrast(200%) saturate(150%)",
+        "invert(100%) hue-rotate(180deg)",
+        "grayscale(80%) blur(1px)",
+        "brightness(200%) contrast(150%)",
+        "sepia(90%) hue-rotate(270deg)"
+    ];
+
+    // Pick a random effect + random filter
+    const randomEffect = effects[Math.floor(Math.random() * effects.length)];
+    const randomFilter = filters[Math.floor(Math.random() * filters.length)];
+
+    document.body.style.transition = "transform 2s ease, filter 2s ease";
+    document.body.style.transform = randomEffect.transform;
+    document.body.style.filter = randomFilter;
+
+    // Restore after 2s
+    setTimeout(() => {
+        document.body.style.transform = "none";
+        document.body.style.filter = "none";
+    }, 2000);
+}
+
+    function rainbowExplosion() {
+        for(let i=0;i<100;i++){
+            rainbowParticles.push(new RainbowParticle(innerWidth/2, innerHeight/2));
+        }
+    }
+
+    function timeGlitch() {
+        document.body.style.filter="hue-rotate(90deg) blur(2px)";
+        for(let i=0;i<10;i++){
+            spawnFloating();
+        }
+        setTimeout(()=>{document.body.style.filter="none";},1000);
+    }
+
+    /* Floating easter eggs */
+    function spawnFloating() {
+        const e = document.createElement("div");
+        e.className="floating";
+        const symbols=["🐙","🐱","☢","⚠","💀","👁"];
+        e.textContent=symbols[Math.floor(Math.random()*symbols.length)];
+        e.style.left=Math.random()*innerWidth+"px";
+        e.style.top=Math.random()*innerHeight+"px";
+        document.body.appendChild(e);
+        setTimeout(()=>{e.remove();},10000);
+    }
+</script>
+</body>
+</html>
