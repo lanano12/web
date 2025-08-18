@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neon Universe</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+    * {margin: 0; padding: 0; box-sizing: border-box;}
+    body {
+        font-family: 'Orbitron', sans-serif;
+        color: white;
+        overflow-x: hidden;
+        background: black;
+        perspective: 1000px;
+    }
+
+    /* Background layers */
+    #bg {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: -2;
+    }
+
+    /* Floating neon cubes */
+    .cube {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        background: rgba(0,255,255,0.5);
+        transform-style: preserve-3d;
+        animation: spin 6s infinite linear;
+        box-shadow: 0 0 20px cyan;
+    }
+    @keyframes spin {
+        from { transform: rotateX(0deg) rotateY(0deg); }
+        to { transform: rotateX(360deg) rotateY(360deg); }
+    }
+
+    /* Glitch title effect */
+    header h1 {
+        font-size: 3.5rem;
+        position: relative;
+        animation: glitch 1s infinite;
+        text-shadow: 0 0 20px cyan;
+    }
+    @keyframes glitch {
+        0% { text-shadow: 2px 0 red, -2px 0 cyan; }
+        20% { text-shadow: -2px 0 red, 2px 0 cyan; }
+        40% { text-shadow: 2px 0 magenta, -2px 0 lime; }
+        60% { text-shadow: -2px 0 magenta, 2px 0 lime; }
+        80% { text-shadow: 2px 0 cyan, -2px 0 red; }
+        100% { text-shadow: -2px 0 cyan, 2px 0 red; }
+    }
+
+    header {
+        text-align: center;
+        padding: 100px 20px;
+        background: rgba(0,0,0,0.3);
+        transform: translateZ(50px);
+    }
+    header p {font-size: 1.2rem;}
+
+    /* Navigation */
+    nav {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        padding: 20px;
+        background: rgba(0,0,0,0.5);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    nav a {
+        text-decoration: none;
+        color: white;
+        padding: 10px 20px;
+        border: 2px solid cyan;
+        border-radius: 30px;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    nav a:hover {
+        transform: scale(1.2) rotate(5deg);
+        background: cyan;
+        color: black;
+        box-shadow: 0 0 20px cyan;
+    }
+
+    /* Sections */
+    section {
+        padding: 100px 20px;
+        text-align: center;
+        transform: translateZ(20px);
+    }
+    h2 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+        text-shadow: 0 0 20px magenta;
+    }
+    .glow-btn {
+        background: transparent;
+        border: 2px solid magenta;
+        color: white;
+        padding: 10px 30px;
+        font-size: 1.2rem;
+        border-radius: 30px;
+        transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+        cursor: pointer;
+    }
+    .glow-btn:hover {
+        background: magenta;
+        transform: rotateY(360deg) scale(1.2);
+        box-shadow: 0 0 20px magenta;
+    }
+
+    /* Rotating 3D text */
+    .rotate-text {
+        font-size: 2.5rem;
+        animation: rotate3D 6s infinite linear;
+        transform-origin: center;
+        text-shadow: 0 0 15px yellow;
+    }
+    @keyframes rotate3D {
+        from { transform: rotateY(0deg); }
+        to { transform: rotateY(360deg); }
+    }
+
+    /* Footer */
+    footer {
+        background: rgba(0,0,0,0.5);
+        text-align: center;
+        padding: 20px;
+        font-size: 0.9rem;
+    }
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<!-- Neon cubes -->
+<div class="cube" style="top:20%; left:10%;"></div>
+<div class="cube" style="top:50%; left:80%;"></div>
+<div class="cube" style="top:70%; left:30%;"></div>
+
+<header>
+    <h1>⚡ Neon Universe ⚡</h1>
+    <p>The ultimate 3D web experience</p>
+</header>
+
+<nav>
+    <a href="#about">About</a>
+    <a href="#fun">Fun Stuff</a>
+    <a href="#music">Music</a>
+</nav>
+
+<section id="about">
+    <h2 class="rotate-text">About This Page</h2>
+    <p>This is an interactive, neon, 3D playground with effects that pop out of the screen.</p>
+</section>
+
+<section id="fun">
+    <h2>Fun Button</h2>
+    <button class="glow-btn" onclick="alert('Warp speed! 🚀')">Warp Speed</button>
+</section>
+
+<section id="music">
+    <h2>Music Player</h2>
+    <audio controls>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+</section>
+
+<footer>
+    &copy; 2025 Neon Universe | Made with 💜 and HTML5
+</footer>
+
+<script>
+    // Particle background
+    const canvas = document.getElementById("bg");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particles = [];
+    const colors = ["cyan", "magenta", "yellow", "white"];
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 3 + 1;
+            this.speedX = Math.random() * 1 - 0.5;
+            this.speedY = Math.random() * 1 - 0.5;
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+        }
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            if (this.size > 0.2) this.size -= 0.02;
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+        }
+    }
+
+    function init() {
+        particles = [];
+        for (let i = 0; i < 200; i++) {
+            particles.push(new Particle());
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p, i) => {
+            p.update();
+            p.draw();
+            if (p.size <= 0.2) {
+                particles[i] = new Particle();
+            }
+        });
+        requestAnimationFrame(animate);
+    }
+
+    window.addEventListener("resize", () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        init();
+    });
+
+    init();
+    animate();
+</script>
+
+</body>
+</html>
