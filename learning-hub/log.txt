@@ -1,0 +1,369 @@
+File: data.json
+{
+  "ranks": [
+    {
+      "name": "Rank A",
+      "description": "Topics I know well",
+      "topics": [
+        {
+          "name": "C++",
+          "subtopics": [
+            { "name": "Templates", "resources": ["https://cppreference.com"] },
+            { "name": "STL", "resources": [] },
+            { "name": "Memory Management", "resources": [] }
+          ],
+          "quizzes": [
+            {
+              "question": "What does RAII stand for?",
+              "type": "text",
+              "answers": ["Resource Acquisition Is Initialization"],
+              "caseSensitive": false,
+              "hint": "Think about resource management in C++."
+            },
+            {
+              "question": "Which STL container provides O(1) lookup?",
+              "type": "multiple-choice",
+              "options": ["vector", "list", "unordered_map", "map"],
+              "answers": ["unordered_map"],
+              "hint": "Consider hash-based containers."
+            }
+          ]
+        },
+        {
+          "name": "Python",
+          "subtopics": [
+            { "name": "OOP", "resources": [] },
+            { "name": "Asyncio", "resources": [] },
+            { "name": "Decorators", "resources": [] }
+          ],
+          "quizzes": [
+            {
+              "question": "What keyword is used to create a generator?",
+              "type": "text",
+              "answers": ["yield"],
+              "caseSensitive": false,
+              "hint": "It’s used in functions to return iterators."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Rank B",
+      "description": "Topics I want to learn",
+      "topics": [
+        {
+          "name": "Quant",
+          "subtopics": [
+            { "name": "Stochastic Calculus", "resources": [] },
+            { "name": "Portfolio Theory", "resources": [] }
+          ],
+          "quizzes": [
+            {
+              "question": "What is the CAPM formula?",
+              "type": "text",
+              "answers": ["E(Ri) = Rf + βi(E(Rm) - Rf)", "E(Ri) = Rf + βi * (E(Rm) - Rf)"],
+              "caseSensitive": false,
+              "hint": "Relates expected return to market risk."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+--- End of data.json ---
+
+File: index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learning Hub</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>📘 My Learning Hub</h1>
+    <button id="toggleAll">Expand All</button>
+  </header>
+  <main>
+    <section id="topicTree" aria-label="Topics and Subtopics"></section>
+    <section id="quizSection" class="hidden" aria-label="Quiz Section"></section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
+
+--- End of index.html ---
+
+File: script.js
+// Load data with error handling
+async function loadData() {
+  try {
+    const res = await fetch('data.json');
+    if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+    const data = await res.json();
+
+    // Load saved progress from localStorage
+    const savedProgress = JSON.parse(localStorage.getItem('learningProgress')) || {};
+    data.ranks.forEach(rank => {
+      rank.topics.forEach(topic => {
+        const key = `${rank.name}:${topic.name}`;
+        if (savedProgress[key] !== undefined) {
+          topic.progress = savedProgress[key];
+        } else {
+          topic.progress = 0;
+        }
+      });
+    });
+
+    buildTree(data);
+  } catch (error) {
+    console.error('Failed to load data:', error);
+    document.getElementById('topicTree').innerHTML = '<p>Error loading topics. Please try again later.</p>';
+  }
+}
+
+// Build topic tree
+function buildTree(data) {
+  const tree = document.getElementById('topicTree');
+  tree.innerHTML = '';
+
+  data.ranks.forEach(rank => {
+    const rankDiv = document.createElement('div');
+    rankDiv.className = 'rank';
+    rankDiv.innerHTML = `<h2>${rank.name}</h2><p>${rank.description}</p>`;
+
+    rank.topics.forEach(topic => {
+      const topicDiv = document.createElement('div');
+      topicDiv.className = 'topic';
+      topicDiv.innerHTML = `${topic.name} <span class="progress">(${topic.progress}%)</span>`;
+      topicDiv.setAttribute('aria-expanded', 'false');
+      topicDiv.setAttribute('tabindex', '0');
+
+      const subDiv = document.createElement('div');
+      subDiv.className = 'subtopics';
+      subDiv.setAttribute('aria-hidden', 'true');
+
+      // Add subtopics
+      topic.subtopics.forEach(st => {
+        const stDiv = document.createElement('div');
+        stDiv.textContent = `• ${st.name}`;
+        if (st.resources.length) {
+          const resLink = document.createElement('a');
+          resLink.href = st.resources[0];
+          resLink.textContent = ' [Learn More]';
+          resLink.target = '_blank';
+          stDiv.appendChild(resLink);
+        }
+        subDiv.appendChild(stDiv);
+      });
+
+      // Add quiz button
+      const quizBtn = document.createElement('button');
+      quizBtn.textContent = 'Take Quiz';
+      quizBtn.onclick = () => showQuiz(topic, rank.name);
+      subDiv.appendChild(quizBtn);
+
+      // Toggle subtopics
+      topicDiv.onclick = () => toggleSubtopics(topicDiv, subDiv);
+      topicDiv.onkeydown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggleSubtopics(topicDiv, subDiv);
+        }
+      };
+
+      rankDiv.appendChild(topicDiv);
+      rankDiv.appendChild(subDiv);
+    });
+
+    tree.appendChild(rankDiv);
+  });
+
+  // Toggle all button
+  document.getElementById('toggleAll').onclick = () => {
+    const topics = document.querySelectorAll('.topic');
+    const subtopics = document.querySelectorAll('.subtopics');
+    const isExpanded = topics[0]?.getAttribute('aria-expanded') === 'true';
+    topics.forEach((topic, i) => {
+      topic.setAttribute('aria-expanded', !isExpanded);
+      subtopics[i].setAttribute('aria-hidden', isExpanded);
+      subtopics[i].style.display = isExpanded ? 'none' : 'block';
+    });
+    document.getElementById('toggleAll').textContent = isExpanded ? 'Expand All' : 'Collapse All';
+  };
+}
+
+// Toggle subtopics
+function toggleSubtopics(topicDiv, subDiv) {
+  const isExpanded = topicDiv.getAttribute('aria-expanded') === 'true';
+  topicDiv.setAttribute('aria-expanded', !isExpanded);
+  subDiv.setAttribute('aria-hidden', isExpanded);
+  subDiv.style.display = isExpanded ? 'none' : 'block';
+}
+
+// Show quiz
+function showQuiz(topic, rankName) {
+  const quizSection = document.getElementById('quizSection');
+  quizSection.innerHTML = `<h3>Quiz: ${topic.name}</h3>`;
+  quizSection.classList.remove('hidden');
+
+  let correctAnswers = 0;
+
+  topic.quizzes.forEach((item, index) => {
+    const qDiv = document.createElement('div');
+    qDiv.className = 'quiz-question';
+    qDiv.innerHTML = `<p><b>${index + 1}. ${item.question}</b> <small>(Hint: ${item.hint})</small></p>`;
+
+    let input;
+    if (item.type === 'multiple-choice') {
+      input = document.createElement('select');
+      item.options.forEach(opt => {
+        const option = document.createElement('option');
+        option.value = opt;
+        option.textContent = opt;
+        input.appendChild(option);
+      });
+    } else {
+      input = document.createElement('input');
+      input.type = 'text';
+      input.placeholder = 'Your answer...';
+    }
+
+    const checkBtn = document.createElement('button');
+    checkBtn.textContent = 'Check';
+    checkBtn.onclick = () => {
+      const userAnswer = input.value.trim();
+      const isCorrect = item.caseSensitive
+        ? item.answers.includes(userAnswer)
+        : item.answers.some(a => a.toLowerCase() === userAnswer.toLowerCase());
+
+      if (isCorrect) {
+        alert('✅ Correct!');
+        correctAnswers++;
+        updateProgress(rankName, topic.name, correctAnswers, topic.quizzes.length);
+      } else {
+        alert('❌ Try again.\nCorrect answer(s): ' + item.answers.join(', '));
+      }
+    };
+
+    qDiv.appendChild(input);
+    qDiv.appendChild(checkBtn);
+    quizSection.appendChild(qDiv);
+  });
+}
+
+// Update and save progress
+function updateProgress(rankName, topicName, correct, total) {
+  const percent = Math.round((correct / total) * 100);
+  const key = `${rankName}:${topicName}`;
+
+  // Save progress to localStorage
+  const savedProgress = JSON.parse(localStorage.getItem('learningProgress')) || {};
+  savedProgress[key] = percent;
+  localStorage.setItem('learningProgress', JSON.stringify(savedProgress));
+
+  // Update UI
+  const topics = document.querySelectorAll('.topic');
+  topics.forEach(t => {
+    if (t.textContent.startsWith(topicName)) {
+      t.querySelector('.progress').textContent = `(${percent}%)`;
+    }
+  });
+}
+
+loadData();
+
+--- End of script.js ---
+
+File: style.css
+body {
+  font-family: Arial, sans-serif;
+  margin: 2rem;
+  background: #f7f7f7;
+  color: #333;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+h1 {
+  color: #0055aa;
+}
+
+h2 {
+  color: #004080;
+}
+
+.rank {
+  margin-bottom: 1.5rem;
+}
+
+.topic {
+  margin: 0.5rem 0;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 0.5rem;
+  background: #e0e7ff;
+  border-radius: 5px;
+  transition: background 0.2s;
+}
+
+.topic:hover, .topic:focus {
+  background: #c7d2fe;
+  outline: none;
+}
+
+.subtopics {
+  margin-left: 1.5rem;
+  display: none;
+}
+
+.subtopics[aria-hidden="false"] {
+  display: block;
+}
+
+.hidden {
+  display: none;
+}
+
+button {
+  margin: 0.5rem 0;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: #0055aa;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover, button:focus {
+  background: #003d80;
+  outline: none;
+}
+
+.quiz-question {
+  margin: 1rem 0;
+}
+
+.quiz-question input, .quiz-question select {
+  margin-right: 0.5rem;
+  padding: 0.3rem;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.progress {
+  color: #2f855a;
+  font-size: 0.9em;
+}
+
+--- End of style.css ---
+

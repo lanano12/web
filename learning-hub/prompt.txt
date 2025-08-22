@@ -1,0 +1,20 @@
+I want to plan and organise my learning. I thought about something like JIRA which I may use anyway. But I was thinking of something bespoke like my own HTML5 page. Or website. I have GITHUB to host my webpage. Or I can just have a private .html5 pages, which may be better for security. In general I have topics which interesting me, let's give a few examples: 
+
+Rank A (I know these already)
+- C++
+- C
+- Embedded
+- WinUI3
+- Python
+
+Rank B (I want to learn)
+- Quant
+- Trading Algorithms
+
+
+When I click on this topics then they can expand into sub-topics and themselves I can click on.
+I suppose the format I'm after is a database of knowledge perhaps Q&A and quizzes.
+
+What would you suggestion for the software architecture / design?
+
+Suggest 3 different solutions.
