@@ -183,18 +183,6 @@
     }
     .idea strong { color: var(--volt); }
 
-    details.unit {
-      background: var(--card); border: 1px solid var(--line); margin: 0 0 10px;
-    }
-    details.unit summary {
-      cursor: pointer; padding: 14px 16px; font-weight: 800; text-transform: uppercase;
-      letter-spacing: 0.06em; list-style: none;
-    }
-    details.unit summary::-webkit-details-marker { display: none; }
-    details.unit summary::after { content: "+"; float: right; color: var(--volt); }
-    details.unit[open] summary::after { content: "–"; }
-    details.unit .pad { padding: 0 16px 16px; }
-
     .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
     .craft-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 0 18px; }
     .craft-grid figure { margin: 0; position: relative; overflow: hidden; border: 1px solid var(--line); }
@@ -251,7 +239,7 @@
       h2, .kicker, .stat b, .idea strong { color: #8a6a12 !important; }
       .hero { min-height: 0; height: 240px; }
       .quote { background: #f0c14b; }
-      .card, .stat, .idea, details.unit, .checks li { background: #f4f4f4; color: #111; }
+      .card, .stat, .idea, .checks li { background: #f4f4f4; color: #111; }
       p, li, td { color: #111; }
     }
   </style>
@@ -392,23 +380,11 @@
     <section class="wrap reveal" id="units">
       <p class="kicker">04–05 · The folder</p>
       <h2>Units 1–7</h2>
-      <p>Learn-the-tools units first. Pass / fail. Use them to get the channel standing. Tap a unit.</p>
-      <details class="unit">
-        <summary>Unit 1 · Skills</summary>
-        <div class="pad"><p>Film one easy run and one session on the same day. Test: phone vs college camera, mic on the move, Premiere cuts, captions for splits. Hand in the two clips + a page of what broke.</p></div>
-      </details>
-      <details class="unit">
-        <summary>Unit 2 · Research</summary>
-        <div class="pad"><p>Pull apart two films: one Nick Bester race-POV, one Olympic training-block (Young / Sesemann / Heymans). Shot list. Who it is for. Then a one-page treatment for your version.</p></div>
-      </details>
-      <details class="unit">
-        <summary>Unit 3 · Professional practice</summary>
-        <div class="pad"><p>Build the one-page media kit. How athlete-creators work with brands. Under-18 rules (parent on the email). A fake “if a local shop asked tomorrow” reply. Card-show / eBay brain: listing, value, showing up.</p></div>
-      </details>
-      <details class="unit">
-        <summary>Unit 4 · Contextual</summary>
-        <div class="pad"><p>Short video essay: how young runners get shown vs how adults get shown. Parkrun vs elite-wave. Football-to-running switch as the case study — three minutes, not a memoir.</p></div>
-      </details>
+      <p>Learn-the-tools units first. Pass / fail. Use them to get the channel standing.</p>
+      <div class="idea"><strong>Unit 1 · Skills.</strong> Film one easy run and one session on the same day. Test: phone vs college camera, mic on the move, Premiere cuts, captions for splits. Hand in the two clips + a page of what broke.</div>
+      <div class="idea"><strong>Unit 2 · Research.</strong> Pull apart two films: one Nick Bester race-POV, one Olympic training-block (Young / Sesemann / Heymans). Shot list. Who it is for. Then a one-page treatment for your version.</div>
+      <div class="idea"><strong>Unit 3 · Professional practice.</strong> Build the one-page media kit. How athlete-creators work with brands. Under-18 rules (parent on the email). A fake “if a local shop asked tomorrow” reply. Card-show / eBay brain: listing, value, showing up.</div>
+      <div class="idea"><strong>Unit 4 · Contextual.</strong> Short video essay: how young runners get shown vs how adults get shown. Parkrun vs elite-wave. Football-to-running switch as the case study — three minutes, not a memoir.</div>
       <div class="three">
         <article class="card">
           <img src="jack-pack/fpl-s.png" alt="FPL-style weekly show craft" />
