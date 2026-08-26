@@ -80,16 +80,11 @@
       display: grid; place-items: end start;
       overflow: hidden;
     }
-    .hero picture, .hero img, .hero video {
+    .hero img {
       position: absolute; inset: 0;
-      width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%;
+      width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%;
       filter: saturate(1.1) contrast(1.05);
     }
-    .hero img { object-position: 50% 18%; z-index: 0; }
-    .hero video {
-      z-index: 1; opacity: 0; transition: opacity .45s ease;
-    }
-    .hero video.is-on { opacity: 1; }
     .hero .veil {
       position: absolute; inset: 0; z-index: 2;
       background:
@@ -224,9 +219,9 @@
     .checks li.done { opacity: 0.55; }
     .checks li.done span { text-decoration: line-through; }
 
-    .reel { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0 0; }
+    .reel { display: grid; grid-template-columns: 1fr; gap: 14px; margin: 18px 0 0; }
     .reel figure { margin: 0; background: var(--card); border: 1px solid var(--line); overflow: hidden; }
-    .reel video { width: 100%; height: 260px; object-fit: cover; background: #000; display: block; }
+    .reel video { width: 100%; height: min(70vw, 420px); object-fit: contain; background: #000; display: block; }
     .reel figcaption {
       padding: 10px 12px 12px; color: var(--volt);
       font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 800;
@@ -249,10 +244,9 @@
       html { scroll-behavior: auto; }
       .reveal { opacity: 1; transform: none; transition: none; }
       .tiles img, .shot img { transition: none; }
-      .hero video { display: none; }
     }
     @media print {
-      header.top, .scroll-cue, .actions, .hero video, .reel { display: none !important; }
+      header.top, .scroll-cue, .actions { display: none !important; }
       body { background: #fff; color: #111; }
       h2, .kicker, .stat b, .idea strong { color: #8a6a12 !important; }
       .hero { min-height: 0; height: 240px; }
@@ -269,13 +263,13 @@
     <a class="brand" href="#top">Jack Ainsley <small>Road to 15 · U18</small></a>
     <nav class="links" aria-label="On this page">
       <a href="#story">Story</a>
-      <a href="#reel">Films</a>
       <a href="#course">Course</a>
       <a href="#brand">Brand</a>
       <a href="#units">Units</a>
       <a href="#unit8">Unit 8</a>
       <a href="#craft">Craft</a>
       <a href="#now">Start now</a>
+      <a href="#reel">Films</a>
     </nav>
     <div class="actions">
       <a class="btn ghost" href="https://www.powerof10.uk/Home/Athlete/f3c93960-7d8b-418c-ae3a-ac1251cc1d4c" rel="noopener" target="_blank">Po10</a>
@@ -287,9 +281,6 @@
 
   <section class="hero" id="top">
     <img src="/web/assets/jack-08-BQ87DUK9.jpg" alt="Jack Ainsley in SAYSKY kit beside the red 08 board" width="1200" height="1600" />
-    <video id="hero-vid" muted loop playsinline preload="auto" aria-hidden="true">
-      <source src="/web/assets/JackAinsley_Spr_DownGrange_20260207-D-_sIE1J.mp4" type="video/mp4" />
-    </video>
     <div class="veil"></div>
     <div class="clock" aria-label="5k personal best 16 minutes 1 second">
       <b>16:01</b>
@@ -335,26 +326,6 @@
             <figcaption>Strava</figcaption>
           </figure>
         </a>
-      </div>
-    </section>
-
-    <section class="wrap reveal" id="reel">
-      <p class="kicker">Already on camera</p>
-      <h2>The films</h2>
-      <p>Phone clips. This is the folder starting. The Down Grange sprint is the homepage loop — muted, in the background. These two you press play.</p>
-      <div class="reel">
-        <figure>
-          <video controls playsinline preload="metadata" poster="/web/assets/jack-08-BQ87DUK9.jpg">
-            <source src="/web/assets/JackAinsley_AldershotXC_17Jan2026-Cc7Jvh-x.mp4" type="video/mp4" />
-          </video>
-          <figcaption>Aldershot XC · 17 Jan 2026</figcaption>
-        </figure>
-        <figure>
-          <video controls playsinline preload="metadata" poster="/web/assets/session-s-CIf8Xdcd.png">
-            <source src="/web/assets/JackAinsley_Training_DownG_03Mar26_6-DB-5YSUs.mp4" type="video/mp4" />
-          </video>
-          <figcaption>Training · Down Grange · 3 Mar 2026</figcaption>
-        </figure>
       </div>
     </section>
 
@@ -558,6 +529,32 @@
       <h3>The only line you need</h3>
       <p>I’m not picking media instead of running. I’m picking the course where the running is the media — and the folder is the start of the platform.</p>
     </section>
+
+    <section class="wrap reveal" id="reel">
+      <p class="kicker">Already on camera</p>
+      <h2>The films</h2>
+      <p>Press play on each. The 08 photo stays on the homepage so the page cannot go blank. Tell us which of these three you can actually see.</p>
+      <div class="reel">
+        <figure>
+          <video controls playsinline preload="metadata">
+            <source src="/web/assets/JackAinsley_Spr_DownGrange_20260207-D-_sIE1J.mp4" type="video/mp4" />
+          </video>
+          <figcaption>Sprint · Down Grange · 7 Feb 2026</figcaption>
+        </figure>
+        <figure>
+          <video controls playsinline preload="metadata">
+            <source src="/web/assets/JackAinsley_AldershotXC_17Jan2026-Cc7Jvh-x.mp4" type="video/mp4" />
+          </video>
+          <figcaption>Aldershot XC · 17 Jan 2026</figcaption>
+        </figure>
+        <figure>
+          <video controls playsinline preload="metadata">
+            <source src="/web/assets/JackAinsley_Training_DownG_03Mar26_6-DB-5YSUs.mp4" type="video/mp4" />
+          </video>
+          <figcaption>Training · Down Grange · 3 Mar 2026</figcaption>
+        </figure>
+      </div>
+    </section>
   </main>
 
   <footer class="site">
@@ -582,24 +579,6 @@
       });
     }, { rootMargin: "-40% 0px -50% 0px" });
     secs.forEach((s) => spy.observe(s));
-
-    const heroVid = document.getElementById("hero-vid");
-    const hero = document.getElementById("top");
-    if (heroVid && hero && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      const show = () => heroVid.classList.add("is-on");
-      const hide = () => heroVid.classList.remove("is-on");
-      heroVid.addEventListener("playing", show);
-      heroVid.addEventListener("error", hide);
-      const hv = new IntersectionObserver((entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) heroVid.play().then(show).catch(hide);
-          else { heroVid.pause(); hide(); }
-        });
-      }, { threshold: 0.2 });
-      hv.observe(hero);
-    } else if (heroVid) {
-      heroVid.remove();
-    }
 
     const films = document.getElementById("films");
     const key = "jack-films-v1";
