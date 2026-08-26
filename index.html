@@ -86,7 +86,10 @@
       filter: saturate(1.1) contrast(1.05);
     }
     .hero img { object-position: 50% 18%; z-index: 0; }
-    .hero video { z-index: 1; }
+    .hero video {
+      z-index: 1; opacity: 0; transition: opacity .45s ease;
+    }
+    .hero video.is-on { opacity: 1; }
     .hero .veil {
       position: absolute; inset: 0; z-index: 2;
       background:
@@ -284,7 +287,7 @@
 
   <section class="hero" id="top">
     <img src="jack-pack/jack-08.jpg" alt="Jack Ainsley in SAYSKY kit beside the red 08 board" width="1200" height="1600" />
-    <video id="hero-vid" autoplay muted loop playsinline preload="metadata" poster="jack-pack/jack-08.jpg" aria-hidden="true">
+    <video id="hero-vid" muted loop playsinline preload="auto" aria-hidden="true">
       <source src="films/JackAinsley_Spr_DownGrange_20260207.mp4" type="video/mp4" />
     </video>
     <div class="veil"></div>
@@ -581,11 +584,21 @@
     secs.forEach((s) => spy.observe(s));
 
     const heroVid = document.getElementById("hero-vid");
-    if (heroVid && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const hero = document.getElementById("top");
+    if (heroVid && hero && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const show = () => heroVid.classList.add("is-on");
+      const hide = () => heroVid.classList.remove("is-on");
+      heroVid.addEventListener("playing", show);
+      heroVid.addEventListener("error", hide);
       const hv = new IntersectionObserver((entries) => {
-        entries.forEach((e) => { e.isIntersecting ? heroVid.play().catch(() => {}) : heroVid.pause(); });
-      }, { threshold: 0.15 });
-      hv.observe(heroVid);
+        entries.forEach((e) => {
+          if (e.isIntersecting) heroVid.play().then(show).catch(hide);
+          else { heroVid.pause(); hide(); }
+        });
+      }, { threshold: 0.2 });
+      hv.observe(hero);
+    } else if (heroVid) {
+      heroVid.remove();
     }
 
     const films = document.getElementById("films");
