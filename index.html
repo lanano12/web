@@ -1,12 +1,552 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Spectra Demo</title>
-    <script type="module" src="/src/main.tsx"></script>
-  </head>
-  <body class="bg-gray-950 text-gray-100">
-    <div id="root"></div>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jack Ainsley · UAL Creative Media · nexafusion.org</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --sheet: #1a100c;
+      --ink: #f7f1e4;
+      --dim: #c4b49a;
+      --line: #3a2a1c;
+      --volt: #f0c14b;
+      --red: #c8102e;
+      --card: #24160f;
+      --card-2: #2c1b12;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0;
+      background: #0d0806;
+      color: var(--ink);
+      font-family: "Barlow", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 10.8pt;
+      line-height: 1.42;
+    }
+    .toolbar {
+      position: sticky; top: 0; z-index: 30;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      background: #140c08; border-bottom: 3px solid var(--red);
+      color: var(--ink); padding: 10px 18px;
+      font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .toolbar span { color: var(--dim); }
+    .btn {
+      appearance: none; border: 0; background: var(--red); color: #fff;
+      font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em;
+      padding: 9px 16px; cursor: pointer; font-size: 12px;
+    }
+    .btn:hover { filter: brightness(1.08); }
+    .stack { width: 210mm; max-width: 100%; margin: 16px auto 40px; }
+    .page {
+      background: var(--sheet);
+      width: 210mm; min-height: 297mm;
+      padding: 12mm 14mm 18mm;
+      margin: 0 0 14px;
+      border: 1px solid #1a1d22;
+      position: relative;
+      page-break-after: always;
+      overflow: hidden;
+    }
+    .page:last-child { page-break-after: auto; }
+    .ph {
+      display: flex; justify-content: space-between; align-items: baseline;
+      border-bottom: 1px solid var(--line); padding-bottom: 6px; margin-bottom: 10px;
+      font-size: 8px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--dim);
+    }
+    .ph b { color: var(--volt); }
+    .pf {
+      position: absolute; left: 14mm; right: 14mm; bottom: 8mm;
+      display: flex; justify-content: space-between;
+      font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--dim);
+      border-top: 1px solid var(--line); padding-top: 6px;
+    }
+    .kicker {
+      font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--volt); font-weight: 700; margin: 0 0 8px;
+    }
+    h1, h2 {
+      font-family: "Oswald", "Arial Narrow", Helvetica, Arial, sans-serif;
+      text-transform: uppercase; font-weight: 700;
+    }
+    h1 {
+      font-size: 42px; line-height: 0.88; letter-spacing: -0.02em;
+      margin: 0 0 10px;
+    }
+    h1 em { font-style: normal; color: var(--volt); }
+    h2 {
+      font-size: 20px; letter-spacing: 0.06em;
+      margin: 0 0 10px; color: var(--volt);
+    }
+    h3 {
+      font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+      margin: 12px 0 5px; color: #fff;
+    }
+    p { margin: 0 0 8px; color: #e4e6e0; }
+    ul, ol { margin: 0 0 10px; padding-left: 18px; color: #e4e6e0; }
+    li { margin-bottom: 4px; }
+    .hero {
+      position: relative;
+      height: 74mm;
+      margin: 0 0 12px;
+      border: 2px solid var(--volt);
+      overflow: hidden;
+    }
+    .hero img {
+      width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%;
+      display: block; filter: saturate(1.08) contrast(1.04);
+    }
+    .hero .veil {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(20,10,6,.15) 20%, rgba(20,10,6,.82) 100%);
+    }
+    .hero .copy {
+      position: absolute; left: 14px; right: 14px; bottom: 12px;
+    }
+    .hero h1 { font-size: 36px; margin: 0; color: #fff; text-shadow: 0 2px 16px rgba(0,0,0,.55); }
+    .hero .pb {
+      position: absolute; top: 10px; right: 10px;
+      background: var(--volt); color: #111;
+      padding: 8px 12px 7px; text-align: right;
+    }
+    .hero .pb .t {
+      display: block; font-family: "Oswald", sans-serif;
+      font-size: 28px; line-height: 0.9; letter-spacing: -0.03em;
+    }
+    .hero .pb .l {
+      display: block; font-size: 8px; letter-spacing: 0.14em;
+      text-transform: uppercase; font-weight: 800;
+    }
+    .cap {
+      font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--dim); margin: -6px 0 10px;
+    }
+    .stats {
+      display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px;
+      margin: 0 0 12px;
+    }
+    .stat {
+      background: var(--card); border: 1px solid var(--line);
+      padding: 8px 7px 7px; min-height: 52px;
+    }
+    .stat .n {
+      display: block; font-family: "Oswald", sans-serif;
+      font-size: 16px; color: var(--volt); line-height: 1;
+    }
+    .stat .l {
+      display: block; margin-top: 4px;
+      font-size: 7.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim);
+    }
+    .callout {
+      background: var(--volt); color: #000; padding: 11px 13px;
+      margin: 0 0 12px; font-weight: 700;
+    }
+    .lane { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 8px 0 12px; }
+    .lane-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin: 8px 0 12px; }
+    .card {
+      background: var(--card); border: 1px solid var(--line); padding: 11px 12px;
+    }
+    .card h3 { margin-top: 0; color: var(--volt); }
+    .photo-card { padding: 0; overflow: hidden; }
+    .photo-card img { width: 100%; height: 38mm; object-fit: cover; display: block; }
+    .photo-card .pad { padding: 9px 11px 11px; }
+    table { width: 100%; border-collapse: collapse; font-size: 9.1pt; margin: 6px 0 12px; }
+    th, td { border: 1px solid #2a2e36; padding: 6px 7px; vertical-align: top; text-align: left; }
+    th {
+      background: var(--volt); color: #000; text-transform: uppercase;
+      letter-spacing: 0.06em; font-size: 8pt; font-weight: 800;
+    }
+    td:first-child { color: #fff; font-weight: 700; }
+    .idea {
+      background: var(--card); border-left: 3px solid var(--volt);
+      padding: 8px 10px; margin: 0 0 8px;
+    }
+    .idea strong { color: var(--volt); }
+    .cover-list { list-style: none; padding: 0; margin: 10px 0 0; }
+    .cover-list li {
+      display: flex; justify-content: space-between; align-items: center; gap: 10px;
+      border-top: 1px solid var(--line); padding: 7px 0;
+      text-transform: uppercase; letter-spacing: 0.08em; font-size: 11px;
+    }
+    .cover-list b { color: var(--volt); white-space: nowrap; }
+    .icons { display: flex; gap: 8px; margin: 0 0 10px; flex-wrap: wrap; }
+    .ico {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--card); border: 1px solid var(--line);
+      padding: 6px 10px; font-size: 8.5pt; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--volt);
+    }
+    .ico svg { width: 18px; height: 18px; fill: var(--red); }
+    .pair { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 8px; margin: 0 0 6px; }
+    .pair img, .strip, .full {
+      width: 100%; object-fit: cover; display: block;
+      border: 1px solid var(--line);
+    }
+    img.jack {
+      object-position: 50% 16%;
+    }
+    .pair img { height: 46mm; }
+    .strip { height: 40mm; margin: 0 0 6px; }
+    .full { height: 48mm; margin: 0 0 6px; border-color: var(--volt); }
+    .mosaic {
+      display: grid; grid-template-columns: 1.4fr 1fr; grid-template-rows: 28mm 28mm;
+      gap: 6px; margin: 0 0 10px;
+    }
+    .mosaic img { width: 100%; height: 100%; object-fit: cover; border: 1px solid var(--line); }
+    .mosaic img:first-child { grid-row: 1 / span 2; height: 100%; }
+    .craft-4 {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 0 0 10px;
+    }
+    .craft-4 figure, .mosaic-4 figure {
+      margin: 0; position: relative; overflow: hidden; border: 1px solid var(--line);
+    }
+    .craft-4 img { width: 100%; height: 22mm; object-fit: cover; display: block; }
+    .craft-4 figcaption, .mosaic-4 figcaption {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(transparent, rgba(20,10,6,.9));
+      color: var(--volt);
+      font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase;
+      font-weight: 700; padding: 16px 7px 5px;
+    }
+    .mosaic-4 {
+      display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 32mm 32mm;
+      gap: 6px; margin: 0 0 10px;
+    }
+    .mosaic-4 img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .note {
+      font-size: 8px; color: var(--dim); letter-spacing: 0.04em; margin: 8px 0 0;
+    }
+    @media print {
+      body { background: #fff; color: #111; }
+      .toolbar { display: none !important; }
+      .stack { width: auto; margin: 0; }
+      .page { width: auto; min-height: auto; margin: 0; padding: 0 0 8mm; border: 0; background: #fff; }
+      h1, h2, h3, p, li, td { color: #111 !important; }
+      h1 em, h2, .kicker, .card h3, .ph b, .idea strong, .stat .n, .cover-list b { color: #8a6a12 !important; }
+      .callout { background: #f0c14b; color: #000 !important; }
+      .hero { height: 52mm; border-color: #ccc; }
+      .hero .veil { background: linear-gradient(180deg, transparent 30%, rgba(255,255,255,.2) 100%); }
+      .hero h1 { color: #fff !important; }
+      .pair img, .strip, .full, .mosaic img, .craft-4 figure, .mosaic-4 figure { border-color: #ccc; }
+      .craft-4 figcaption, .mosaic-4 figcaption { color: #8a6a12 !important; }
+      .ico { color: #8a6a12; background: #f6f1e8; }
+      th { background: #111 !important; color: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .card, .idea, .stat { background: #f3f3f3 !important; border-color: #ccc; color: #111; }
+      .pf { position: static; margin-top: 12px; color: #666; }
+      .hero, .callout, .stat, th, .card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+    @page { size: A4; margin: 12mm 12mm 14mm; }
+    @media (max-width: 820px) {
+      .stack, .page { width: auto; min-height: 0; }
+      .page { padding: 16px 16px 48px; }
+      .stats { grid-template-columns: repeat(3, 1fr); }
+      .lane, .pair, .lane-3, .mosaic-4 { grid-template-columns: 1fr; }
+      .craft-4 { grid-template-columns: 1fr 1fr; }
+      .mosaic-4 { grid-template-rows: none; }
+      .mosaic-4 img { height: 38mm; }
+      .hero { height: 56vw; min-height: 180px; }
+      .hero h1 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <div>nexafusion.org <span>Jack Ainsley · age 16 · U18 · UAL coursework ideas · print A4</span></div>
+    <button class="btn" type="button" onclick="window.print()">Print / PDF</button>
+  </div>
+
+  <div class="stack">
+
+    <section class="page">
+      <div class="ph"><b>Jack Ainsley · age 16 · U18</b><span>01 / 08 · start here</span></div>
+      <div class="hero">
+        <img src="jack-pack/jack-08.jpg" alt="Jack Ainsley — SAYSKY kit, orange shoes, the red 08 board" />
+        <div class="veil"></div>
+        <div class="pb"><span class="t">16:01</span><span class="l">5k PB · U18</span></div>
+        <div class="copy">
+          <p class="kicker">Basingstoke AC · UAL Creative Media · QMC 2026–28</p>
+          <h1>Jack Ainsley.<br><em>Age 16 · U18.</em></h1>
+        </div>
+      </div>
+      <p class="cap">The 08 board · same look he already posts on <a href="https://www.strava.com/athletes/174172689" style="color:var(--volt)">Strava</a></p>
+      <div class="stats">
+        <div class="stat"><span class="n">BAC</span><span class="l">Club</span></div>
+        <div class="stat"><span class="n">16</span><span class="l">Age · U18</span></div>
+        <div class="stat"><span class="n">2273*</span><span class="l">Power of 10</span></div>
+        <div class="stat"><span class="n">9:33</span><span class="l">3000m</span></div>
+        <div class="stat"><span class="n">35:52</span><span class="l">10k</span></div>
+        <div class="stat"><span class="n">×1</span><span class="l">Parkrun win</span></div>
+      </div>
+      <div class="callout">My story. I am 16 and ran 16:01 for 5k in 10 months since starting at parkrun. I have won several parkruns, having fun and doing it all with my dad. The flair is already on <a href="https://www.strava.com/athletes/174172689" style="color:#111">Strava</a> — titles, photos, the public clock. The course is the camera upgrade, not a new personality.</div>
+      <div class="craft-4">
+        <figure>
+          <img src="jack-pack/fpl-s.png" alt="Fantasy football squad on a phone — the weekly-show craft" />
+          <figcaption>FPL</figcaption>
+        </figure>
+        <figure>
+          <img src="jack-pack/cards-s.png" alt="Football trading cards in sleeves on a table" />
+          <figcaption>Cards</figcaption>
+        </figure>
+        <figure>
+          <img src="jack-pack/football-s.png" alt="Muddy football boots next to running spikes" />
+          <figcaption>Football</figcaption>
+        </figure>
+        <figure>
+          <img src="jack-pack/strava-phone-s.png" alt="Phone after a run — GPS route and a 16:01 title" />
+          <figcaption>Strava</figcaption>
+        </figure>
+      </div>
+      <p>Coursework ideas for the UAL Single Diploma: how this brand, plus FPL craft, Strava, cards and football, become the folder he hands in.</p>
+      <ul class="cover-list">
+        <li>02 What you actually do on this course <b>the week</b></li>
+        <li>03 You as a brand <b>one name, one promise</b></li>
+        <li>04 Units 1–4 <b>skills, research, job, context</b></li>
+        <li>05 Units 5–7 <b>audio, visual, hub</b></li>
+        <li>06 Unit 8 <b>championship project ideas</b></li>
+        <li>07 Steal the craft <b>FPL · Strava · cards · football</b></li>
+        <li>08 Film list you can start now <b>before September</b></li>
+      </ul>
+      <div class="pf"><span>Personal interests in · coursework out</span><span>01 / 08</span></div>
+    </section>
+
+    <section class="page">
+      <div class="ph"><b>Jack · coursework ideas</b><span>02 / 08 · the course</span></div>
+      <h2>02 · What you would actually be doing</h2>
+      <div class="pair">
+        <img class="jack" src="jack-pack/jack-08.jpg" alt="Jack Ainsley — kit and the 08 board" />
+        <img src="jack-pack/edit-s.png" alt="Night editing desk with camera, mic and laptop timeline" />
+      </div>
+      <p class="cap">Shoot on the track · cut it the same night</p>
+      <p>Eight units, two years, 100% coursework. Units 1–7 are pass / fail. Unit 8 is the whole grade. Most weeks: shoot or edit something, write a short log of why you did it that way, hand it in on a blog or Padlet. No June exam about a TV drama someone else picked.</p>
+      <div class="lane">
+        <div class="card photo-card">
+          <img src="jack-pack/session-s.png" alt="Filming an interval session on the track" />
+          <div class="pad">
+            <h3>Year 12 · 2026–27</h3>
+            <p>Learn the kit on real sessions. First films at the new standard after sub-16. Audio test. A short piece on how young runners get shown. Build the look of the channel.</p>
+            <p>On the track: live in the 15s.</p>
+          </div>
+        </div>
+        <div class="card photo-card">
+          <img src="jack-pack/hub-s.png" alt="Laptop and phone as a simple athlete hub" />
+          <div class="pad">
+            <h3>Year 13 · 2027–28</h3>
+            <p>Audio + visual + hub as proper pieces. Then Unit 8: one planned season of films that is the certificate.</p>
+            <p>On the track: break 15. Hunt 14.</p>
+          </div>
+        </div>
+      </div>
+      <h3>What a normal week looks like</h3>
+      <ul>
+        <li>College sessions on cameras, Premiere, sound, a set brief.</li>
+        <li>You shoot around training — not instead of it.</li>
+        <li>A short journal after: what you tried, what failed, what you change next time.</li>
+        <li>Deadlines keep coming. Treat them like sessions. Missing one is a dropped workout.</li>
+      </ul>
+      <p>Teachers still set some briefs in Year 12 (an advert, a podcast, a website). Your move is to answer those briefs with running wherever they let you — and keep a side folder of channel work so Unit 8 is already warm.</p>
+      <div class="pf"><span>Make · log · hand in · repeat</span><span>02 / 08</span></div>
+    </section>
+
+    <section class="page">
+      <div class="ph"><b>Jack · coursework ideas</b><span>03 / 08 · the brand</span></div>
+      <h2>03 · Portfolio = you as a runner brand</h2>
+      <img class="strip jack" src="jack-pack/jack-08.jpg" alt="Jack Ainsley — kit and the 08 board" />
+      <p class="cap">This is the look. Keep it. Same photo energy he already puts on Strava.</p>
+      <p>Not “Jack’s random videos.” One name, one look, one promise.</p>
+      <div class="idea"><strong>Name on the work:</strong> Jack Ainsley. Age 16. U18. Basingstoke AC — 16:01 / 9:33 / 35:52.</div>
+      <div class="idea"><strong>Working title:</strong> Road to 15 — with 14 in the sights.</div>
+      <div class="idea"><strong>Promise:</strong> Honest films of a 16-year-old taking the 5k seriously. Having fun. Doing it with dad. Public clock. No pile-ons.</div>
+      <div class="idea"><strong>Audience:</strong> Other 14–18 club runners who just broke 17 or 16 and want the next 60 seconds.</div>
+      <div class="idea"><strong>Where it lives:</strong> YouTube for the films. Short cuts on Instagram / TikTok. <a href="https://www.strava.com/athletes/174172689" style="color:var(--volt)">Strava</a> is already live — he already writes titles and posts pictures with flair. Keep that voice. The hub just hangs the films next to the same clock.</div>
+      <h3>What goes in the public folder</h3>
+      <table>
+        <thead>
+          <tr><th>Piece</th><th>Why a brand / college wants it</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Origin cut · 90 seconds</td><td>Parkrun with dad → first win → 16:01 in 10 months. The story, once.</td></tr>
+          <tr><td>Session films</td><td>Craft. Threshold / reps with splits on screen.</td></tr>
+          <tr><td>Race-POV</td><td>The Bester-style piece. Parkrun / target 5k.</td></tr>
+          <tr><td>Debrief audio</td><td>What the clock said. What you change.</td></tr>
+          <tr><td>Season hub</td><td>Proof you can build a place, not only a clip.</td></tr>
+          <tr><td>One-page media kit</td><td>Name, times, links, what you stand for. For Unit 3 and for a future sponsor.</td></tr>
+        </tbody>
+      </table>
+      <p>Call yourself a serious youth runner chasing 15 then 14. Save “elite” for when rankings say it. Brands and teachers both prefer the honest version.</p>
+      <div class="pf"><span>One look · one promise · public clock</span><span>03 / 08</span></div>
+    </section>
+
+    <section class="page">
+      <div class="ph"><b>Jack · coursework ideas</b><span>04 / 08 · units 1–4</span></div>
+      <h2>04 · Units 1–4 — portfolio ideas</h2>
+      <img class="full" src="jack-pack/session-s.png" alt="Phone on a gimbal filming track intervals" />
+      <p class="cap">Unit 1 starts here: film the session you already do</p>
+      <p>These are the learn-the-tools units. Pass / fail. Use them to get the channel standing.</p>
+      <div class="idea">
+        <strong>Unit 1 · Skills.</strong> Film one easy run and one session on the same day. Test: phone vs college camera, mic on the move, Premiere cuts, captions for splits. Hand in the two clips + a page of what broke.
+      </div>
+      <div class="idea">
+        <strong>Unit 2 · Research.</strong> Pull apart two films: one Nick Bester race-POV, one Olympic training-block (Young / Sesemann / Heymans). Shot list. Who it is for. Then write a one-page treatment for your version of the same form.
+      </div>
+      <div class="idea">
+        <strong>Unit 3 · Professional practice.</strong> Build the one-page media kit. How Bester and other athlete-creators work with brands. Under-18 rules (parent on the email). A fake “if a local shop asked tomorrow” reply. Call sheet for a parkrun shoot. Card-show / eBay brain goes here: listing, value, showing up.
+      </div>
+      <div class="idea">
+        <strong>Unit 4 · Contextual.</strong> Short video essay: how young runners get shown vs how adults get shown. Parkrun vs elite-wave. Who is missing. Football-to-running switch as the case study — three minutes, not a memoir.
+      </div>
+      <p>If the teacher sets a locked brief (an advert for a made-up brand), answer it with running kit / a youth-race / a club night. Ask first. If they say no, do their brief properly and keep your running version in the side folder.</p>
+      <div class="pf"><span>Tools on · brand standing up</span><span>04 / 08</span></div>
+    </section>
+
+    <section class="page">
+      <div class="ph"><b>Jack · coursework ideas</b><span>05 / 08 · units 5–7</span></div>
+      <h2>05 · Units 5–7 — the three making blocks</h2>
+      <div class="lane-3">
+        <div class="card photo-card">
+          <img src="jack-pack/fpl-s.png" alt="Fantasy football on a phone — steal the weekly-show format" />
+          <div class="pad">
+            <h3>5 · Audio</h3>
+            <p><strong>A.</strong> FPL-style weekly show, running subject. Same three chapters: last race / session · what changes · next target. 8–12 minutes.</p>
+            <p><strong>B.</strong> Interview a senior club runner who already owns 15 or 14. You as host. Clean sound.</p>
+            <p><strong>C.</strong> Race-week voice note as commentary over silent race footage.</p>
+          </div>
+        </div>
+        <div class="card photo-card">
+          <img class="jack" src="jack-pack/jack-08.jpg" alt="Jack Ainsley — the visual unit starts with this look" />
+          <div class="pad">
+            <h3>6 · Visual</h3>
+            <p><strong>A.</strong> Full key session. Warm-up to last rep. Splits on screen. No talking-head until the end.</p>
+            <p><strong>B.</strong> Race-POV of a target 5k. Bester structure: start, splits, last 400, debrief.</p>
+            <p><strong>C.</strong> 90-second origin: football boots on a peg, first parkrun, 16:01 board.</p>
+          </div>
+        </div>
+        <div class="card photo-card">
+          <img src="jack-pack/strava-phone-s.png" alt="Phone hub: GPS clock, title, next race" />
+          <div class="pad">
+            <h3>7 · Hub</h3>
+            <p>One page: films, official times (16:15 / 16:05 / 16:01 / next), link to Strava, next race.</p>
+            <p>Not a video game. Not an eBay shop. This is the platform the course asks for.</p>
+            <p>A clean hub beats a half-built game every time.</p>
+          </div>
+        </div>
+      </div>
+      <p>These feed Unit 8. Do not waste them on a topic you will never use again if you can help it.</p>
+      <div class="pf"><span>Audio · pictures · a place they live</span><span>05 / 08</span></div>
+    </section>
+
+    <section class="page">
+      <div class="ph"><b>Jack · coursework ideas</b><span>06 / 08 · unit 8</span></div>
+      <h2>06 · Unit 8 — championship project ideas</h2>
+      <img class="full jack" src="jack-pack/jack-08.jpg" alt="Jack Ainsley — Unit 8 is this athlete, on camera, for a season" />
+      <p class="cap">Unit 8 is the whole diploma grade. Ask the college to accept the topic early.</p>
+      <p>About 350 words of plan, the films, a journal, a debrief against the plan.</p>
+      <div class="idea"><strong>Main idea · Road to 15.</strong> Three to five films across Year 13: winter base at the new standard · one key session · race week + target 5k · debrief against 15:00 and the first look at 14. Hub holds them. Club screening as evaluation.</div>
+      <div class="idea"><strong>Alt · The 60 seconds.</strong> Same form, tighter promise: one season about what the next minute actually costs after 16:01. Good if a teacher wants a smaller brief.</div>
+      <div class="idea"><strong>Alt · Two jobs.</strong> Athlete + creator. One film on the session, one on the edit / media kit / how a junior asks for kit without looking fake. Still running at the centre.</div>
+      <h3>What you hand in</h3>
+      <ol>
+        <li>Proposal: why this audience, what films, how you will judge them.</li>
+        <li>The work itself.</li>
+        <li>Journal — decisions, not a diary of feelings.</li>
+        <li>Evaluation: did club runners say it was honest; did the race film look built; did you hit the dates. Name what failed. A missed 15 still counts if the debrief is straight.</li>
+      </ol>
+      <p>Do not write “Olympic standard 2028” as the Unit 8 outcome. That is the north star. The project is the next two standards on camera.</p>
+      <div class="pf"><span>One season · four pieces of evidence</span><span>06 / 08</span></div>
+    </section>
+
+    <section class="page">
+      <div class="ph"><b>Jack · coursework ideas</b><span>07 / 08 · other interests</span></div>
+      <h2>07 · How FPL, Strava, cards and football get in</h2>
+      <div class="mosaic-4">
+        <figure>
+          <img src="jack-pack/fpl-s.png" alt="Fantasy football squad and deadline on a phone" />
+          <figcaption>FPL · weekly show format</figcaption>
+        </figure>
+        <figure>
+          <img src="jack-pack/cards-s.png" alt="Football cards in sleeves and a value notebook" />
+          <figcaption>Cards · value and listing</figcaption>
+        </figure>
+        <figure>
+          <img src="jack-pack/ebay-s.png" alt="Phone photographing a card for a marketplace listing" />
+          <figcaption>Shows / eBay · showing up</figcaption>
+        </figure>
+        <figure>
+          <img src="jack-pack/football-s.png" alt="Football boots hung next to running spikes" />
+          <figcaption>Football · the origin</figcaption>
+        </figure>
+      </div>
+      <p class="cap">Football is the origin · FPL is the show format · cards are the pitch brain · Strava is the clock</p>
+      <p>They make the running brand sharper. They do not get their own channel on this course.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Interest</th>
+            <th>Steal this</th>
+            <th>Put it here</th>
+            <th>Leave it out of</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>FPL YouTubers</td>
+            <td>Same show every week. Review / changes / next pick. Graphics. Deadline energy.</td>
+            <td>Unit 5 audio series. Thumbnail and title practice.</td>
+            <td>Unit 8 title. You are not an FPL tipster.</td>
+          </tr>
+          <tr>
+            <td>Strava</td>
+            <td>He already does this. Public clock, photos, titles with flair — not a silent GPS dump. That is the brand voice.</td>
+            <td>Unit 7 hub. End cards. Same captions on the films. Link: athletes/174172689</td>
+            <td>A screenshot dump with no film. Or a new “serious” voice that kills the flair.</td>
+          </tr>
+          <tr>
+            <td>Cards / eBay / shows</td>
+            <td>What something is worth. Listing. Showing up in a room.</td>
+            <td>Unit 3 media kit and “how I’d pitch a shop.”</td>
+            <td>A trading-card mini-doc as the main project.</td>
+          </tr>
+          <tr>
+            <td>Football</td>
+            <td>Origin. Team brain. Knowing a crowd.</td>
+            <td>90-second origin cut. Maybe matchday vs race-day.</td>
+            <td>Equal billing with the 5k.</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3>Sponsorship — later, not the first video</h3>
+      <p>UK brands already pay runners who can make films. First deals at 16 look like kit and a code, with a parent on the email. The coursework builds the folder those emails need: films, times, a clean look, a one-page kit. Do the work first. The deal follows the folder.</p>
+      <div class="pf"><span>Craft in · subject stays running</span><span>07 / 08</span></div>
+    </section>
+
+    <section class="page">
+      <div class="ph"><b>Jack · coursework ideas</b><span>08 / 08 · start now</span></div>
+      <h2>08 · Films you can make before September</h2>
+      <div class="pair">
+        <img class="jack" src="jack-pack/jack-08.jpg" alt="Jack Ainsley — next shoot should match this look" />
+        <img src="jack-pack/fpl-s.png" alt="FPL-style weekly show — sit down, same three chapters" />
+      </div>
+      <p class="cap">None of this needs the college kit. Phone + a cheap mic + a free edit app.</p>
+      <p>You walk in with proof you already work like this.</p>
+      <ol>
+        <li><strong>Origin 90.</strong> Football stopped. First parkrun. 16:01. One track. One voiceover.</li>
+        <li><strong>One session, whole.</strong> Warm-up to last rep. Splits in captions.</li>
+        <li><strong>One race-POV.</strong> Next parkrun or 5k. Start, middle, last 400, 20-second debrief.</li>
+        <li><strong>One FPL-style audio.</strong> Last week / this week / next target. Sitting down. Clean sound.</li>
+        <li><strong>One hub sketch.</strong> A free Notion / Google site / Linktree: those four pieces + current PB + <a href="https://www.strava.com/athletes/174172689" style="color:var(--volt)">his Strava</a>. Steal titles from posts he already wrote. Do not invent a stiffer voice.</li>
+      </ol>
+      <div class="callout">Walk into college with those five things and the course is no longer abstract. It is last month’s work, with better cameras.</div>
+      <h3>The only line you need</h3>
+      <p>I’m not picking media instead of running. I’m picking the course where the running is the media — and the folder is the start of the platform.</p>
+      <h3>Ask the teacher on day one</h3>
+      <p>Can my set briefs be answered through youth running, and can Unit 8 be a planned season of race and session films plus a hub? If yes, this pack is the plan. If they lock every brief to horror films or adverts, keep the running folder anyway and use Unit 8 as the open door.</p>
+      <p class="note">Cover photo is Jack at the 08 board (22 Aug 2026). Drop race and session stills into jack-pack if you want more of him on the later pages.</p>
+      <div class="pf"><span>Start shooting · the course is the upgrade</span><span>08 / 08</span></div>
+    </section>
+
+  </div>
+</body>
 </html>
