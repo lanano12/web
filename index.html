@@ -66,7 +66,7 @@
       letter-spacing: 0.1em; font-size: 11px; font-weight: 700;
     }
     nav.links a:hover, nav.links a.active { color: var(--volt); }
-    .actions { display: flex; gap: 8px; }
+    .actions { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
     .btn {
       appearance: none; border: 0; background: var(--red); color: #fff;
       font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em;
@@ -139,7 +139,9 @@
     }
     .stat {
       background: var(--card); border: 1px solid var(--line); padding: 14px 12px;
+      color: inherit; text-decoration: none;
     }
+    a.stat:hover { border-color: var(--volt); }
     .stat b {
       display: block; font-family: Oswald, sans-serif; font-size: clamp(20px, 3vw, 28px);
       color: var(--volt); line-height: 1;
@@ -152,6 +154,7 @@
     .quote a { color: #111; }
 
     .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 22px 0 0; }
+    .tiles a { color: inherit; text-decoration: none; }
     .tiles figure, .shot {
       margin: 0; position: relative; overflow: hidden; border: 1px solid var(--line); background: var(--card);
     }
@@ -260,7 +263,9 @@
       <a href="#now">Start now</a>
     </nav>
     <div class="actions">
-      <a class="btn ghost" href="https://www.strava.com/athletes/174172689" rel="noopener">Strava</a>
+      <a class="btn ghost" href="https://www.powerof10.uk/Home/Athlete/f3c93960-7d8b-418c-ae3a-ac1251cc1d4c" rel="noopener" target="_blank">Po10</a>
+      <a class="btn ghost" href="https://www.parkrun.org.uk/parkrunner/11118729/all/" rel="noopener" target="_blank">parkrun</a>
+      <a class="btn ghost" href="https://www.strava.com/athletes/174172689" rel="noopener" target="_blank">Strava</a>
       <button class="btn" type="button" onclick="window.print()">Print</button>
     </div>
   </header>
@@ -287,10 +292,10 @@
       <div class="stats">
         <div class="stat"><b>BAC</b><span>Club</span></div>
         <div class="stat"><b>16</b><span>Age · U18</span></div>
-        <div class="stat"><b>2273*</b><span>Power of 10</span></div>
+        <a class="stat" href="https://www.powerof10.uk/Home/Athlete/f3c93960-7d8b-418c-ae3a-ac1251cc1d4c" rel="noopener" target="_blank"><b>2474</b><span>Power of 10</span></a>
         <div class="stat"><b>9:33</b><span>3000m</span></div>
         <div class="stat"><b>35:52</b><span>10k</span></div>
-        <div class="stat"><b>×1</b><span>Parkrun win</span></div>
+        <a class="stat" href="https://www.parkrun.org.uk/parkrunner/11118729/all/" rel="noopener" target="_blank"><b>×1</b><span>parkrun</span></a>
       </div>
       <div class="quote">I am 16 and ran 16:01 for 5k in 10 months since starting at parkrun. I have won several parkruns, having fun and doing it all with my dad. The flair is already on <a href="https://www.strava.com/athletes/174172689" rel="noopener">Strava</a> — titles, photos, the public clock.</div>
       <div class="tiles">
@@ -306,10 +311,12 @@
           <img src="jack-pack/football-s.png" alt="Football boots next to running spikes" />
           <figcaption>Football</figcaption>
         </figure>
-        <figure>
-          <img src="jack-pack/strava-phone-s.png" alt="Phone after a run showing 16:01" />
-          <figcaption>Strava</figcaption>
-        </figure>
+        <a href="https://www.strava.com/athletes/174172689" rel="noopener" target="_blank">
+          <figure>
+            <img src="jack-pack/strava-phone-s.png" alt="Phone after a run showing 16:01" />
+            <figcaption>Strava</figcaption>
+          </figure>
+        </a>
       </div>
     </section>
 
@@ -357,7 +364,7 @@
       <div class="idea"><strong>Working title:</strong> Road to 15 — with 14 in the sights.</div>
       <div class="idea"><strong>Promise:</strong> Honest films of a 16-year-old taking the 5k seriously. Having fun. Doing it with dad. Public clock. No pile-ons.</div>
       <div class="idea"><strong>Audience:</strong> Other 14–18 club runners who just broke 17 or 16 and want the next 60 seconds.</div>
-      <div class="idea"><strong>Where it lives:</strong> YouTube for the films. Short cuts on Instagram / TikTok. <a href="https://www.strava.com/athletes/174172689" rel="noopener">Strava</a> is already live. Keep that voice.</div>
+      <div class="idea"><strong>Where it lives:</strong> YouTube for the films. Short cuts on Instagram / TikTok. The clocks are already public: <a href="https://www.strava.com/athletes/174172689" rel="noopener" target="_blank">Strava</a> · <a href="https://www.powerof10.uk/Home/Athlete/f3c93960-7d8b-418c-ae3a-ac1251cc1d4c" rel="noopener" target="_blank">Power of 10</a> · <a href="https://www.parkrun.org.uk/parkrunner/11118729/all/" rel="noopener" target="_blank">parkrun</a>. Keep that voice.</div>
       <table>
         <thead>
           <tr><th>Piece</th><th>Why a brand / college wants it</th></tr>
@@ -416,7 +423,7 @@
           <img src="jack-pack/strava-phone-s.png" alt="Phone hub with GPS clock" />
           <div class="pad">
             <h3>7 · Hub</h3>
-            <p>One page: films, official times, link to Strava, next race. Not a video game. Not an eBay shop.</p>
+            <p>One page: films, official times, <a href="https://www.strava.com/athletes/174172689" rel="noopener" target="_blank">Strava</a>, <a href="https://www.powerof10.uk/Home/Athlete/f3c93960-7d8b-418c-ae3a-ac1251cc1d4c" rel="noopener" target="_blank">Power of 10</a>, <a href="https://www.parkrun.org.uk/parkrunner/11118729/all/" rel="noopener" target="_blank">parkrun</a>, next race.</p>
             <p>A clean hub beats a half-built game every time.</p>
           </div>
         </article>
@@ -475,7 +482,7 @@
           <tr>
             <td>Strava</td>
             <td>Public clock, photos, titles with flair. That is the brand voice.</td>
-            <td>Unit 7 hub. End cards. Same captions.</td>
+            <td>Unit 7 hub. End cards. Same captions. <a href="https://www.strava.com/athletes/174172689" rel="noopener" target="_blank">athletes/174172689</a></td>
             <td>A new “serious” voice that kills the flair.</td>
           </tr>
           <tr>
@@ -507,7 +514,7 @@
         <li><input type="checkbox" id="f2" /><span><strong>One session, whole.</strong> Warm-up to last rep. Splits in captions.</span></li>
         <li><input type="checkbox" id="f3" /><span><strong>One race-POV.</strong> Next parkrun or 5k. Start, middle, last 400, 20-second debrief.</span></li>
         <li><input type="checkbox" id="f4" /><span><strong>One FPL-style audio.</strong> Last week / this week / next target. Sitting down. Clean sound.</span></li>
-        <li><input type="checkbox" id="f5" /><span><strong>One hub sketch.</strong> Notion / Google site / Linktree: those four pieces + PB + <a href="https://www.strava.com/athletes/174172689" rel="noopener">Strava</a>. Steal titles he already wrote.</span></li>
+        <li><input type="checkbox" id="f5" /><span><strong>One hub sketch.</strong> Notion / Google site / Linktree: those four pieces + PB + <a href="https://www.strava.com/athletes/174172689" rel="noopener" target="_blank">Strava</a> + <a href="https://www.powerof10.uk/Home/Athlete/f3c93960-7d8b-418c-ae3a-ac1251cc1d4c" rel="noopener" target="_blank">Power of 10</a> + <a href="https://www.parkrun.org.uk/parkrunner/11118729/all/" rel="noopener" target="_blank">parkrun</a>. Steal titles he already wrote.</span></li>
       </ul>
       <div class="quote">Walk into college with those five things and the course is last month’s work, with better cameras.</div>
       <h3>The only line you need</h3>
@@ -515,7 +522,12 @@
     </section>
   </main>
 
-  <footer class="site">nexafusion.org · Jack Ainsley · U18 · public clock</footer>
+  <footer class="site">
+    nexafusion.org ·
+    <a href="https://www.powerof10.uk/Home/Athlete/f3c93960-7d8b-418c-ae3a-ac1251cc1d4c" rel="noopener" target="_blank">Power of 10</a> ·
+    <a href="https://www.parkrun.org.uk/parkrunner/11118729/all/" rel="noopener" target="_blank">parkrun</a> ·
+    <a href="https://www.strava.com/athletes/174172689" rel="noopener" target="_blank">Strava</a>
+  </footer>
 
   <script>
     const io = new IntersectionObserver((entries) => {
