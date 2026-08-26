@@ -80,16 +80,30 @@
       display: grid; place-items: end start;
       overflow: hidden;
     }
-    .hero img {
+    .hero img, .hero video, .band-still, .band video {
       position: absolute; inset: 0;
-      width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%;
+      width: 100%; height: 100%; object-fit: cover;
       filter: saturate(1.1) contrast(1.05);
     }
-    .hero .veil {
+    .hero img { object-position: 50% 18%; z-index: 0; }
+    .hero video, .band video {
+      z-index: 1; opacity: 0; transition: opacity .45s ease; object-position: 50% 40%;
+    }
+    .hero video.is-on, .band video.is-on { opacity: 1; }
+    .band {
+      position: relative; overflow: hidden;
+      background: #120c08;
+    }
+    .band-still { object-position: 50% 40%; z-index: 0; }
+    .band .wrap { position: relative; z-index: 3; }
+    .hero .veil, .band .veil {
       position: absolute; inset: 0; z-index: 2;
       background:
         linear-gradient(180deg, rgba(13,8,6,.15) 20%, rgba(13,8,6,.88) 100%),
         linear-gradient(90deg, rgba(13,8,6,.45), transparent 55%);
+    }
+    .band .veil {
+      background: linear-gradient(180deg, rgba(13,8,6,.62) 0%, rgba(13,8,6,.88) 100%);
     }
     .hero .copy { position: relative; z-index: 3; padding: clamp(20px, 5vw, 56px); max-width: 920px; }
     .kicker {
@@ -232,9 +246,10 @@
       html { scroll-behavior: auto; }
       .reveal { opacity: 1; transform: none; transition: none; }
       .tiles img, .shot img { transition: none; }
+      .hero video, .band video { display: none; }
     }
     @media print {
-      header.top, .scroll-cue, .actions { display: none !important; }
+      header.top, .scroll-cue, .actions, .hero video, .band video { display: none !important; }
       body { background: #fff; color: #111; }
       h2, .kicker, .stat b, .idea strong { color: #8a6a12 !important; }
       .hero { min-height: 0; height: 240px; }
@@ -257,7 +272,6 @@
       <a href="#unit8">Unit 8</a>
       <a href="#craft">Craft</a>
       <a href="#now">Start now</a>
-      <a href="#reel">Films</a>
     </nav>
     <div class="actions">
       <a class="btn ghost" href="https://www.powerof10.uk/Home/Athlete/f3c93960-7d8b-418c-ae3a-ac1251cc1d4c" rel="noopener" target="_blank">Po10</a>
@@ -269,6 +283,9 @@
 
   <section class="hero" id="top">
     <img src="jack-pack/jack-08.jpg" alt="Jack Ainsley in SAYSKY kit beside the red 08 board" width="1200" height="1600" />
+    <video muted loop playsinline preload="metadata">
+      <source src="films/JackAinsley_Spr_DownGrange_20260207.mp4" type="video/mp4" />
+    </video>
     <div class="veil"></div>
     <div class="clock" aria-label="5k personal best 16 minutes 1 second">
       <b>16:01</b>
@@ -317,7 +334,13 @@
       </div>
     </section>
 
-    <section class="wrap reveal" id="course">
+    <section class="band" id="course">
+      <img class="band-still" src="jack-pack/session-s.png" alt="" />
+      <video muted loop playsinline preload="metadata">
+        <source src="films/JackAinsley_Training_DownG_03Mar26_6.mp4" type="video/mp4" />
+      </video>
+      <div class="veil"></div>
+      <div class="wrap reveal">
       <p class="kicker">02 · The week</p>
       <h2>What you actually do</h2>
       <div class="split">
@@ -350,6 +373,7 @@
         <li>A short journal after: what you tried, what failed, what you change next time.</li>
         <li>Deadlines keep coming. Treat them like sessions. Missing one is a dropped workout.</li>
       </ul>
+      </div>
     </section>
 
     <section class="wrap reveal" id="brand">
@@ -415,10 +439,15 @@
       </div>
     </section>
 
-    <section class="wrap reveal" id="unit8">
+    <section class="band" id="unit8">
+      <img class="band-still" src="jack-pack/jack-08.jpg" alt="" />
+      <video muted loop playsinline preload="metadata">
+        <source src="films/JackAinsley_AldershotXC_17Jan2026.mp4" type="video/mp4" />
+      </video>
+      <div class="veil"></div>
+      <div class="wrap reveal">
       <p class="kicker">06 · The whole grade</p>
       <h2>Unit 8 · championship project</h2>
-      <img class="jack" src="jack-pack/jack-08.jpg" alt="Unit 8 is this athlete on camera for a season" style="width:100%;height:min(42vw,360px);object-fit:cover;border:1px solid var(--volt);margin-bottom:16px" />
       <p>About 350 words of plan, the films, a journal, a debrief against the plan. Ask the college to accept the topic early.</p>
       <div class="idea"><strong>Main idea · Road to 15.</strong> Three to five films across Year 13: winter base · one key session · race week + target 5k · debrief against 15:00 and the first look at 14. Hub holds them. Club screening as evaluation.</div>
       <div class="idea"><strong>Alt · The 60 seconds.</strong> One season about what the next minute actually costs after 16:01.</div>
@@ -429,6 +458,7 @@
         <li>Journal — decisions, not a diary of feelings.</li>
         <li>Evaluation: honest, built, on the dates. Name what failed. A missed 15 still counts if the debrief is straight.</li>
       </ol>
+      </div>
     </section>
 
     <section class="wrap reveal" id="craft">
@@ -506,31 +536,6 @@
       <p>I’m not picking media instead of running. I’m picking the course where the running is the media — and the folder is the start of the platform.</p>
     </section>
 
-    <section class="wrap reveal" id="reel">
-      <p class="kicker">Already on camera</p>
-      <h2>The films</h2>
-      <p>Press play on each. The 08 photo stays on the homepage so the page cannot go blank. Tell us which of these three you can actually see.</p>
-      <div class="reel">
-        <figure>
-          <video controls playsinline preload="metadata">
-            <source src="films/JackAinsley_Spr_DownGrange_20260207.mp4" type="video/mp4" />
-          </video>
-          <figcaption>Sprint · Down Grange · 7 Feb 2026</figcaption>
-        </figure>
-        <figure>
-          <video controls playsinline preload="metadata">
-            <source src="films/JackAinsley_AldershotXC_17Jan2026.mp4" type="video/mp4" />
-          </video>
-          <figcaption>Aldershot XC · 17 Jan 2026</figcaption>
-        </figure>
-        <figure>
-          <video controls playsinline preload="metadata">
-            <source src="films/JackAinsley_Training_DownG_03Mar26_6.mp4" type="video/mp4" />
-          </video>
-          <figcaption>Training · Down Grange · 3 Mar 2026</figcaption>
-        </figure>
-      </div>
-    </section>
   </main>
 
   <footer class="site">
@@ -555,6 +560,23 @@
       });
     }, { rootMargin: "-40% 0px -50% 0px" });
     secs.forEach((s) => spy.observe(s));
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    document.querySelectorAll(".hero video, .band video").forEach((vid) => {
+      if (reduce) { vid.remove(); return; }
+      const host = vid.closest(".hero, .band");
+      const show = () => vid.classList.add("is-on");
+      const hide = () => vid.classList.remove("is-on");
+      vid.addEventListener("playing", show);
+      vid.addEventListener("error", hide);
+      const watch = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) vid.play().then(show).catch(hide);
+          else { vid.pause(); hide(); }
+        });
+      }, { threshold: 0.25 });
+      watch.observe(host);
+    });
 
     const films = document.getElementById("films");
     const key = "jack-films-v1";
