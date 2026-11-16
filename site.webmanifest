@@ -1,0 +1,15 @@
+{
+  "name": "NexaFusion · Software Consultancy",
+  "short_name": "NexaFusion",
+  "description": "Experienced software engineering consultancy: AI agents, AI compilers, Rust & C++, cyber security and cloud platforms.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#05060b",
+  "theme_color": "#05060b",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
