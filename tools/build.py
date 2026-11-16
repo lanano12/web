@@ -21,7 +21,7 @@ TODAY = "2026-11-16"
 
 CSP = ("default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; "
        "img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; "
-       "base-uri 'self'; form-action 'self'")
+       "base-uri 'self'; form-action 'self'; upgrade-insecure-requests")
 
 ARROW = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" '
          'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>')
