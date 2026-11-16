@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <title>CRA readiness check · NexaFusion</title>
+  <meta name="description" content="Free EU Cyber Resilience Act readiness check: twelve questions, an indicative score and your biggest gaps. Runs in your browser." />
+  <link rel="canonical" href="https://www.nexafusion.io/cra-readiness/" />
+  <meta name="theme-color" content="#05060b" />
+  <meta name="color-scheme" content="dark light" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="NexaFusion" />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:url" content="https://www.nexafusion.io/cra-readiness/" />
+  <meta property="og:title" content="CRA readiness check" />
+  <meta property="og:description" content="Free EU Cyber Resilience Act readiness check: twelve questions, an indicative score and your biggest gaps. Runs in your browser." />
+  <meta property="og:image" content="https://www.nexafusion.io/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://www.nexafusion.io/og.png" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="alternate" type="application/rss+xml" title="NexaFusion Insights" href="/insights/feed.xml" />
+  <link rel="preload" href="/fonts/sora.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/assets/site.css" />
+  <script src="/assets/theme-init.js"></script>
+  <script src="/assets/site.js" defer></script>
+  <script src="/assets/cra-check.js" defer></script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.nexafusion.io/"}, {"@type": "ListItem", "position": 2, "name": "CRA readiness check"}]}</script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="ambient" aria-hidden="true"><div class="aurora a"></div><div class="aurora b"></div></div>
+
+  <header class="top" id="top">
+    <a class="logo" href="/" aria-label="NexaFusion home">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5ef2ff"/><stop offset=".55" stop-color="#a37bff"/><stop offset="1" stop-color="#ff5cc8"/></linearGradient></defs>
+        <rect x="2" y="2" width="60" height="60" rx="16" fill="none" stroke="url(#lg)" stroke-width="3" opacity=".5"/>
+        <path d="M20 44V20l24 24V20" fill="none" stroke="url(#lg)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Nexa<b>Fusion</b></span>
+    </a>
+    <nav class="nav" id="nav" aria-label="Primary"><a href="/#services">Services</a><a href="/cra-readiness/" class="active" aria-current="page">CRA check</a><a href="/#diagnose">Diagnose</a><a href="/insights/">Insights</a><a href="/#contact">Contact</a></nav>
+    <div class="top-actions">
+      <button class="icon-btn" id="theme" type="button" aria-label="Switch colour theme">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="icon-btn menu-btn" id="menu" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+      </button>
+      <a class="btn small" href="/#contact">Start a project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="wrap page-hero">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> / <span aria-current="page">CRA readiness check</span></nav>
+      <p class="eyebrow">Free tool</p>
+      <h1>How ready are you for the <em class="grad-text">Cyber Resilience Act</em>?</h1>
+      <p class="lede">Twelve quick questions, about three minutes. You’ll get an indicative readiness score and your biggest gaps — starting with the duties that already apply.</p>
+      <div class="meta-row"><span>Runs entirely in your browser</span><span>Nothing is sent or stored</span><span>Not legal advice</span></div>
+    </section>
+
+    <section class="wrap" aria-label="CRA readiness questions">
+      <form class="cra" id="cra-form" novalidate>
+          <fieldset class="q scope">
+            <legend><span class="qn">00</span>Do you sell or supply software, or products containing software, to customers in the EU?</legend>
+            <div class="opts"><label><input type="radio" name="scope" value="yes" required /><span>Yes</span></label><label><input type="radio" name="scope" value="unsure" required /><span>Not sure</span></label><label><input type="radio" name="scope" value="no" required /><span>No</span></label></div>
+          </fieldset>
+          <fieldset class="q">
+            <legend><span class="qn">01</span>Can outside researchers and customers easily report a vulnerability to you (e.g. a security.txt file or a published security contact)? <span class="live-tag">In force now</span></legend>
+            <div class="opts"><label><input type="radio" name="intake" value="2" required /><span>Yes</span></label><label><input type="radio" name="intake" value="1" required /><span>Partly</span></label><label><input type="radio" name="intake" value="0" required /><span>No</span></label></div>
+          </fieldset>
+          <fieldset class="q">
+            <legend><span class="qn">02</span>Could you triage a reported, actively exploited vulnerability and make a decision within 24 hours? <span class="live-tag">In force now</span></legend>
+            <div class="opts"><label><input type="radio" name="triage" value="2" required /><span>Yes</span></label><label><input type="radio" name="triage" value="1" required /><span>Partly</span></label><label><input type="radio" name="triage" value="0" required /><span>No</span></label></div>
+          </fieldset>
+          <fieldset class="q">
+            <legend><span class="qn">03</span>Do you know who would submit an early warning through ENISA’s single reporting platform, and how? <span class="live-tag">In force now</span></legend>
+            <div class="opts"><label><input type="radio" name="report" value="2" required /><span>Yes</span></label><label><input type="radio" name="report" value="1" required /><span>Partly</span></label><label><input type="radio" name="report" value="0" required /><span>No</span></label></div>
+          </fieldset>
+          <fieldset class="q">
+            <legend><span class="qn">04</span>Do your builds generate a machine-readable software bill of materials (SBOM)?</legend>
+            <div class="opts"><label><input type="radio" name="sbom" value="2" required /><span>Yes</span></label><label><input type="radio" name="sbom" value="1" required /><span>Partly</span></label><label><input type="radio" name="sbom" value="0" required /><span>No</span></label></div>
+          </fieldset>
+          <fieldset class="q">
+            <legend><span class="qn">05</span>Do you check releases for known exploitable vulnerabilities before shipping?</legend>
+            <div class="opts"><label><input type="radio" name="scan" value="2" required /><span>Yes</span></label><label><input type="radio" name="scan" value="1" required /><span>Partly</span></label><label><input type="radio" name="scan" value="0" required /><span>No</span></label></div>
+          </fieldset>
+          <fieldset class="q">
+            <legend><span class="qn">06</span>Have your main products been threat-modelled, with the decisions recorded?</legend>
+            <div class="opts"><label><input type="radio" name="threat" value="2" required /><span>Yes</span></label><label><input type="radio" name="threat" value="1" required /><span>Partly</span></label><label><input type="radio" name="threat" value="0" required /><span>No</span></label></div>
+          </fieldset>
+          <fieldset class="q">
+            <legend><span class="qn">07</span>Do your products ship with secure defaults (no default passwords, minimal exposed services)?</legend>
+            <div class="opts"><label><input type="radio" name="defaults" value="2" required /><span>Yes</span></label><label><input type="radio" name="defaults" value="1" required /><span>Partly</span></label><label><input type="radio" name="defaults" value="0" required /><span>No</span></label></div>
+          </fieldset>
+          <fieldset class="q">
+            <legend><span class="qn">08</span>Have you defined a support period and a way to ship security updates for each product?</legend>
+            <div class="opts"><label><input type="radio" name="support" value="2" required /><span>Yes</span></label><label><input type="radio" name="support" value="1" required /><span>Partly</span></label><label><input type="radio" name="support" value="0" required /><span>No</span></label></div>
+          </fieldset>
+          <fieldset class="q">
+            <legend><span class="qn">09</span>Do you publish a coordinated vulnerability disclosure policy?</legend>
+            <div class="opts"><label><input type="radio" name="cvd" value="2" required /><span>Yes</span></label><label><input type="radio" name="cvd" value="1" required /><span>Partly</span></label><label><input type="radio" name="cvd" value="0" required /><span>No</span></label></div>
+          </fieldset>
+          <fieldset class="q">
+            <legend><span class="qn">10</span>Do you keep technical documentation of your security design and risk assessment?</legend>
+            <div class="opts"><label><input type="radio" name="docs" value="2" required /><span>Yes</span></label><label><input type="radio" name="docs" value="1" required /><span>Partly</span></label><label><input type="radio" name="docs" value="0" required /><span>No</span></label></div>
+          </fieldset>
+          <fieldset class="q">
+            <legend><span class="qn">11</span>Do you know whether any of your products are “important” or “critical” under the CRA?</legend>
+            <div class="opts"><label><input type="radio" name="class" value="2" required /><span>Yes</span></label><label><input type="radio" name="class" value="1" required /><span>Partly</span></label><label><input type="radio" name="class" value="0" required /><span>No</span></label></div>
+          </fieldset>
+          <div class="cra-actions">
+            <button class="btn" type="submit">See my results <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+            <button class="btn ghost" type="reset">Start again</button>
+            <p class="cra-error" id="cra-error" role="alert"></p>
+          </div>
+      </form>
+      <div class="cra-result" id="cra-result" aria-live="polite" tabindex="-1" hidden></div>
+      <script type="application/json" id="cra-data">{"questions": [{"id": "intake", "advice": "Publish a security contact and a security.txt file, and make sure the mailbox is monitored.", "live": true}, {"id": "triage", "advice": "Define an on-call owner and a 24-hour triage path for exploited vulnerabilities.", "live": true}, {"id": "report", "advice": "Name who files CRA reports, rehearse the 24h / 72h / final-report sequence and keep templates ready.", "live": true}, {"id": "sbom", "advice": "Generate SBOMs (e.g. CycloneDX or SPDX) automatically in CI for every release.", "live": false}, {"id": "scan", "advice": "Add dependency and image vulnerability scanning as a release gate.", "live": false}, {"id": "threat", "advice": "Threat-model your main products and record the risk decisions — this feeds your technical documentation.", "live": false}, {"id": "defaults", "advice": "Review default configurations and remove default credentials and unnecessary exposed services.", "live": false}, {"id": "support", "advice": "Set and publish a support period per product, with a reliable security-update mechanism.", "live": false}, {"id": "cvd", "advice": "Publish a coordinated vulnerability disclosure policy explaining how you handle reports.", "live": false}, {"id": "docs", "advice": "Start a technical documentation set now, built from real engineering artefacts.", "live": false}, {"id": "class", "advice": "Classify each product — “important” and “critical” products need stricter conformity assessment.", "live": false}], "email": "hello@nexafusion.io"}</script>
+    </section>
+
+    <section class="wrap related" aria-labelledby="more">
+      <h2 id="more">Go deeper</h2>
+      <div class="post-list"><article class="post reveal">
+            <div><time datetime="2026-11-16">16 Nov 2026</time><span class="topic">Cyber security</span></div>
+            <div><h2><a href="/insights/eu-cyber-resilience-act/">The EU Cyber Resilience Act: what UK software firms need to know</a></h2><p>Reporting duties started in September 2026 and the main obligations follow in December 2027. A practical guide for UK companies selling software into the EU.</p></div>
+          </article></div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <span>© 2026 NexaFusion · Software consultancy</span>
+      <nav aria-label="Footer">
+        <a href="/#services">Services</a><a href="/insights/">Insights</a><a href="/#faq">FAQ</a><a href="/#contact">Contact</a>
+      </nav>
+      <span class="status">All systems nominal</span>
+    </div>
+  </footer>
+</body>
+</html>

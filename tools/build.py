@@ -38,25 +38,69 @@ LOGO = '''<svg viewBox="0 0 64 64" aria-hidden="true">
 
 SERVICES = [
     {
-        "slug": "ai-agents",
-        "name": "AI & agent engineering",
-        "title": "AI & agent engineering that survives production",
-        "lede": "Agents and LLM features that call your real systems — with evaluation, guardrails, observability and cost control designed in from the first commit.",
+        "slug": "cyber-security",
+        "name": "Cyber security & resilience",
+        "title": "Secure by design — and able to prove it",
+        "lede": "Threat modelling, supply-chain security and secure-development practice that engineers actually follow, plus the evidence customers and regulators now expect.",
         "fit": [
-            "You have an AI prototype that impresses in demos but you don’t trust it with customers.",
-            "You want agents that act on internal tools and data, safely.",
-            "Your LLM bill or latency is growing faster than usage.",
+            "You sell software or connected products into the EU and need to prepare for the Cyber Resilience Act.",
+            "Enterprise customers send security questionnaires you struggle to answer.",
+            "A pen test found issues and you want them fixed at the root, not patched.",
         ],
         "what": [
-            ("Use-case triage", "Rank candidate features by value, risk and data readiness, and drop the weak ones early."),
-            ("Evaluation harnesses", "Define what “good” means, build test sets and automated evals, and gate releases on them."),
-            ("Tools, retrieval & MCP", "Typed tool interfaces, retrieval over your own data and Model Context Protocol servers."),
-            ("Guardrails & security", "Permissioning, prompt-injection defences, red-teaming and human-in-the-loop where it matters."),
-            ("LLMOps", "Tracing, cost budgets, model routing and staged rollouts behind feature flags."),
-            ("Team enablement", "Patterns and reviews so your engineers can build the next feature without us."),
+            ("Threat modelling", "Map assets, attack surfaces and abuse cases with your engineers, not just for them."),
+            ("Supply-chain security", "SBOMs, dependency policy, signed builds and provenance for what you ship."),
+            ("Secure SDLC", "Code review checklists, secrets handling, SAST and fuzzing that fit your delivery flow."),
+            ("Vulnerability handling", "Intake, triage, disclosure and patch processes — including CRA reporting readiness."),
+            ("Remediation", "Fix the findings that matter, in code, with tests so they stay fixed."),
+            ("Evidence", "Technical documentation and records that stand up to customer and regulatory scrutiny."),
         ],
-        "deliver": ["Prioritised use-case map", "Evaluation suite wired into CI", "Production agent or feature behind a flag", "Runbooks and cost dashboard"],
-        "tags": ["Tool use / MCP", "RAG", "Evals", "LLMOps", "Guardrails"],
+        "deliver": ["Threat model and risk register", "SBOM pipeline", "Vulnerability-handling process", "CRA gap analysis and plan"],
+        "tags": ["Threat modelling", "SBOM", "Fuzzing", "EU CRA", "Secure SDLC"],
+        "related": ["eu-cyber-resilience-act", "memory-safety-roadmaps"],
+    },
+    {
+        "slug": "cra-readiness",
+        "name": "EU CRA readiness",
+        "title": "EU Cyber Resilience Act readiness",
+        "lede": "Reporting duties have applied since 11 September 2026 and the main obligations follow on 11 December 2027. We turn the regulation into an engineering plan — and help you deliver it.",
+        "fit": [
+            "You sell software or connected products to customers in the EU — including from the UK.",
+            "You aren’t sure whether you could report an actively exploited vulnerability within 24 hours.",
+            "You need SBOMs, a support policy and technical documentation, but don’t know where to start.",
+        ],
+        "what": [
+            ("Scope & classification", "Which products are in scope, and whether any fall into the “important” or “critical” categories."),
+            ("Gap analysis", "Your products and processes measured against the CRA’s essential requirements, with a prioritised plan."),
+            ("Reporting readiness", "Vulnerability intake, 24-hour triage, and a rehearsed path to ENISA early warnings and notifications."),
+            ("SBOM pipeline", "Machine-readable SBOMs generated in your builds and kept up to date with each release."),
+            ("Secure development evidence", "Threat models, secure defaults, vulnerability scanning and update processes — recorded as you go."),
+            ("Technical documentation", "The documentation set for conformity assessment, built from real engineering artefacts."),
+        ],
+        "deliver": ["Scope and classification of your products", "CRA gap analysis and plan to December 2027", "Working vulnerability-handling and reporting process", "SBOM pipeline and documentation set"],
+        "tags": ["CRA gap analysis", "24/72h reporting", "SBOM", "Technical documentation"],
+        "related": ["eu-cyber-resilience-act"],
+    },
+    {
+        "slug": "ai-compilers",
+        "name": "AI compilers & performance",
+        "title": "Faster models, smaller bills",
+        "lede": "Compiler passes, custom kernels and profiling from the model graph down to the silicon — so inference and training run faster on the hardware you already pay for.",
+        "fit": [
+            "Inference latency or GPU cost is limiting what you can ship.",
+            "You are bringing models to new or custom accelerators.",
+            "Hot paths in your native code need serious performance work.",
+        ],
+        "what": [
+            ("Profiling & roofline analysis", "Trace from framework to kernel to find whether you are compute-, memory- or launch-bound."),
+            ("Graph compilation", "Fusion, layout and quantisation passes with torch.compile, XLA or MLIR-based stacks."),
+            ("Custom kernels", "Triton or CUDA kernels for the operations that dominate your profile."),
+            ("Serving optimisation", "Batching, KV-cache management and speculative decoding for LLM inference."),
+            ("Accelerator bring-up", "MLIR / LLVM lowering for new hardware targets."),
+            ("Regression guards", "Benchmarks and performance budgets in CI so gains don’t quietly erode."),
+        ],
+        "deliver": ["Profile report with ranked opportunities", "Optimised kernels or compiler passes", "Before/after benchmarks", "CI performance budgets"],
+        "tags": ["MLIR", "LLVM", "Triton", "CUDA", "Profiling"],
         "related": ["inference-cost-compilers"],
     },
     {
@@ -82,47 +126,25 @@ SERVICES = [
         "related": ["memory-safety-roadmaps"],
     },
     {
-        "slug": "cyber-security",
-        "name": "Cyber security & resilience",
-        "title": "Secure by design — and able to prove it",
-        "lede": "Threat modelling, supply-chain security and secure-development practice that engineers actually follow, plus the evidence customers and regulators now expect.",
+        "slug": "ai-agents",
+        "name": "AI & agent engineering",
+        "title": "AI & agent engineering that survives production",
+        "lede": "Agents and LLM features that call your real systems — with evaluation, guardrails, observability and cost control designed in from the first commit.",
         "fit": [
-            "You sell software or connected products into the EU and need to prepare for the Cyber Resilience Act.",
-            "Enterprise customers send security questionnaires you struggle to answer.",
-            "A pen test found issues and you want them fixed at the root, not patched.",
+            "You have an AI prototype that impresses in demos but you don’t trust it with customers.",
+            "You want agents that act on internal tools and data, safely.",
+            "Your LLM bill or latency is growing faster than usage.",
         ],
         "what": [
-            ("Threat modelling", "Map assets, attack surfaces and abuse cases with your engineers, not just for them."),
-            ("Supply-chain security", "SBOMs, dependency policy, signed builds and provenance for what you ship."),
-            ("Secure SDLC", "Code review checklists, secrets handling, SAST and fuzzing that fit your delivery flow."),
-            ("Vulnerability handling", "Intake, triage, disclosure and patch processes — including CRA reporting readiness."),
-            ("Remediation", "Fix the findings that matter, in code, with tests so they stay fixed."),
-            ("Evidence", "Technical documentation and records that stand up to customer and regulatory scrutiny."),
+            ("Use-case triage", "Rank candidate features by value, risk and data readiness, and drop the weak ones early."),
+            ("Evaluation harnesses", "Define what “good” means, build test sets and automated evals, and gate releases on them."),
+            ("Tools, retrieval & MCP", "Typed tool interfaces, retrieval over your own data and Model Context Protocol servers."),
+            ("Guardrails & security", "Permissioning, prompt-injection defences, red-teaming and human-in-the-loop where it matters."),
+            ("LLMOps", "Tracing, cost budgets, model routing and staged rollouts behind feature flags."),
+            ("Team enablement", "Patterns and reviews so your engineers can build the next feature without us."),
         ],
-        "deliver": ["Threat model and risk register", "SBOM pipeline", "Vulnerability-handling process", "CRA gap analysis and plan"],
-        "tags": ["Threat modelling", "SBOM", "Fuzzing", "EU CRA", "Secure SDLC"],
-        "related": ["eu-cyber-resilience-act", "memory-safety-roadmaps"],
-    },
-    {
-        "slug": "ai-compilers",
-        "name": "AI compilers & performance",
-        "title": "Faster models, smaller bills",
-        "lede": "Compiler passes, custom kernels and profiling from the model graph down to the silicon — so inference and training run faster on the hardware you already pay for.",
-        "fit": [
-            "Inference latency or GPU cost is limiting what you can ship.",
-            "You are bringing models to new or custom accelerators.",
-            "Hot paths in your native code need serious performance work.",
-        ],
-        "what": [
-            ("Profiling & roofline analysis", "Trace from framework to kernel to find whether you are compute-, memory- or launch-bound."),
-            ("Graph compilation", "Fusion, layout and quantisation passes with torch.compile, XLA or MLIR-based stacks."),
-            ("Custom kernels", "Triton or CUDA kernels for the operations that dominate your profile."),
-            ("Serving optimisation", "Batching, KV-cache management and speculative decoding for LLM inference."),
-            ("Accelerator bring-up", "MLIR / LLVM lowering for new hardware targets."),
-            ("Regression guards", "Benchmarks and performance budgets in CI so gains don’t quietly erode."),
-        ],
-        "deliver": ["Profile report with ranked opportunities", "Optimised kernels or compiler passes", "Before/after benchmarks", "CI performance budgets"],
-        "tags": ["MLIR", "LLVM", "Triton", "CUDA", "Profiling"],
+        "deliver": ["Prioritised use-case map", "Evaluation suite wired into CI", "Production agent or feature behind a flag", "Runbooks and cost dashboard"],
+        "tags": ["Tool use / MCP", "RAG", "Evals", "LLMOps", "Guardrails"],
         "related": ["inference-cost-compilers"],
     },
     {
@@ -322,7 +344,7 @@ ARTICLES = [
     },
 ]
 
-NAV = [("/#services", "Services"), ("/#diagnose", "Diagnose"), ("/#approach", "Approach"), ("/insights/", "Insights"), ("/#contact", "Contact")]
+NAV = [("/#services", "Services"), ("/cra-readiness/", "CRA check"), ("/#diagnose", "Diagnose"), ("/insights/", "Insights"), ("/#contact", "Contact")]
 
 # --------------------------------------------------------------------------
 # Templates
@@ -535,6 +557,83 @@ def build_insights_index() -> str:
                 body=body, active="Insights", ld=[bc_ld])
 
 
+CRA_SCOPE = "Do you sell or supply software, or products containing software, to customers in the EU?"
+
+# (id, question, advice if not in place, in force already?)
+CRA_QUESTIONS = [
+    ("intake", "Can outside researchers and customers easily report a vulnerability to you (e.g. a security.txt file or a published security contact)?",
+     "Publish a security contact and a security.txt file, and make sure the mailbox is monitored.", True),
+    ("triage", "Could you triage a reported, actively exploited vulnerability and make a decision within 24 hours?",
+     "Define an on-call owner and a 24-hour triage path for exploited vulnerabilities.", True),
+    ("report", "Do you know who would submit an early warning through ENISA’s single reporting platform, and how?",
+     "Name who files CRA reports, rehearse the 24h / 72h / final-report sequence and keep templates ready.", True),
+    ("sbom", "Do your builds generate a machine-readable software bill of materials (SBOM)?",
+     "Generate SBOMs (e.g. CycloneDX or SPDX) automatically in CI for every release.", False),
+    ("scan", "Do you check releases for known exploitable vulnerabilities before shipping?",
+     "Add dependency and image vulnerability scanning as a release gate.", False),
+    ("threat", "Have your main products been threat-modelled, with the decisions recorded?",
+     "Threat-model your main products and record the risk decisions — this feeds your technical documentation.", False),
+    ("defaults", "Do your products ship with secure defaults (no default passwords, minimal exposed services)?",
+     "Review default configurations and remove default credentials and unnecessary exposed services.", False),
+    ("support", "Have you defined a support period and a way to ship security updates for each product?",
+     "Set and publish a support period per product, with a reliable security-update mechanism.", False),
+    ("cvd", "Do you publish a coordinated vulnerability disclosure policy?",
+     "Publish a coordinated vulnerability disclosure policy explaining how you handle reports.", False),
+    ("docs", "Do you keep technical documentation of your security design and risk assessment?",
+     "Start a technical documentation set now, built from real engineering artefacts.", False),
+    ("class", "Do you know whether any of your products are “important” or “critical” under the CRA?",
+     "Classify each product — “important” and “critical” products need stricter conformity assessment.", False),
+]
+
+
+def build_cra_check() -> str:
+    bc, bc_ld = crumbs(("Home", "/"), ("CRA readiness check", None))
+    def radios(qid: str, opts: list[tuple[str, str]]) -> str:
+        return "".join(
+            f'<label><input type="radio" name="{qid}" value="{v}" required /><span>{e(t)}</span></label>' for v, t in opts)
+    yn = [("2", "Yes"), ("1", "Partly"), ("0", "No")]
+    qs = "".join(
+        f'''
+          <fieldset class="q">
+            <legend><span class="qn">{n:02d}</span>{e(q)}{' <span class="live-tag">In force now</span>' if live else ''}</legend>
+            <div class="opts">{radios(qid, yn)}</div>
+          </fieldset>''' for n, (qid, q, _a, live) in enumerate(CRA_QUESTIONS, 1))
+    data = {"questions": [{"id": i, "advice": a, "live": l} for i, _q, a, l in CRA_QUESTIONS], "email": EMAIL}
+    body = f'''    <section class="wrap page-hero">
+      {bc}
+      <p class="eyebrow">Free tool</p>
+      <h1>How ready are you for the <em class="grad-text">Cyber Resilience Act</em>?</h1>
+      <p class="lede">Twelve quick questions, about three minutes. You’ll get an indicative readiness score and your biggest gaps — starting with the duties that already apply.</p>
+      <div class="meta-row"><span>Runs entirely in your browser</span><span>Nothing is sent or stored</span><span>Not legal advice</span></div>
+    </section>
+
+    <section class="wrap" aria-label="CRA readiness questions">
+      <form class="cra" id="cra-form" novalidate>
+          <fieldset class="q scope">
+            <legend><span class="qn">00</span>{e(CRA_SCOPE)}</legend>
+            <div class="opts">{radios("scope", [("yes", "Yes"), ("unsure", "Not sure"), ("no", "No")])}</div>
+          </fieldset>{qs}
+          <div class="cra-actions">
+            <button class="btn" type="submit">See my results {ARROW}</button>
+            <button class="btn ghost" type="reset">Start again</button>
+            <p class="cra-error" id="cra-error" role="alert"></p>
+          </div>
+      </form>
+      <div class="cra-result" id="cra-result" aria-live="polite" tabindex="-1" hidden></div>
+      <script type="application/json" id="cra-data">{json.dumps(data, ensure_ascii=False)}</script>
+    </section>
+
+    <section class="wrap related" aria-labelledby="more">
+      <h2 id="more">Go deeper</h2>
+      <div class="post-list">{post_card(ART["eu-cyber-resilience-act"])}</div>
+    </section>'''
+    page_html = page(path="/cra-readiness/", title="CRA readiness check",
+                     desc="Free EU Cyber Resilience Act readiness check: twelve questions, an indicative score and your biggest gaps. Runs in your browser.",
+                     body=body, active="CRA check", ld=[bc_ld])
+    return page_html.replace('<script src="/assets/site.js" defer></script>',
+                             '<script src="/assets/site.js" defer></script>\n  <script src="/assets/cra-check.js" defer></script>')
+
+
 def build_feed() -> str:
     items = "".join(f'''
     <item>
@@ -557,7 +656,7 @@ def build_feed() -> str:
 
 
 def build_sitemap() -> str:
-    paths = ["/", "/insights/"] + [f"/services/{s['slug']}/" for s in SERVICES] + [f"/insights/{a['slug']}/" for a in ARTICLES]
+    paths = ["/", "/cra-readiness/", "/insights/"] + [f"/services/{s['slug']}/" for s in SERVICES] + [f"/insights/{a['slug']}/" for a in ARTICLES]
     urls = "".join(f"\n  <url><loc>{SITE}{p}</loc><lastmod>{TODAY}</lastmod></url>" for p in paths)
     return f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}\n</urlset>\n'
 
@@ -575,6 +674,7 @@ def main() -> None:
     for a in ARTICLES:
         write(f"insights/{a['slug']}/index.html", build_article(a))
     write("insights/index.html", build_insights_index())
+    write("cra-readiness/index.html", build_cra_check())
     write("insights/feed.xml", build_feed())
     write("sitemap.xml", build_sitemap())
 
