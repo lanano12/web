@@ -27,7 +27,7 @@ ARROW = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-widt
          'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>')
 
 LOGO = '''<svg viewBox="0 0 64 64" aria-hidden="true">
-        <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5ef2ff"/><stop offset=".55" stop-color="#a37bff"/><stop offset="1" stop-color="#ff5cc8"/></linearGradient></defs>
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6fd8f2"/><stop offset=".55" stop-color="#a08cff"/><stop offset="1" stop-color="#f08ac6"/></linearGradient></defs>
         <rect x="2" y="2" width="60" height="60" rx="16" fill="none" stroke="url(#lg)" stroke-width="3" opacity=".5"/>
         <path d="M20 44V20l24 24V20" fill="none" stroke="url(#lg)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>'''
@@ -393,7 +393,8 @@ def page(*, path: str, title: str, desc: str, body: str, active: str = "", ld: l
   <link rel="preload" href="/fonts/sora.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="/assets/site.css" />
   <script src="/assets/theme-init.js"></script>
-  <script src="/assets/site.js" defer></script>{ld_html}
+  <script src="/assets/site.js" defer></script>
+  <script src="/assets/ui.js" defer></script>{ld_html}
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -406,6 +407,10 @@ def page(*, path: str, title: str, desc: str, body: str, active: str = "", ld: l
     </a>
     <nav class="nav" id="nav" aria-label="Primary">{nav}</nav>
     <div class="top-actions">
+      <button class="kbar-btn" type="button" data-kbar aria-label="Search and jump">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <span class="kbar-label">Ask</span><kbd class="kbar-hint">Ctrl K</kbd>
+      </button>
       <button class="icon-btn" id="theme" type="button" aria-label="Switch colour theme">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
       </button>
