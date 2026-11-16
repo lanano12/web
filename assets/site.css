@@ -173,7 +173,7 @@ a { color: inherit; }
 @keyframes pulse { 50% { box-shadow: 0 0 0 8px transparent; } }
 h1 {
   font-size: clamp(44px, 7.4vw, 104px); line-height: .95; letter-spacing: -.045em;
-  font-weight: 700; margin: 22px 0 22px; text-wrap: balance;
+  font-weight: 700; margin: 0 0 22px; text-wrap: balance;
 }
 h1 .grad {
   background: var(--grad); background-size: 200% 100%;
