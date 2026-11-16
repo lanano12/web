@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'" />
+  <meta name="robots" content="noindex" />
+  <title>Page not found · NexaFusion</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <style>
+    @font-face { font-family: Sora; src: url(/fonts/sora.woff2) format("woff2"); font-weight: 100 800; font-display: swap; }
+    @font-face { font-family: "JetBrains Mono"; src: url(/fonts/jetbrains-mono.woff2) format("woff2"); font-weight: 400 500; font-display: swap; }
+    :root { --bg: #05060b; --ink: #eef1ff; --dim: #9aa3c7; --cyan: #5ef2ff; --line: rgba(255,255,255,.09); --grad: linear-gradient(100deg, #5ef2ff, #a37bff 55%, #ff5cc8); color-scheme: dark; }
+    @media (prefers-color-scheme: light) { :root { --bg: #f6f7fb; --ink: #0b0e22; --dim: #444b6e; --cyan: #007a96; --line: rgba(10,14,40,.1); color-scheme: light; } }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100svh; display: grid; place-items: center; padding: 24px 16px;
+      background: radial-gradient(60vmax 60vmax at 20% -10%, rgba(163,123,255,.25), transparent 70%), radial-gradient(50vmax 50vmax at 100% 0%, rgba(94,242,255,.16), transparent 70%), var(--bg);
+      color: var(--ink); font-family: Sora, system-ui, sans-serif; text-align: center;
+    }
+    body::before { content: ""; position: fixed; inset: 0; z-index: -1; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(ellipse at 50% 40%, #000 20%, transparent 70%); }
+    .code { font: 500 14px/1 "JetBrains Mono", monospace; color: var(--cyan); letter-spacing: .2em; }
+    h1 { font-size: clamp(64px, 16vw, 180px); line-height: .9; letter-spacing: -.06em; margin: 18px 0; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    p { color: var(--dim); max-width: 30rem; margin: 0 auto 32px; font-size: 18px; font-weight: 300; }
+    a { display: inline-flex; padding: 13px 22px; border-radius: 999px; background: var(--grad); color: #05060b; font-weight: 600; text-decoration: none; }
+    a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="code">ERR · 404 · ROUTE_NOT_FOUND</p>
+    <h1>Lost signal.</h1>
+    <p>This page isn’t here — it may have moved during our upgrade. The good stuff is one click away.</p>
+    <a href="/">Back to NexaFusion</a>
+  </main>
+</body>
+</html>

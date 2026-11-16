@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'sha256-hOvUtvUtJm475IR8GMr91N0q5Pc1ph4DAzoRkcRrcPU=' 'sha256-5khvUBBTSnyuRQ9LA2g3XqG6C0zZNkNOoRPPUT/zeSY='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>NexaFusion · Software Consultancy</title>
   <meta name="description" content="NexaFusion is a senior software engineering consultancy. AI and agent engineering, legacy C/C++ modernisation, cloud platforms and performance work — shipped in weeks, owned by you." />
   <link rel="canonical" href="https://www.nexafusion.io/" />
@@ -11,11 +13,19 @@
   <meta property="og:url" content="https://www.nexafusion.io/" />
   <meta property="og:title" content="NexaFusion · Ship the future. Keep the lights on." />
   <meta property="og:description" content="Senior software engineering consultancy: AI agents, legacy modernisation, cloud platforms, performance." />
-  <meta name="twitter:card" content="summary" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%235ef2ff'/%3E%3Cstop offset='1' stop-color='%23a37bff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%2305060b'/%3E%3Cpath d='M18 46V18l28 28V18' fill='none' stroke='url(%23g)' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <meta property="og:site_name" content="NexaFusion" />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:image" content="https://www.nexafusion.io/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="NexaFusion — Ship the future. Keep the lights on." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://www.nexafusion.io/og.png" />
+  <meta name="color-scheme" content="dark light" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="preload" href="/fonts/sora.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/fonts/jetbrains-mono.woff2" as="font" type="font/woff2" crossorigin />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -33,6 +43,8 @@
     try { const t = localStorage.getItem("nf-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
   </script>
   <style>
+    @font-face { font-family: Sora; src: url(/fonts/sora.woff2) format("woff2"); font-weight: 100 800; font-display: swap; }
+    @font-face { font-family: "JetBrains Mono"; src: url(/fonts/jetbrains-mono.woff2) format("woff2"); font-weight: 400 500; font-display: swap; }
     :root {
       --bg: #05060b;
       --bg-2: #0a0c16;
@@ -42,7 +54,7 @@
       --line-strong: rgba(255,255,255,.18);
       --ink: #eef1ff;
       --dim: #9aa3c7;
-      --mute: #6b7399;
+      --mute: #8a93b8;
       --cyan: #5ef2ff;
       --violet: #a37bff;
       --magenta: #ff5cc8;
@@ -64,8 +76,8 @@
       --line-strong: rgba(10,14,40,.2);
       --ink: #0b0e22;
       --dim: #444b6e;
-      --mute: #6a7194;
-      --cyan: #0089a8;
+      --mute: #5c6386;
+      --cyan: #007a96;
       --violet: #6a3df0;
       --magenta: #c4148c;
       --lime: #4d7c00;
@@ -104,13 +116,13 @@
     }
     .aurora {
       position: absolute; width: 70vmax; height: 70vmax; border-radius: 50%;
-      filter: blur(90px); opacity: .22; mix-blend-mode: screen;
+      opacity: .3;
       animation: drift 28s ease-in-out infinite alternate;
     }
-    :root[data-theme="light"] .aurora { mix-blend-mode: multiply; opacity: .12; }
-    .aurora.a { background: var(--violet); top: -30vmax; left: -20vmax; }
-    .aurora.b { background: var(--cyan); top: -25vmax; right: -30vmax; animation-delay: -9s; }
-    .aurora.c { background: var(--magenta); top: 60vh; left: 30vw; opacity: .12; animation-delay: -17s; }
+    :root[data-theme="light"] .aurora { opacity: .14; }
+    .aurora.a { background: radial-gradient(closest-side, var(--violet), transparent); top: -30vmax; left: -20vmax; }
+    .aurora.b { background: radial-gradient(closest-side, var(--cyan), transparent); top: -25vmax; right: -30vmax; animation-delay: -9s; }
+    .aurora.c { background: radial-gradient(closest-side, var(--magenta), transparent); top: 60vh; left: 30vw; opacity: .14; animation-delay: -17s; }
     @keyframes drift {
       to { transform: translate3d(8vmax, 6vmax, 0) scale(1.15); }
     }
@@ -124,6 +136,14 @@
       .progress { animation: grow linear both; animation-timeline: scroll(root); }
       @keyframes grow { to { transform: scaleX(1); } }
     }
+
+    :root[data-theme="light"] .ambient::before { opacity: .8; }
+    :root[data-theme="light"] .btn { color: #fff; box-shadow: 0 8px 24px -10px rgba(106,61,240,.55); }
+    :root[data-theme="light"] .btn.ghost { color: var(--ink); }
+    :root[data-theme="light"] .term { background: #0d1020; --dim: #b4bbdc; --ink: #eef1ff; --mute: #8a93b8; --cyan: #5ef2ff; --violet: #a37bff; --lime: #c8ff4d; --magenta: #ff5cc8; }
+    :root[data-theme="light"] .orbit text[style] { fill: #05060b; }
+    :root[data-theme="light"] .principle { background: var(--panel-solid); }
+    :root[data-theme="light"] .principle:hover { background: var(--bg-2); }
 
     /* Header */
     .top {
@@ -188,7 +208,7 @@
     .pill {
       display: inline-flex; align-items: center; gap: 10px; padding: 7px 14px 7px 8px;
       border-radius: 999px; border: 1px solid var(--line-strong); background: var(--panel);
-      font-size: 13px; color: var(--dim); backdrop-filter: blur(8px);
+      font-size: 13px; color: var(--dim);
     }
     .pill .dot {
       width: 8px; height: 8px; border-radius: 50%; background: var(--lime);
@@ -207,9 +227,9 @@
     }
     @keyframes sheen { to { background-position: 100% 0; } }
     h1 .line { display: block; }
-    h1 .line > span { display: inline-block; opacity: 0; transform: translateY(.35em); filter: blur(8px); animation: rise 1s cubic-bezier(.2,.8,.2,1) forwards; }
+    h1 .line > span { display: inline-block; opacity: .001; transform: translateY(.3em); animation: rise .8s cubic-bezier(.2,.8,.2,1) forwards; }
     h1 .line:nth-child(2) > span { animation-delay: .15s; }
-    @keyframes rise { to { opacity: 1; transform: none; filter: none; } }
+    @keyframes rise { to { opacity: 1; transform: none; } }
     .lede { font-size: clamp(17px, 1.4vw, 20px); color: var(--dim); max-width: 36rem; margin: 0 0 32px; font-weight: 300; }
     .lede strong { color: var(--ink); font-weight: 500; }
     .cta-row { display: flex; flex-wrap: wrap; gap: 12px; }
@@ -222,9 +242,8 @@
     /* Terminal */
     .term {
       position: relative; border-radius: var(--radius); overflow: hidden;
-      background: color-mix(in srgb, var(--panel-solid) 78%, transparent);
+      background: color-mix(in srgb, var(--panel-solid) 92%, transparent);
       border: 1px solid var(--line-strong); box-shadow: var(--glow);
-      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
       transform: perspective(1200px) rotateY(-8deg) rotateX(4deg);
       transition: transform .6s cubic-bezier(.2,.8,.2,1);
     }
@@ -317,7 +336,7 @@
     .card .ico svg { width: 24px; height: 24px; }
     .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 18px; }
     .tags span {
-      font-family: var(--mono); font-size: 11px; color: var(--mute); padding: 4px 9px;
+      font-family: var(--mono); font-size: 12px; color: var(--mute); padding: 4px 10px;
       border: 1px solid var(--line); border-radius: 999px;
     }
     .c-ai { grid-column: span 4; grid-row: span 2; min-height: 540px; }
@@ -343,13 +362,13 @@
       font: 500 16px/1.35 var(--sans); transition: border-color .25s, background .25s, transform .25s;
     }
     .chip:hover { border-color: var(--line-strong); transform: translateX(4px); }
-    .chip[aria-pressed="true"] {
+    .chip[aria-checked="true"] {
       border-color: var(--cyan); background: color-mix(in srgb, var(--cyan) 8%, transparent);
     }
     .chip .k {
       font-family: var(--mono); font-size: 12px; color: var(--mute); width: 28px; flex: none;
     }
-    .chip[aria-pressed="true"] .k { color: var(--cyan); }
+    .chip[aria-checked="true"] .k { color: var(--cyan); }
     .plan {
       position: sticky; top: 100px; border-radius: var(--radius); padding: 30px;
       background: color-mix(in srgb, var(--panel-solid) 85%, transparent);
@@ -477,7 +496,7 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
       .reveal { opacity: 1; transform: none; }
-      h1 .line > span { opacity: 1; transform: none; filter: none; }
+      h1 .line > span { opacity: 1; transform: none; }
       .statement .word { opacity: 1; }
       .marquee-track { animation: none; }
       .term { transform: none; }
@@ -633,13 +652,13 @@
         <h2 class="reveal" id="diag-title">What’s <em>slowing you down</em>?</h2>
         <p class="section-lede reveal">Pick the one that stings most. Here’s how a first engagement would usually run.</p>
         <div class="diag">
-          <div class="chips reveal" role="group" aria-label="Choose your biggest challenge">
-            <button class="chip" type="button" data-k="ai" aria-pressed="true"><span class="k">/01</span>We need AI in the product — properly</button>
-            <button class="chip" type="button" data-k="legacy" aria-pressed="false"><span class="k">/02</span>Our legacy codebase is holding us back</button>
-            <button class="chip" type="button" data-k="cloud" aria-pressed="false"><span class="k">/03</span>The cloud bill is out of control</button>
-            <button class="chip" type="button" data-k="ship" aria-pressed="false"><span class="k">/04</span>Releases are slow and scary</button>
-            <button class="chip" type="button" data-k="perf" aria-pressed="false"><span class="k">/05</span>It’s just too slow</button>
-            <button class="chip" type="button" data-k="lead" aria-pressed="false"><span class="k">/06</span>We need senior technical leadership</button>
+          <div class="chips reveal" role="radiogroup" aria-label="Choose your biggest challenge">
+            <button class="chip" type="button" role="radio" data-k="ai" aria-checked="true" tabindex="0"><span class="k">/01</span>We need AI in the product — properly</button>
+            <button class="chip" type="button" role="radio" data-k="legacy" aria-checked="false" tabindex="-1"><span class="k">/02</span>Our legacy codebase is holding us back</button>
+            <button class="chip" type="button" role="radio" data-k="cloud" aria-checked="false" tabindex="-1"><span class="k">/03</span>The cloud bill is out of control</button>
+            <button class="chip" type="button" role="radio" data-k="ship" aria-checked="false" tabindex="-1"><span class="k">/04</span>Releases are slow and scary</button>
+            <button class="chip" type="button" role="radio" data-k="perf" aria-checked="false" tabindex="-1"><span class="k">/05</span>It’s just too slow</button>
+            <button class="chip" type="button" role="radio" data-k="lead" aria-checked="false" tabindex="-1"><span class="k">/06</span>We need senior technical leadership</button>
           </div>
           <div class="plan reveal" aria-live="polite">
             <div class="plan-head"><span id="plan-id">plan/ai-in-product</span><span class="live">generated</span></div>
@@ -726,9 +745,12 @@
     document.getElementById("yr").textContent = new Date().getFullYear();
 
     /* Theme */
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    const syncTheme = () => metaTheme.setAttribute("content", root.dataset.theme === "light" ? "#f6f7fb" : "#05060b");
+    syncTheme();
     document.getElementById("theme").addEventListener("click", () => {
       const next = root.dataset.theme === "light" ? "dark" : "light";
-      const apply = () => { root.dataset.theme = next; try { localStorage.setItem("nf-theme", next); } catch (e) {} };
+      const apply = () => { root.dataset.theme = next; syncTheme(); try { localStorage.setItem("nf-theme", next); } catch (e) {} };
       if (document.startViewTransition && !reduce) document.startViewTransition(apply); else apply();
     });
 
@@ -838,15 +860,24 @@
       const p = plans[k];
       pid.textContent = "plan/" + p.id;
       body.innerHTML = `<h3>${esc(p.t)}</h3><p>${esc(p.d)}</p><ol class="steps">${p.s.map(([b, s]) => `<li><div><b>${esc(b)}</b><span>${esc(s)}</span></div></li>`).join("")}</ol>`;
-      chips.forEach((c) => c.setAttribute("aria-pressed", c.dataset.k === k));
+      chips.forEach((c) => { const on = c.dataset.k === k; c.setAttribute("aria-checked", on); c.tabIndex = on ? 0 : -1; });
     };
-    chips.forEach((c) => c.addEventListener("click", () => render(c.dataset.k)));
+    chips.forEach((c, i) => {
+      c.addEventListener("click", () => render(c.dataset.k));
+      c.addEventListener("keydown", (e) => {
+        const step = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+        const to = e.key === "Home" ? 0 : e.key === "End" ? chips.length - 1 : step ? (i + step + chips.length) % chips.length : -1;
+        if (to < 0) return;
+        e.preventDefault(); chips[to].focus(); render(chips[to].dataset.k);
+      });
+    });
     render("ai");
 
     /* Hero particle field: two attractors fusing, with links between near particles */
     const cv = document.getElementById("field"), ctx = cv.getContext("2d");
     let W = 0, H = 0, dpr = 1, pts = [], running = true, mouse = { x: -1e4, y: -1e4 };
-    const N = () => Math.round(Math.min(110, Math.max(45, (W * H) / 16000)));
+    const lowPower = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.connection && navigator.connection.saveData);
+    const N = () => Math.round(Math.min(110, Math.max(45, (W * H) / 16000)) * (lowPower ? 0.55 : 1));
     const resize = () => {
       dpr = Math.min(devicePixelRatio || 1, 2);
       W = cv.clientWidth; H = cv.clientHeight;
