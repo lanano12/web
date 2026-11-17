@@ -1,0 +1,316 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 720 640"
+  class="device-svg"
+  role="img"
+  aria-labelledby="device-title device-desc"
+>
+  <title id="device-title">Exploded view of a connected embedded device</title>
+  <desc id="device-desc">
+    An illustrative circuit board, firmware plane, trust boundary and release evidence. Use the
+    layer controls to explore each part.
+  </desc>
+  <style>
+    .device-annotation {
+      fill: #a8bb9f;
+      stroke: none;
+      font: 9px monospace;
+      letter-spacing: 1px;
+    }
+    .device-annotation path {
+      fill: none;
+      stroke: #708a6b;
+      stroke-width: 1;
+    }
+  </style>
+  <defs>
+    <linearGradient id="board-face" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#233c34" />
+      <stop offset=".5" stop-color="#122822" />
+      <stop offset="1" stop-color="#0a1714" />
+    </linearGradient>
+    <linearGradient id="chip-face" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#34483e" />
+      <stop offset="1" stop-color="#101c17" />
+    </linearGradient>
+    <linearGradient id="plane-face" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#b5ff68" stop-opacity=".13" />
+      <stop offset="1" stop-color="#6bd8ca" stop-opacity=".02" />
+    </linearGradient>
+    <radialGradient id="ground-glow">
+      <stop stop-color="#a4ef70" stop-opacity=".16" />
+      <stop offset="1" stop-color="#a4ef70" stop-opacity="0" />
+    </radialGradient>
+    <pattern id="pcb-grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M20 0H0v20" fill="none" stroke="#83be93" stroke-opacity=".11" stroke-width=".6" />
+    </pattern>
+    <filter id="led-glow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="3" />
+    </filter>
+  </defs>
+  <ellipse cx="360" cy="493" rx="320" ry="104" fill="url(#ground-glow)" />
+  <g class="diagram-guides" fill="none" stroke="#799e88" stroke-opacity=".2" stroke-width="1">
+    <path d="M360 72v484M65 310l590 0" stroke-dasharray="3 9" />
+    <ellipse cx="360" cy="465" rx="286" ry="115" />
+    <ellipse cx="360" cy="465" rx="316" ry="130" stroke-dasharray="2 10" />
+  </g>
+  <g class="device-layer layer-hardware">
+    <g transform="matrix(.86 .43 -.86 .43 360 278)">
+      <path
+        d="M0 0H310V310H0z"
+        transform="translate(0 18)"
+        fill="#081511"
+        stroke="#325443"
+        stroke-width="1.3"
+      />
+      <path d="M0 310v18h310v-18M310 0l18 18v310l-18-18" fill="#10271e" stroke="#345541" />
+      <rect
+        width="310"
+        height="310"
+        rx="10"
+        fill="url(#board-face)"
+        stroke="#719e79"
+        stroke-width="1.5"
+      />
+      <rect
+        x="10"
+        y="10"
+        width="290"
+        height="290"
+        rx="4"
+        fill="url(#pcb-grid)"
+        stroke="#55785c"
+        stroke-opacity=".4"
+      />
+      <g fill="none" stroke="#7aab70" stroke-width="1.7" opacity=".6">
+        <path
+          d="M28 70h52l38 38v28M28 88h45l28 28v29M40 265v-40l60-60h30M62 278v-44l51-51h20M174 30v60l-15 15v24M192 30v60l-15 15v24M270 70h-35l-40 40v20M278 100h-30l-40 40h-25M280 220h-30l-45-45h-25M268 245h-28l-47-47h-25M138 280v-50l20-20v-30M165 280v-45l15-15v-40M30 190h35l48-48h20"
+        />
+      </g>
+      <circle cx="18" cy="18" r="7" fill="#0a1511" stroke="#5e8060" stroke-width="3" />
+      <circle cx="18" cy="18" r="2" fill="#a3bc89" />
+      <circle cx="292" cy="18" r="7" fill="#0a1511" stroke="#5e8060" stroke-width="3" />
+      <circle cx="292" cy="18" r="2" fill="#a3bc89" />
+      <circle cx="18" cy="292" r="7" fill="#0a1511" stroke="#5e8060" stroke-width="3" />
+      <circle cx="18" cy="292" r="2" fill="#a3bc89" />
+      <circle cx="292" cy="292" r="7" fill="#0a1511" stroke="#5e8060" stroke-width="3" />
+      <circle cx="292" cy="292" r="2" fill="#a3bc89" />
+      <rect x="117" y="102" width="3" height="12" fill="#95b58c" />
+      <rect x="117" y="194" width="3" height="12" fill="#95b58c" />
+      <rect x="102" y="117" width="12" height="3" fill="#95b58c" />
+      <rect x="194" y="117" width="12" height="3" fill="#95b58c" />
+      <rect x="125" y="102" width="3" height="12" fill="#95b58c" />
+      <rect x="125" y="194" width="3" height="12" fill="#95b58c" />
+      <rect x="102" y="125" width="12" height="3" fill="#95b58c" />
+      <rect x="194" y="125" width="12" height="3" fill="#95b58c" />
+      <rect x="133" y="102" width="3" height="12" fill="#95b58c" />
+      <rect x="133" y="194" width="3" height="12" fill="#95b58c" />
+      <rect x="102" y="133" width="12" height="3" fill="#95b58c" />
+      <rect x="194" y="133" width="12" height="3" fill="#95b58c" />
+      <rect x="141" y="102" width="3" height="12" fill="#95b58c" />
+      <rect x="141" y="194" width="3" height="12" fill="#95b58c" />
+      <rect x="102" y="141" width="12" height="3" fill="#95b58c" />
+      <rect x="194" y="141" width="12" height="3" fill="#95b58c" />
+      <rect x="149" y="102" width="3" height="12" fill="#95b58c" />
+      <rect x="149" y="194" width="3" height="12" fill="#95b58c" />
+      <rect x="102" y="149" width="12" height="3" fill="#95b58c" />
+      <rect x="194" y="149" width="12" height="3" fill="#95b58c" />
+      <rect x="157" y="102" width="3" height="12" fill="#95b58c" />
+      <rect x="157" y="194" width="3" height="12" fill="#95b58c" />
+      <rect x="102" y="157" width="12" height="3" fill="#95b58c" />
+      <rect x="194" y="157" width="12" height="3" fill="#95b58c" />
+      <rect x="165" y="102" width="3" height="12" fill="#95b58c" />
+      <rect x="165" y="194" width="3" height="12" fill="#95b58c" />
+      <rect x="102" y="165" width="12" height="3" fill="#95b58c" />
+      <rect x="194" y="165" width="12" height="3" fill="#95b58c" />
+      <rect x="173" y="102" width="3" height="12" fill="#95b58c" />
+      <rect x="173" y="194" width="3" height="12" fill="#95b58c" />
+      <rect x="102" y="173" width="12" height="3" fill="#95b58c" />
+      <rect x="194" y="173" width="12" height="3" fill="#95b58c" />
+      <rect x="181" y="102" width="3" height="12" fill="#95b58c" />
+      <rect x="181" y="194" width="3" height="12" fill="#95b58c" />
+      <rect x="102" y="181" width="12" height="3" fill="#95b58c" />
+      <rect x="194" y="181" width="12" height="3" fill="#95b58c" />
+      <rect x="189" y="102" width="3" height="12" fill="#95b58c" />
+      <rect x="189" y="194" width="3" height="12" fill="#95b58c" />
+      <rect x="102" y="189" width="12" height="3" fill="#95b58c" />
+      <rect x="194" y="189" width="12" height="3" fill="#95b58c" />
+      <rect x="113" y="113" width="81" height="81" rx="3" fill="#08120e" stroke="#86a77e" />
+      <rect x="121" y="121" width="65" height="65" rx="2" fill="url(#chip-face)" stroke="#516b4c" />
+      <text
+        x="153"
+        y="153"
+        text-anchor="middle"
+        fill="#b9d3a2"
+        font-family="monospace"
+        font-size="13"
+      >
+        MCU
+      </text>
+      <text
+        x="153"
+        y="170"
+        text-anchor="middle"
+        fill="#91a77e"
+        font-family="monospace"
+        font-size="8"
+      >
+        NF / 001
+      </text>
+      <rect x="40" y="40" width="40" height="24" rx="2" fill="#0d1913" stroke="#658960" />
+      <path
+        d="M45 36v4m8-4v4m8-4v4m8-4v4M45 64v4m8-4v4m8-4v4m8-4v4"
+        stroke="#adc99a"
+        stroke-width="3"
+      />
+      <rect x="212" y="170" width="40" height="24" rx="2" fill="#0d1913" stroke="#658960" />
+      <path
+        d="M217 166v4m8-4v4m8-4v4m8-4v4M217 194v4m8-4v4m8-4v4m8-4v4"
+        stroke="#adc99a"
+        stroke-width="3"
+      />
+      <rect x="73" y="230" width="40" height="24" rx="2" fill="#0d1913" stroke="#658960" />
+      <path
+        d="M78 226v4m8-4v4m8-4v4m8-4v4M78 254v4m8-4v4m8-4v4m8-4v4"
+        stroke="#adc99a"
+        stroke-width="3"
+      />
+      <rect x="220" y="40" width="40" height="24" rx="2" fill="#0d1913" stroke="#658960" />
+      <path
+        d="M225 36v4m8-4v4m8-4v4m8-4v4M225 64v4m8-4v4m8-4v4m8-4v4"
+        stroke="#adc99a"
+        stroke-width="3"
+      />
+      <rect x="30" y="127" width="7" height="14" rx="1" fill="#3d5040" stroke="#99ac82" />
+      <rect x="44" y="127" width="7" height="14" rx="1" fill="#3d5040" stroke="#99ac82" />
+      <rect x="60" y="127" width="7" height="14" rx="1" fill="#3d5040" stroke="#99ac82" />
+      <rect x="225" y="255" width="7" height="14" rx="1" fill="#3d5040" stroke="#99ac82" />
+      <rect x="240" y="255" width="7" height="14" rx="1" fill="#3d5040" stroke="#99ac82" />
+      <rect x="255" y="255" width="7" height="14" rx="1" fill="#3d5040" stroke="#99ac82" />
+      <rect x="229" y="116" width="7" height="14" rx="1" fill="#3d5040" stroke="#99ac82" />
+      <rect x="244" y="116" width="7" height="14" rx="1" fill="#3d5040" stroke="#99ac82" />
+      <rect x="112" y="13" width="7" height="21" fill="#b2ae79" />
+      <rect x="13" y="211" width="20" height="6" fill="#b2ae79" />
+      <rect x="123" y="13" width="7" height="21" fill="#b2ae79" />
+      <rect x="13" y="221" width="20" height="6" fill="#b2ae79" />
+      <rect x="134" y="13" width="7" height="21" fill="#b2ae79" />
+      <rect x="13" y="231" width="20" height="6" fill="#b2ae79" />
+      <rect x="145" y="13" width="7" height="21" fill="#b2ae79" />
+      <rect x="13" y="241" width="20" height="6" fill="#b2ae79" />
+      <rect x="156" y="13" width="7" height="21" fill="#b2ae79" />
+      <rect x="13" y="251" width="20" height="6" fill="#b2ae79" />
+      <rect x="167" y="13" width="7" height="21" fill="#b2ae79" />
+      <rect x="13" y="261" width="20" height="6" fill="#b2ae79" />
+      <rect x="178" y="13" width="7" height="21" fill="#b2ae79" />
+      <rect x="13" y="271" width="20" height="6" fill="#b2ae79" />
+      <circle cx="268" cy="158" r="4" fill="#b5ff68" />
+      <circle cx="268" cy="158" r="9" fill="#b5ff68" opacity=".4" filter="url(#led-glow)" />
+    </g>
+    <g class="device-annotation">
+      <path d="M116 429H55v24" />
+      <text x="54" y="473">01 / HARDWARE</text>
+    </g>
+  </g>
+  <g class="device-layer layer-firmware">
+    <g transform="matrix(.86 .43 -.86 .43 360 183)">
+      <rect
+        width="310"
+        height="310"
+        rx="10"
+        fill="url(#plane-face)"
+        stroke="#a5e879"
+        stroke-width="1.2"
+      />
+      <rect
+        x="16"
+        y="16"
+        width="278"
+        height="278"
+        rx="3"
+        fill="none"
+        stroke="#a5e879"
+        stroke-opacity=".2"
+      />
+      <g stroke="#a9ec7e" fill="none" stroke-width="1.5">
+        <path d="M45 80h65l40 40v95h70" />
+        <path d="M70 245v-50l80-75h90" />
+        <path d="M150 120V57h60" />
+      </g>
+      <g class="signal-flow" stroke="#d6ff9b" fill="none" stroke-width="3">
+        <path d="M45 80h65l40 40v95h70" />
+        <path d="M70 245v-50l80-75h90" />
+      </g>
+      <g fill="#0e2517" stroke="#a5e879">
+        <rect x="30" y="65" width="46" height="30" rx="3" />
+        <rect x="120" y="105" width="60" height="38" rx="3" />
+        <rect x="210" y="200" width="56" height="30" rx="3" />
+        <rect x="205" y="40" width="55" height="30" rx="3" />
+      </g>
+      <g fill="#d0f7af" font-family="monospace" font-size="9" text-anchor="middle">
+        <text x="53" y="84">INPUT</text>
+        <text x="150" y="129">EXECUTE</text>
+        <text x="238" y="219">OUTPUT</text>
+        <text x="232" y="59">VERIFY</text>
+      </g>
+      <g fill="#d0f7af">
+        <circle cx="70" cy="245" r="3" />
+        <circle cx="240" cy="120" r="3" />
+      </g>
+    </g>
+    <g class="device-annotation">
+      <path d="M590 325h65v-30" />
+      <text x="655" y="282" text-anchor="end">02 / FIRMWARE</text>
+    </g>
+  </g>
+  <g class="device-layer layer-security">
+    <g transform="matrix(.86 .43 -.86 .43 360 96)">
+      <rect
+        width="310"
+        height="310"
+        rx="10"
+        fill="url(#plane-face)"
+        stroke="#71d7c1"
+        stroke-width="1"
+        stroke-dasharray="6 5"
+      />
+      <path
+        d="M65 65h180v180H65z"
+        fill="#75e1bc"
+        fill-opacity=".025"
+        stroke="#7dd5bc"
+        stroke-width="1"
+      />
+      <path
+        d="M155 83l52 21v45c0 40-52 76-52 76s-52-36-52-76v-45z"
+        fill="#0c201a"
+        fill-opacity=".7"
+        stroke="#a4f1c6"
+        stroke-width="1.5"
+      />
+      <path d="M137 150l13 13 27-31" fill="none" stroke="#b5ff68" stroke-width="3" />
+      <circle cx="65" cy="65" r="4" fill="#7dd5bc" />
+      <circle cx="245" cy="245" r="4" fill="#7dd5bc" />
+    </g>
+    <g class="device-annotation">
+      <path d="M116 228H55v-45" />
+      <text x="54" y="169">03 / TRUST BOUNDARY</text>
+    </g>
+  </g>
+  <g class="device-layer layer-evidence">
+    <g transform="translate(560 94)">
+      <path d="M0 0h65l15 15v78H0z" fill="#11221d" stroke="#a4bd8e" stroke-width="1" />
+      <path
+        d="M65 0v15h15M12 29h46M12 39h38M12 49h46M12 59h26"
+        stroke="#b5d29e"
+        stroke-opacity=".65"
+      />
+      <circle cx="61" cy="75" r="17" fill="#172b1b" stroke="#b5ff68" />
+      <path d="M53 75l6 6 11-13" fill="none" stroke="#b5ff68" stroke-width="2" />
+    </g>
+    <path d="M560 162l-35 30v65l-42 22" fill="none" stroke="#c9e8a5" stroke-dasharray="3 5" />
+    <g class="device-annotation"><text x="600" y="76" text-anchor="middle">04 / EVIDENCE</text></g>
+  </g>
+  <g fill="#719482" font-family="monospace" font-size="9" letter-spacing="2">
+    <text x="360" y="593" text-anchor="middle">HARDWARE → CODE → TRUST → EVIDENCE</text>
+  </g>
+</svg>

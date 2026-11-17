@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Generate NexaFusion's inner pages (services, insights) and sitemap.xml.
+"""Generate NexaFusion’s pages, feed and sitemap.
 
-The homepage (index.html) is hand-written. Everything else is generated from
-the content below so the header, footer, metadata and styling stay consistent.
+Homepage content lives in tools/home.html and tools/device.svg. Service and
+article content lives below. All pages share the same navigation and metadata.
 
     python3 tools/build.py
 
@@ -12,12 +12,14 @@ from __future__ import annotations
 
 import html
 import json
+from urllib.parse import quote
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://www.nexafusion.io"
-EMAIL = "hello@nexafusion.io"  # TODO: replace with a real, monitored mailbox
-TODAY = "2026-11-16"
+EMAIL = "hello@nexafusion.io"
+TODAY = "2026-11-17"
+ARTICLE_DATE = "2026-11-16"
 
 CSP = ("default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; "
        "img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; "
@@ -27,7 +29,7 @@ ARROW = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-widt
          'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>')
 
 LOGO = '''<svg viewBox="0 0 64 64" aria-hidden="true">
-        <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6fd8f2"/><stop offset=".55" stop-color="#a08cff"/><stop offset="1" stop-color="#f08ac6"/></linearGradient></defs>
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b5ff68"/><stop offset=".55" stop-color="#74e2bb"/><stop offset="1" stop-color="#6bcfe2"/></linearGradient></defs>
         <rect x="2" y="2" width="60" height="60" rx="16" fill="none" stroke="url(#lg)" stroke-width="3" opacity=".5"/>
         <path d="M20 44V20l24 24V20" fill="none" stroke="url(#lg)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>'''
@@ -38,158 +40,70 @@ LOGO = '''<svg viewBox="0 0 64 64" aria-hidden="true">
 
 SERVICES = [
     {
-        "slug": "cyber-security",
-        "name": "Cyber security & resilience",
-        "title": "Secure by design — and able to prove it",
-        "lede": "Threat modelling, supply-chain security and secure-development practice that engineers actually follow, plus the evidence customers and regulators now expect.",
+        "slug": "embedded-software",
+        "name": "Embedded software engineering",
+        "title": "Software that understands the hardware.",
+        "lede": "Embedded software development, integration and debugging, with security and testability considered from the first design decision.",
         "fit": [
-            "You sell software or connected products into the EU and need to prepare for the Cyber Resilience Act.",
-            "Enterprise customers send security questionnaires you struggle to answer.",
-            "A pen test found issues and you want them fixed at the root, not patched.",
+            "You need firmware developed or integrated with an existing product.",
+            "An intermittent fault, timing issue or hardware interaction is holding up delivery.",
+            "You need to change an established codebase without losing confidence in the behaviour that already works.",
         ],
         "what": [
-            ("Threat modelling", "Map assets, attack surfaces and abuse cases with your engineers, not just for them."),
-            ("Supply-chain security", "SBOMs, dependency policy, signed builds and provenance for what you ship."),
-            ("Secure SDLC", "Code review checklists, secrets handling, SAST and fuzzing that fit your delivery flow."),
-            ("Vulnerability handling", "Intake, triage, disclosure and patch processes — including CRA reporting readiness."),
-            ("Remediation", "Fix the findings that matter, in code, with tests so they stay fixed."),
-            ("Evidence", "Technical documentation and records that stand up to customer and regulatory scrutiny."),
+            ("Firmware development", "Implementation close to the hardware, with explicit interfaces, ownership and resource constraints."),
+            ("Hardware integration", "Bring software and hardware together, investigate peripheral interactions and make failures reproducible."),
+            ("Debugging & root cause", "Follow the evidence through code, traces and device behaviour to find the actual fault."),
+            ("Testing & verification", "Build repeatable tests around critical behaviour and the changes your product needs."),
+            ("Codebase improvement", "Review and improve existing C and C++ incrementally, with tests around the behaviour that matters."),
+            ("Release & handover", "Reproducible builds, clear release records and documentation your team can maintain."),
         ],
-        "deliver": ["Threat model and risk register", "SBOM pipeline", "Vulnerability-handling process", "CRA gap analysis and plan"],
-        "tags": ["Threat modelling", "SBOM", "Fuzzing", "EU CRA", "Secure SDLC"],
-        "related": ["eu-cyber-resilience-act", "memory-safety-roadmaps"],
-    },
-    {
-        "slug": "cra-readiness",
-        "name": "EU CRA readiness",
-        "title": "EU Cyber Resilience Act readiness",
-        "lede": "Reporting duties have applied since 11 September 2026 and the main obligations follow on 11 December 2027. We turn the regulation into an engineering plan — and help you deliver it.",
-        "fit": [
-            "You sell software or connected products to customers in the EU — including from the UK.",
-            "You aren’t sure whether you could report an actively exploited vulnerability within 24 hours.",
-            "You need SBOMs, a support policy and technical documentation, but don’t know where to start.",
-        ],
-        "what": [
-            ("Scope & classification", "Which products are in scope, and whether any fall into the “important” or “critical” categories."),
-            ("Gap analysis", "Your products and processes measured against the CRA’s essential requirements, with a prioritised plan."),
-            ("Reporting readiness", "Vulnerability intake, 24-hour triage, and a rehearsed path to ENISA early warnings and notifications."),
-            ("SBOM pipeline", "Machine-readable SBOMs generated in your builds and kept up to date with each release."),
-            ("Secure development evidence", "Threat models, secure defaults, vulnerability scanning and update processes — recorded as you go."),
-            ("Technical documentation", "The documentation set for conformity assessment, built from real engineering artefacts."),
-        ],
-        "deliver": ["Scope and classification of your products", "CRA gap analysis and plan to December 2027", "Working vulnerability-handling and reporting process", "SBOM pipeline and documentation set"],
-        "tags": ["CRA gap analysis", "24/72h reporting", "SBOM", "Technical documentation"],
-        "related": ["eu-cyber-resilience-act"],
-    },
-    {
-        "slug": "ai-compilers",
-        "name": "AI compilers & performance",
-        "title": "Faster models, smaller bills",
-        "lede": "Compiler passes, custom kernels and profiling from the model graph down to the silicon — so inference and training run faster on the hardware you already pay for.",
-        "fit": [
-            "Inference latency or GPU cost is limiting what you can ship.",
-            "You are bringing models to new or custom accelerators.",
-            "Hot paths in your native code need serious performance work.",
-        ],
-        "what": [
-            ("Profiling & roofline analysis", "Trace from framework to kernel to find whether you are compute-, memory- or launch-bound."),
-            ("Graph compilation", "Fusion, layout and quantisation passes with torch.compile, XLA or MLIR-based stacks."),
-            ("Custom kernels", "Triton or CUDA kernels for the operations that dominate your profile."),
-            ("Serving optimisation", "Batching, KV-cache management and speculative decoding for LLM inference."),
-            ("Accelerator bring-up", "MLIR / LLVM lowering for new hardware targets."),
-            ("Regression guards", "Benchmarks and performance budgets in CI so gains don’t quietly erode."),
-        ],
-        "deliver": ["Profile report with ranked opportunities", "Optimised kernels or compiler passes", "Before/after benchmarks", "CI performance budgets"],
-        "tags": ["MLIR", "LLVM", "Triton", "CUDA", "Profiling"],
-        "related": ["inference-cost-compilers"],
-    },
-    {
-        "slug": "rust-cpp",
-        "name": "Rust & C++ systems",
-        "title": "Memory-safe Rust & C++ — without the big-bang rewrite",
-        "lede": "New components in Rust, existing C and C++ hardened and modernised, and a memory-safety roadmap your customers and auditors can read.",
-        "fit": [
-            "You maintain a large C or C++ codebase that is hard to change safely.",
-            "Customers or regulators are asking about memory safety.",
-            "You want to introduce Rust but don’t know where to start.",
-        ],
-        "what": [
-            ("Memory-safety roadmap", "Inventory, risk-rank components by exposure and publish a credible, staged plan."),
-            ("Modern C++ hardening", "Current toolchains, sanitisers, hardened standard-library modes, static analysis and fuzzing in CI."),
-            ("Rust adoption", "Pick the right first component, design the FFI boundary and set up build, test and review."),
-            ("Interop done properly", "Safe wrappers with cxx or bindgen, clear ownership rules and no undefined behaviour at the seams."),
-            ("Characterisation tests", "Pin today’s behaviour so modernisation never changes results by accident."),
-            ("Performance", "Profile before and after so safety never quietly costs you latency."),
-        ],
-        "deliver": ["Published memory-safety roadmap", "Hardened CI with sanitisers and fuzzing", "First Rust component in production", "Interop and coding guidelines"],
-        "tags": ["Rust", "C++23", "FFI / interop", "Sanitisers", "Fuzzing"],
+        "deliver": ["Reviewable implementation in your repository", "Tests and a reproducible verification method", "Recorded design decisions and known limitations", "Build, release and handover documentation"],
+        "tags": ["Firmware", "C / C++", "Hardware integration", "Debugging", "Verification"],
         "related": ["memory-safety-roadmaps"],
     },
     {
-        "slug": "ai-agents",
-        "name": "AI & agent engineering",
-        "title": "AI & agent engineering that survives production",
-        "lede": "Agents and LLM features that call your real systems — with evaluation, guardrails, observability and cost control designed in from the first commit.",
+        "slug": "cyber-security",
+        "name": "Embedded product security",
+        "title": "Know the boundaries. Engineer the defences.",
+        "lede": "Product cyber security grounded in the device: its firmware, interfaces, update mechanism and the people who maintain it.",
         "fit": [
-            "You have an AI prototype that impresses in demos but you don’t trust it with customers.",
-            "You want agents that act on internal tools and data, safely.",
-            "Your LLM bill or latency is growing faster than usage.",
+            "You need a clear view of your product’s attack surface and the risks worth addressing first.",
+            "You have security findings to resolve in firmware or an existing codebase.",
+            "You need security decisions and verification evidence that your engineers can explain.",
         ],
         "what": [
-            ("Use-case triage", "Rank candidate features by value, risk and data readiness, and drop the weak ones early."),
-            ("Evaluation harnesses", "Define what “good” means, build test sets and automated evals, and gate releases on them."),
-            ("Tools, retrieval & MCP", "Typed tool interfaces, retrieval over your own data and Model Context Protocol servers."),
-            ("Guardrails & security", "Permissioning, prompt-injection defences, red-teaming and human-in-the-loop where it matters."),
-            ("LLMOps", "Tracing, cost budgets, model routing and staged rollouts behind feature flags."),
-            ("Team enablement", "Patterns and reviews so your engineers can build the next feature without us."),
+            ("Threat modelling", "Map assets, entry points and trust boundaries. Connect each significant risk to an engineering decision."),
+            ("Firmware hardening", "Review exposed interfaces, input handling and privilege boundaries, then address the findings in code."),
+            ("Update security", "Review authentication, version policy, recovery and failure behaviour across the product’s update path."),
+            ("Supply-chain visibility", "Identify software dependencies and build a maintainable SBOM and vulnerability review process."),
+            ("Security verification", "Use focused tests, static analysis and fuzzing where they provide useful evidence for the risks identified."),
+            ("Vulnerability handling", "Connect security intake, triage, remediation and release records so reports have an owner and a path to resolution."),
         ],
-        "deliver": ["Prioritised use-case map", "Evaluation suite wired into CI", "Production agent or feature behind a flag", "Runbooks and cost dashboard"],
-        "tags": ["Tool use / MCP", "RAG", "Evals", "LLMOps", "Guardrails"],
-        "related": ["inference-cost-compilers"],
+        "deliver": ["Product threat model and prioritised findings", "Reviewable remediation and verification evidence", "Dependency and vulnerability visibility", "Documented decisions, residual risks and next steps"],
+        "tags": ["Threat modelling", "Firmware security", "Secure updates", "SBOM", "Fuzzing"],
+        "related": ["memory-safety-roadmaps", "eu-cyber-resilience-act"],
     },
     {
-        "slug": "cloud-platform",
-        "name": "Cloud, platform & delivery",
-        "title": "Platforms that don’t page you at 3am",
-        "lede": "Infrastructure as code, paved roads for developers, fast and boring releases, and a cloud bill you can explain to finance.",
+        "slug": "cra-readiness",
+        "name": "CRA engineering readiness",
+        "title": "Build the product. Keep the evidence.",
+        "lede": "Turn Cyber Resilience Act readiness into practical engineering work: product risk assessment, vulnerability handling, software inventories and traceable technical documentation.",
         "fit": [
-            "Deploying is slow or scary, so you deploy less often.",
-            "Nobody can explain the cloud bill.",
-            "Environments drift and incidents take too long to diagnose.",
+            "You supply products with digital elements to the EU market and need an engineering readiness plan.",
+            "You need to connect existing development work to the evidence required for your product.",
+            "Your team needs a workable vulnerability-handling and reporting process.",
         ],
         "what": [
-            ("Infrastructure as code", "Terraform or Pulumi with reviewable, reproducible environments."),
-            ("CI/CD", "Parallel, cached pipelines with progressive delivery and automatic rollback."),
-            ("Observability", "OpenTelemetry tracing, useful dashboards and alerts that mean something."),
-            ("FinOps", "Cost attribution by team and feature, right-sizing and budgets enforced in code."),
-            ("Kubernetes & runtime", "Only where it earns its keep — and simpler options where it doesn’t."),
-            ("Developer experience", "Templates and golden paths so new services start production-ready."),
+            ("Engineering gap review", "Map the product, its lifecycle and existing engineering artefacts to the applicable requirements, alongside your regulatory advisers."),
+            ("Product risk assessment", "Record the attack surface, security decisions and the verification needed to support them."),
+            ("Reporting readiness", "Establish ownership and a rehearsed workflow for vulnerability and incident reporting."),
+            ("Release inventories", "Generate machine-readable SBOMs and connect them to specific product versions and build records."),
+            ("Support & updates", "Document the support period, update mechanism and vulnerability-handling process for each product."),
+            ("Technical evidence", "Connect risks, implementation, tests and release records into a maintainable documentation set."),
         ],
-        "deliver": ["IaC for all environments", "Pipeline with progressive delivery", "Observability baseline", "Cost dashboard and budgets"],
-        "tags": ["Terraform", "Kubernetes", "CI/CD", "OpenTelemetry", "FinOps"],
-        "related": [],
-    },
-    {
-        "slug": "fractional-cto",
-        "name": "Fractional CTO & due diligence",
-        "title": "Technical leadership, on tap",
-        "lede": "Experienced technical judgement without a full-time hire: architecture, roadmaps, hiring and investor-grade technical due diligence.",
-        "fit": [
-            "You are a founder or CEO without a technical co-founder.",
-            "Your team needs an outside view on architecture or delivery.",
-            "You are investing in or acquiring a software business.",
-        ],
-        "what": [
-            ("Architecture review", "A candid read of where you are, where the risks are and what to do first."),
-            ("Technology roadmap", "A plan the board understands and the team believes in."),
-            ("Hiring", "Role design, interview loops and help assessing candidates."),
-            ("Technical due diligence", "Code, architecture, security, team and scalability — with clear findings for investors."),
-            ("AI strategy", "Where AI genuinely helps your product and operations, and where it doesn’t."),
-            ("Ongoing advisory", "Regular sessions with engineering and leadership as things move."),
-        ],
-        "deliver": ["Architecture assessment", "12-month technology roadmap", "Due-diligence report", "Hiring plan"],
-        "tags": ["Architecture", "Tech DD", "Roadmaps", "Hiring"],
-        "related": [],
+        "deliver": ["Prioritised engineering readiness plan", "Product risk assessment and evidence map", "SBOM and release-record workflow", "Vulnerability-handling process and technical documentation"],
+        "tags": ["EU CRA", "Risk assessment", "SBOM", "Vulnerability handling", "Technical evidence"],
+        "related": ["eu-cyber-resilience-act"],
     },
 ]
 
@@ -200,7 +114,7 @@ ARTICLES = [
         "desc": "Why memory safety moved from a security talking point to a customer question, and how to build a roadmap that pairs hardened C++ with targeted Rust.",
         "topic": "Rust & C++",
         "read": "7 min read",
-        "service": "rust-cpp",
+        "service": "embedded-software",
         "body": """
 <p>For years, memory safety was something security teams worried about and product teams didn’t. That has changed. Government security agencies across the Five Eyes now recommend memory-safe languages, and US guidance from CISA and the FBI asked software manufacturers to publish a <strong>memory-safety roadmap</strong> for existing products by 1 January 2026. That guidance is not law — but customers, insurers and procurement teams increasingly ask the question, and “we’re thinking about it” is no longer a good answer.</p>
 
@@ -270,7 +184,7 @@ ARTICLES = [
 <ul>
   <li><strong>Early warning</strong> within 24 hours of becoming aware.</li>
   <li><strong>Notification</strong> with more detail within 72 hours.</li>
-  <li><strong>Final report</strong> within 14 days of a corrective measure being available for a vulnerability, or within one month for an incident.</li>
+  <li><strong>Final report</strong> within 14 days of a corrective measure being available for a vulnerability, or within one month of the 72-hour incident notification (with a progress report if the incident is still ongoing).</li>
 </ul>
 <p>If you don’t yet have a way to receive vulnerability reports, triage them quickly and know who makes the call to notify, that is the first gap to close.</p>
 
@@ -299,52 +213,13 @@ ARTICLES = [
   <li>Define a support period and an update process for each product.</li>
   <li>Run a gap analysis against the essential requirements and plan the work to December 2027.</li>
 </ol>
-<p class="note">This article is general guidance, not legal advice. Check the regulation and take legal advice for your specific products.</p>
-""",
-    },
-    {
-        "slug": "inference-cost-compilers",
-        "title": "Why your inference bill is a compiler problem",
-        "desc": "LLM inference is usually limited by memory bandwidth, not raw compute. That makes fusion, quantisation and kernel work the biggest levers on cost and latency.",
-        "topic": "AI compilers",
-        "read": "6 min read",
-        "service": "ai-compilers",
-        "body": """
-<p>When an AI feature gets expensive, the first instinct is to look at the model: use a smaller one, or a cheaper provider. Sometimes that is right. But if you run models yourself, a large share of the cost is often in <em>how</em> the model runs — and that is a compiler and kernel problem.</p>
-
-<h2>Bytes, not FLOPs</h2>
-<p>Generating text with a large language model happens one token at a time. For each new token, the model’s weights have to be read from GPU memory. At small batch sizes, the arithmetic per byte read is low, so the GPU spends much of its time waiting on memory rather than computing. In roofline terms, decoding is usually <strong>memory-bandwidth bound</strong>.</p>
-<p>That changes what “optimisation” means. Making the maths faster doesn’t help much. Moving fewer bytes does.</p>
-
-<h2>The levers that matter</h2>
-<h3>Batching</h3>
-<p>Serving many requests together reuses each weight read across more tokens. Continuous batching — adding and removing requests from a running batch — is now standard in serious serving stacks.</p>
-<h3>Quantisation</h3>
-<p>Storing weights in 8-bit or 4-bit formats instead of 16-bit cuts the bytes moved per token. Done carefully, with evaluation, quality loss can be small. Done carelessly, it quietly degrades your product — which is why evals come first.</p>
-<h3>Kernel fusion</h3>
-<p>Every time an intermediate result is written to GPU memory and read back, you pay for bandwidth. Fusing operations keeps data in fast on-chip memory. FlashAttention is the best-known example: it computes attention without ever materialising the full attention matrix in GPU memory.</p>
-<h3>KV-cache management</h3>
-<p>The attention cache grows with context length and concurrency. Paging and sharing it efficiently lets you serve more users per GPU.</p>
-<h3>Speculative decoding</h3>
-<p>A small draft model proposes several tokens and the large model verifies them in one pass, turning sequential work into parallel work.</p>
-
-<h2>Where compilers come in</h2>
-<p>Modern ML compilers automate much of this. <code>torch.compile</code>, XLA and MLIR-based stacks capture the model graph, fuse operations and choose memory layouts. <strong>MLIR</strong> lets compilers lower a model step by step through dialects — from high-level tensor operations down to hardware instructions — which is also how new accelerators get supported. <strong>Triton</strong> lets engineers write custom GPU kernels at the level of tiles rather than threads, for the hot operations a general compiler doesn’t handle well.</p>
-
-<h2>A sane process</h2>
-<ol>
-  <li><strong>Measure the right thing:</strong> cost per thousand tokens and p95 latency at realistic load — not a single-request benchmark.</li>
-  <li><strong>Profile:</strong> framework profilers and Nsight Systems / Nsight Compute show where time goes, kernel by kernel.</li>
-  <li><strong>Classify:</strong> compute-bound, memory-bound or launch-overhead-bound? Each needs a different fix.</li>
-  <li><strong>Fix the top items:</strong> serving configuration first, then compilation, then custom kernels for what remains.</li>
-  <li><strong>Guard the gains:</strong> benchmarks in CI so the next model or library upgrade doesn’t erase them.</li>
-</ol>
-<p>Teams that work this way often find substantial savings on the same hardware — and they understand why, which means the savings last.</p>
+<p class="note">Engineering guidance, not legal advice. Check the <a href="https://digital-strategy.ec.europa.eu/en/policies/cyber-resilience-act">European Commission’s CRA overview</a> and <a href="https://eur-lex.europa.eu/eli/reg/2024/2847/oj">Regulation (EU) 2024/2847</a> with your legal advisers for your specific products.</p>
 """,
     },
 ]
 
-NAV = [("/#services", "Services"), ("/cra-readiness/", "CRA check"), ("/#diagnose", "Diagnose"), ("/insights/", "Insights"), ("/#contact", "Contact")]
+
+NAV = [("/#services", "Expertise"), ("/#explorer", "Explore the system"), ("/insights/", "Field notes")]
 
 # --------------------------------------------------------------------------
 # Templates
@@ -373,7 +248,7 @@ def page(*, path: str, title: str, desc: str, body: str, active: str = "", ld: l
   <title>{e(title)} · NexaFusion</title>
   <meta name="description" content="{e(desc)}" />
   <link rel="canonical" href="{url}" />
-  <meta name="theme-color" content="#05060b" />
+  <meta name="theme-color" content="#080c0c" />
   <meta name="color-scheme" content="dark light" />
   <meta property="og:type" content="{og_type}" />
   <meta property="og:site_name" content="NexaFusion" />
@@ -384,17 +259,19 @@ def page(*, path: str, title: str, desc: str, body: str, active: str = "", ld: l
   <meta property="og:image" content="{SITE}/og.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="NexaFusion — embedded software, security engineered in" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="{SITE}/og.png" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/site.webmanifest" />
-  <link rel="alternate" type="application/rss+xml" title="NexaFusion Insights" href="/insights/feed.xml" />
+  <link rel="alternate" type="application/rss+xml" title="NexaFusion Field notes" href="/insights/feed.xml" />
   <link rel="preload" href="/fonts/sora.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="/assets/site.css" />
   <script src="/assets/theme-init.js"></script>
   <script src="/assets/site.js" defer></script>
   <script src="/assets/ui.js" defer></script>{ld_html}
+  <noscript><style>.top{{position:static;flex-wrap:wrap}}.nav{{display:flex;position:static;width:100%;flex-direction:row;flex-wrap:wrap;padding:0;border:0;box-shadow:none;background:none}}.nav a{{padding:8px 0;margin-right:20px}}.top-actions{{display:none}}.scene-selector,.scene-hint,.boot-controls{{display:none}}</style></noscript>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -409,7 +286,7 @@ def page(*, path: str, title: str, desc: str, body: str, active: str = "", ld: l
     <div class="top-actions">
       <button class="kbar-btn" type="button" data-kbar aria-label="Search and jump">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-        <span class="kbar-label">Ask</span><kbd class="kbar-hint">Ctrl K</kbd>
+        <span class="kbar-label">Find</span><kbd class="kbar-hint">Ctrl K</kbd>
       </button>
       <button class="icon-btn" id="theme" type="button" aria-label="Switch colour theme">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
@@ -427,11 +304,11 @@ def page(*, path: str, title: str, desc: str, body: str, active: str = "", ld: l
 
   <footer>
     <div class="wrap foot">
-      <span>© 2026 NexaFusion · Software consultancy</span>
+      <a class="footer-brand" href="/">NexaFusion<span>Embedded software. Security engineered in.</span></a>
       <nav aria-label="Footer">
-        <a href="/#services">Services</a><a href="/insights/">Insights</a><a href="/#faq">FAQ</a><a href="/#contact">Contact</a>
+        <a href="/services/embedded-software/">Embedded</a><a href="/services/cyber-security/">Security</a><a href="/services/cra-readiness/">CRA readiness</a><a href="mailto:{EMAIL}">Contact</a>
       </nav>
-      <span class="status">All systems nominal</span>
+      <span class="footer-meta">© 2026 NexaFusion · UK</span>
     </div>
   </footer>
 </body>
@@ -453,7 +330,7 @@ def contact_aside(heading: str, text: str, tags: list[str] | None = None) -> str
     return f'''<aside class="aside">
           <h2>{e(heading)}</h2>
           <p>{e(text)}</p>
-          <a class="btn" href="mailto:{EMAIL}?subject={e(heading).replace(" ", "%20")}">Start a conversation {ARROW}</a>
+          <a class="btn" href="mailto:{EMAIL}?subject={quote(heading)}">Start a conversation {ARROW}</a>
           {tag_html}
         </aside>'''
 
@@ -464,13 +341,13 @@ SVC = {s["slug"]: s for s in SERVICES}
 
 def post_card(a: dict) -> str:
     return f'''<article class="post reveal">
-            <div><time datetime="{TODAY}">16 Nov 2026</time><span class="topic">{e(a["topic"])}</span></div>
+            <div><time datetime="{ARTICLE_DATE}">16 Nov 2026</time><span class="topic">{e(a["topic"])}</span></div>
             <div><h2><a href="/insights/{a["slug"]}/">{e(a["title"])}</a></h2><p>{e(a["desc"])}</p></div>
           </article>'''
 
 
 def build_service(s: dict) -> str:
-    bc, bc_ld = crumbs(("Home", "/"), ("Services", "/#services"), (s["name"], None))
+    bc, bc_ld = crumbs(("Home", "/"), ("Expertise", "/#services"), (s["name"], None))
     what = "".join(f'<div class="mini"><h3>{e(h)}</h3><p>{e(p)}</p></div>' for h, p in s["what"])
     fit = "".join(f"<li>{e(x)}</li>" for x in s["fit"])
     deliver = "".join(f"<li>{e(x)}</li>" for x in s["deliver"])
@@ -505,9 +382,9 @@ def build_service(s: dict) -> str:
         <ul>{deliver}</ul>
         <h2>How an engagement runs</h2>
         <ol>
-          <li><strong>Diagnose (1–2 weeks).</strong> We read the code and the data, and agree the baseline and the number we expect to move.</li>
-          <li><strong>Prove (3–5 weeks).</strong> A thin, real slice in production, measured against that baseline.</li>
-          <li><strong>Scale and hand over.</strong> Widen the change with your engineers, then leave docs, runbooks and a team that owns it.</li>
+          <li><strong>Understand.</strong> Review the product, code and constraints, then agree the scope and acceptance criteria.</li>
+          <li><strong>Implement and verify.</strong> Make reviewable changes and test them against the agreed behaviour and risks.</li>
+          <li><strong>Hand over.</strong> Leave the code, build instructions, evidence and decisions in your team’s hands.</li>
         </ol>
       </div>
     </div>{related}'''
@@ -518,7 +395,7 @@ def build_service(s: dict) -> str:
 
 
 def build_article(a: dict) -> str:
-    bc, bc_ld = crumbs(("Home", "/"), ("Insights", "/insights/"), (a["title"], None))
+    bc, bc_ld = crumbs(("Home", "/"), ("Field notes", "/insights/"), (a["title"], None))
     svc = SVC[a["service"]]
     others = [x for x in ARTICLES if x["slug"] != a["slug"]]
     body = f'''    <section class="wrap page-hero">
@@ -526,7 +403,7 @@ def build_article(a: dict) -> str:
       <p class="eyebrow">{e(a["topic"])}</p>
       <h1>{e(a["title"])}</h1>
       <p class="lede">{e(a["desc"])}</p>
-      <div class="meta-row"><time datetime="{TODAY}">16 Nov 2026</time><span>{e(a["read"])}</span><span>NexaFusion</span></div>
+      <div class="meta-row"><time datetime="{ARTICLE_DATE}">16 Nov 2026</time><span>{e(a["read"])}</span><span>NexaFusion</span></div>
     </section>
 
     <div class="wrap layout">
@@ -540,31 +417,31 @@ def build_article(a: dict) -> str:
       <div class="post-list">{"".join(post_card(x) for x in others)}</div>
     </section>'''
     ld = [bc_ld, {"@context": "https://schema.org", "@type": "Article", "headline": a["title"], "description": a["desc"],
-                  "datePublished": TODAY, "dateModified": TODAY, "image": SITE + "/og.png",
+                  "datePublished": ARTICLE_DATE, "dateModified": TODAY, "image": SITE + "/og.png",
                   "author": {"@type": "Organization", "name": "NexaFusion", "url": SITE + "/"},
                   "publisher": {"@type": "Organization", "name": "NexaFusion", "url": SITE + "/"},
                   "mainEntityOfPage": f"{SITE}/insights/{a['slug']}/"}]
-    return page(path=f"/insights/{a['slug']}/", title=a["title"], desc=a["desc"], body=body, active="Insights", ld=ld, og_type="article")
+    return page(path=f"/insights/{a['slug']}/", title=a["title"], desc=a["desc"], body=body, active="Field notes", ld=ld, og_type="article")
 
 
 def build_insights_index() -> str:
-    bc, bc_ld = crumbs(("Home", "/"), ("Insights", None))
+    bc, bc_ld = crumbs(("Home", "/"), ("Field notes", None))
     body = f'''    <section class="wrap page-hero">
       {bc}
-      <p class="eyebrow">Insights</p>
-      <h1>Notes from the <em class="grad-text">engine room</em>.</h1>
-      <p class="lede">Practical writing on AI engineering, memory safety, cyber security and performance — what works, what doesn’t, and why.</p>
+      <p class="eyebrow">Field notes</p>
+      <h1>Under the <em class="grad-text">surface.</em></h1>
+      <p class="lede">Notes on product security, memory safety and the engineering behind CRA readiness.</p>
     </section>
     <section class="wrap" style="padding-bottom:40px" aria-label="Articles">
       <div class="post-list">{"".join(post_card(a) for a in ARTICLES)}</div>
     </section>'''
-    return page(path="/insights/", title="Insights", desc="Practical writing on AI engineering, Rust and memory safety, cyber security and AI compilers from NexaFusion.",
-                body=body, active="Insights", ld=[bc_ld])
+    return page(path="/insights/", title="Field notes", desc="Practical writing on embedded product security, memory safety and CRA readiness from NexaFusion.",
+                body=body, active="Field notes", ld=[bc_ld])
 
 
 CRA_SCOPE = "Do you sell or supply software, or products containing software, to customers in the EU?"
 
-# (id, question, advice if not in place, in force already?)
+# (id, question, advice if not in place, reporting priority?)
 CRA_QUESTIONS = [
     ("intake", "Can outside researchers and customers easily report a vulnerability to you (e.g. a security.txt file or a published security contact)?",
      "Publish a security contact and a security.txt file, and make sure the mailbox is monitored.", True),
@@ -600,7 +477,7 @@ def build_cra_check() -> str:
     qs = "".join(
         f'''
           <fieldset class="q">
-            <legend><span class="qn">{n:02d}</span>{e(q)}{' <span class="live-tag">In force now</span>' if live else ''}</legend>
+            <legend><span class="qn">{n:02d}</span>{e(q)}{' <span class="live-tag">Reporting priority</span>' if live else ''}</legend>
             <div class="opts">{radios(qid, yn)}</div>
           </fieldset>''' for n, (qid, q, _a, live) in enumerate(CRA_QUESTIONS, 1))
     data = {"questions": [{"id": i, "advice": a, "live": l} for i, _q, a, l in CRA_QUESTIONS], "email": EMAIL}
@@ -608,18 +485,19 @@ def build_cra_check() -> str:
       {bc}
       <p class="eyebrow">Free tool</p>
       <h1>How ready are you for the <em class="grad-text">Cyber Resilience Act</em>?</h1>
-      <p class="lede">Twelve quick questions, about three minutes. You’ll get an indicative readiness score and your biggest gaps — starting with the duties that already apply.</p>
-      <div class="meta-row"><span>Runs entirely in your browser</span><span>Nothing is sent or stored</span><span>Not legal advice</span></div>
+      <p class="lede">Twelve quick questions, about three minutes. You’ll get an indicative readiness score and your biggest gaps — starting with vulnerability-reporting readiness.</p>
+      <div class="meta-row"><span>Runs entirely in your browser</span><span>Your answers stay in this page</span><span>Not legal advice</span></div>
     </section>
 
     <section class="wrap" aria-label="CRA readiness questions">
+      <noscript><p class="note">Enable JavaScript to calculate a score. You can still read the questions and our <a href="/services/cra-readiness/">CRA engineering readiness service</a>.</p></noscript>
       <form class="cra" id="cra-form" novalidate>
           <fieldset class="q scope">
             <legend><span class="qn">00</span>{e(CRA_SCOPE)}</legend>
             <div class="opts">{radios("scope", [("yes", "Yes"), ("unsure", "Not sure"), ("no", "No")])}</div>
           </fieldset>{qs}
           <div class="cra-actions">
-            <button class="btn" type="submit">See my results {ARROW}</button>
+            <button class="btn" type="submit" disabled>See my results {ARROW}</button>
             <button class="btn ghost" type="reset">Start again</button>
             <p class="cra-error" id="cra-error" role="alert"></p>
           </div>
@@ -651,9 +529,9 @@ def build_feed() -> str:
     return f'''<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
-    <title>NexaFusion Insights</title>
+    <title>NexaFusion Field notes</title>
     <link>{SITE}/insights/</link>
-    <description>Practical writing on AI engineering, memory safety, cyber security and performance.</description>
+    <description>Practical writing on embedded product security, memory safety and CRA readiness.</description>
     <language>en-gb</language>{items}
   </channel>
 </rss>
@@ -666,6 +544,51 @@ def build_sitemap() -> str:
     return f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}\n</urlset>\n'
 
 
+LEGACY_REDIRECTS = {
+    "services/ai-compilers/index.html": "/#services",
+    "services/ai-agents/index.html": "/#services",
+    "services/cloud-platform/index.html": "/#services",
+    "services/fractional-cto/index.html": "/#services",
+    "services/rust-cpp/index.html": "/services/embedded-software/",
+    "insights/inference-cost-compilers/index.html": "/insights/",
+}
+
+
+def build_redirect(destination: str) -> str:
+    """Retire old offers without leaving incoming links at a 404."""
+    return f'''<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="{CSP}">
+<meta name="robots" content="noindex,follow">
+<meta http-equiv="refresh" content="0;url={destination}">
+<link rel="canonical" href="{SITE}{destination.split('#')[0]}">
+<link rel="stylesheet" href="/assets/site.css">
+<title>Page moved · NexaFusion</title>  <noscript><style>.top{{position:static;flex-wrap:wrap}}.nav{{display:flex;position:static;width:100%;flex-direction:row;flex-wrap:wrap;padding:0;border:0;box-shadow:none;background:none}}.nav a{{padding:8px 0;margin-right:20px}}.top-actions{{display:none}}.scene-selector,.scene-hint,.boot-controls{{display:none}}</style></noscript>
+</head>
+<body><main class="wrap page-hero"><p class="eyebrow">NexaFusion</p>
+<h1>Engineering close to the hardware.</h1>
+<p>This page has moved as we focus on embedded software, product security and CRA readiness.</p>
+<a class="btn" href="{destination}">Continue to NexaFusion →</a></main></body></html>
+'''
+
+
+def build_home() -> str:
+    body = (ROOT / "tools/home.html").read_text(encoding="utf-8")
+    body = body.replace("<!-- DEVICE -->", (ROOT / "tools/device.svg").read_text(encoding="utf-8"))
+    markup = page(path="/", title="Embedded software. Security engineered in.",
+                  desc="NexaFusion: embedded software development, product cyber security and the engineering evidence behind EU Cyber Resilience Act readiness.",
+                  body=body, ld=[{
+                      "@context": "https://schema.org", "@type": "ProfessionalService",
+                      "name": "NexaFusion", "url": SITE + "/", "email": EMAIL,
+                      "description": "Embedded software engineering, product cyber security and CRA engineering readiness.",
+                      "areaServed": "GB", "knowsAbout": ["Embedded software", "Firmware", "Product cyber security", "EU Cyber Resilience Act"],
+                  }])
+    return markup.replace("<body>", '<body class="home">').replace(
+        '<script src="/assets/ui.js" defer></script>',
+        '<script src="/assets/ui.js" defer></script>\n  <script src="/assets/explorer.js" type="module"></script>')
+
+
 def write(rel: str, text: str) -> None:
     out = ROOT / rel
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -674,6 +597,9 @@ def write(rel: str, text: str) -> None:
 
 
 def main() -> None:
+    write("index.html", build_home())
+    for old, destination in LEGACY_REDIRECTS.items():
+        write(old, build_redirect(destination))
     for s in SERVICES:
         write(f"services/{s['slug']}/index.html", build_service(s))
     for a in ARTICLES:

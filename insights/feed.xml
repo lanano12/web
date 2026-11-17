@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
-    <title>NexaFusion Insights</title>
+    <title>NexaFusion Field notes</title>
     <link>https://www.nexafusion.io/insights/</link>
-    <description>Practical writing on AI engineering, memory safety, cyber security and performance.</description>
+    <description>Practical writing on embedded product security, memory safety and CRA readiness.</description>
     <language>en-gb</language>
     <item>
       <title>Memory-safety roadmaps: Rust without the rewrite</title>
@@ -18,13 +18,6 @@
       <guid>https://www.nexafusion.io/insights/eu-cyber-resilience-act/</guid>
       <pubDate>Mon, 16 Nov 2026 09:00:00 +0000</pubDate>
       <description>Reporting duties started in September 2026 and the main obligations follow in December 2027. A practical guide for UK companies selling software into the EU.</description>
-    </item>
-    <item>
-      <title>Why your inference bill is a compiler problem</title>
-      <link>https://www.nexafusion.io/insights/inference-cost-compilers/</link>
-      <guid>https://www.nexafusion.io/insights/inference-cost-compilers/</guid>
-      <pubDate>Mon, 16 Nov 2026 09:00:00 +0000</pubDate>
-      <description>LLM inference is usually limited by memory bandwidth, not raw compute. That makes fusion, quantisation and kernel work the biggest levers on cost and latency.</description>
     </item>
   </channel>
 </rss>

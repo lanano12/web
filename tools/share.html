@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <title>NexaFusion share image source</title>
+    <style>
+      @font-face {
+        font-family: Sora;
+        src: url(/fonts/sora.woff2);
+        font-weight: 100 800;
+      }
+      @font-face {
+        font-family: Mono;
+        src: url(/fonts/jetbrains-mono.woff2);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        width: 1200px;
+        height: 630px;
+        margin: 0;
+        background: #080c0c;
+        color: #eff2e9;
+        font-family: Sora, sans-serif;
+        overflow: hidden;
+      }
+      header {
+        position: absolute;
+        top: 40px;
+        left: 50px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 23px;
+        letter-spacing: -1px;
+      }
+      header img {
+        width: 34px;
+        height: 34px;
+      }
+      h1 {
+        position: absolute;
+        top: 145px;
+        left: 50px;
+        font-size: 64px;
+        font-weight: 450;
+        letter-spacing: -4px;
+        line-height: 1.12;
+        margin: 0;
+      }
+      em {
+        color: #b5ff68;
+        font-style: normal;
+      }
+      p {
+        position: absolute;
+        left: 53px;
+        bottom: 55px;
+        font:
+          12px Mono,
+          monospace;
+        color: #a4b2a9;
+        letter-spacing: 0.5px;
+      }
+      object {
+        position: absolute;
+        width: 560px;
+        height: 500px;
+        right: 14px;
+        top: 65px;
+      }
+      footer {
+        position: absolute;
+        right: 50px;
+        bottom: 55px;
+        font:
+          12px Mono,
+          monospace;
+        color: #b5ff68;
+      }
+      .line {
+        position: absolute;
+        left: 50px;
+        right: 50px;
+        bottom: 100px;
+        border-top: 1px solid #26352e;
+      }
+    </style>
+  </head>
+  <body>
+    <header><img src="/favicon.svg" alt="" />NexaFusion</header>
+    <h1>
+      Embedded software.<br /><em>Security<br />engineered in.</em>
+    </h1>
+    <object
+      data="/tools/device.svg"
+      type="image/svg+xml"
+      aria-label="Illustrative embedded device"
+    ></object>
+    <div class="line"></div>
+    <p>EMBEDDED ENGINEERING / PRODUCT SECURITY / EU CRA</p>
+    <footer>nexafusion.io ↗</footer>
+  </body>
+</html>

@@ -1,2 +1,7 @@
-/* Apply saved theme before paint to avoid a flash. */
-try { var t = localStorage.getItem("nf-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+/* Apply only a recognised saved theme before paint. */
+try {
+  const theme = localStorage.getItem('nf-theme');
+  if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+} catch {
+  /* The default theme works without storage. */
+}

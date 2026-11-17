@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://www.nexafusion.io/</loc><lastmod>2026-11-16</lastmod></url>
-  <url><loc>https://www.nexafusion.io/cra-readiness/</loc><lastmod>2026-11-16</lastmod></url>
-  <url><loc>https://www.nexafusion.io/insights/</loc><lastmod>2026-11-16</lastmod></url>
-  <url><loc>https://www.nexafusion.io/services/cyber-security/</loc><lastmod>2026-11-16</lastmod></url>
-  <url><loc>https://www.nexafusion.io/services/cra-readiness/</loc><lastmod>2026-11-16</lastmod></url>
-  <url><loc>https://www.nexafusion.io/services/ai-compilers/</loc><lastmod>2026-11-16</lastmod></url>
-  <url><loc>https://www.nexafusion.io/services/rust-cpp/</loc><lastmod>2026-11-16</lastmod></url>
-  <url><loc>https://www.nexafusion.io/services/ai-agents/</loc><lastmod>2026-11-16</lastmod></url>
-  <url><loc>https://www.nexafusion.io/services/cloud-platform/</loc><lastmod>2026-11-16</lastmod></url>
-  <url><loc>https://www.nexafusion.io/services/fractional-cto/</loc><lastmod>2026-11-16</lastmod></url>
-  <url><loc>https://www.nexafusion.io/insights/memory-safety-roadmaps/</loc><lastmod>2026-11-16</lastmod></url>
-  <url><loc>https://www.nexafusion.io/insights/eu-cyber-resilience-act/</loc><lastmod>2026-11-16</lastmod></url>
-  <url><loc>https://www.nexafusion.io/insights/inference-cost-compilers/</loc><lastmod>2026-11-16</lastmod></url>
+  <url><loc>https://www.nexafusion.io/</loc><lastmod>2026-11-17</lastmod></url>
+  <url><loc>https://www.nexafusion.io/cra-readiness/</loc><lastmod>2026-11-17</lastmod></url>
+  <url><loc>https://www.nexafusion.io/insights/</loc><lastmod>2026-11-17</lastmod></url>
+  <url><loc>https://www.nexafusion.io/services/embedded-software/</loc><lastmod>2026-11-17</lastmod></url>
+  <url><loc>https://www.nexafusion.io/services/cyber-security/</loc><lastmod>2026-11-17</lastmod></url>
+  <url><loc>https://www.nexafusion.io/services/cra-readiness/</loc><lastmod>2026-11-17</lastmod></url>
+  <url><loc>https://www.nexafusion.io/insights/memory-safety-roadmaps/</loc><lastmod>2026-11-17</lastmod></url>
+  <url><loc>https://www.nexafusion.io/insights/eu-cyber-resilience-act/</loc><lastmod>2026-11-17</lastmod></url>
 </urlset>
