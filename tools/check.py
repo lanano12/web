@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check the committed static site without modifying it or using the network.
 
-Edit tools/home.html, tools/device.svg or the content in tools/build.py, then:
+Edit tools/home.html, tools/engineering.html, tools/device.svg or tools/build.py, then:
     python3 tools/build.py
     python3 tools/check.py
 
@@ -52,6 +52,7 @@ class Page(HTMLParser):
 def main():
     expected = {
         "index.html": build["build_home"](),
+        "engineering/index.html": build["build_engineering"](),
         "insights/index.html": build["build_insights_index"](),
         "cra-readiness/index.html": build["build_cra_check"](),
         "insights/feed.xml": build["build_feed"](),

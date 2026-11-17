@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generate NexaFusion’s pages, feed and sitemap.
 
-Homepage content lives in tools/home.html and tools/device.svg. Service and
+Page templates live in tools/home.html, tools/engineering.html and tools/device.svg. Service and
 article content lives below. All pages share the same navigation and metadata.
 
     python3 tools/build.py
@@ -219,7 +219,7 @@ ARTICLES = [
 ]
 
 
-NAV = [("/#services", "Expertise"), ("/#explorer", "Explore the system"), ("/insights/", "Field notes")]
+NAV = [("/engineering/", "Engineering"), ("/cra-readiness/", "CRA check"), ("/insights/", "Field notes")]
 
 # --------------------------------------------------------------------------
 # Templates
@@ -229,7 +229,7 @@ e = html.escape
 ACTIVE = ' class="active" aria-current="page"'
 
 
-def page(*, path: str, title: str, desc: str, body: str, active: str = "", ld: list | None = None, og_type: str = "website") -> str:
+def page(*, path: str, title: str, desc: str, body: str, active: str = "", ld: list | None = None, og_type: str = "website", home: bool = False, module: str | None = None) -> str:
     url = SITE + path
     nav = "".join(
         f'<a href="{href}"{ACTIVE if label == active else ""}>{label}</a>'
@@ -238,46 +238,22 @@ def page(*, path: str, title: str, desc: str, body: str, active: str = "", ld: l
     ld_html = "".join(
         f'\n  <script type="application/ld+json">{json.dumps(x, ensure_ascii=False)}</script>' for x in (ld or [])
     )
-    return f'''<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="{CSP}" />
-  <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <title>{e(title)} · NexaFusion</title>
-  <meta name="description" content="{e(desc)}" />
-  <link rel="canonical" href="{url}" />
-  <meta name="theme-color" content="#080c0c" />
-  <meta name="color-scheme" content="dark light" />
-  <meta property="og:type" content="{og_type}" />
-  <meta property="og:site_name" content="NexaFusion" />
-  <meta property="og:locale" content="en_GB" />
-  <meta property="og:url" content="{url}" />
-  <meta property="og:title" content="{e(title)}" />
-  <meta property="og:description" content="{e(desc)}" />
-  <meta property="og:image" content="{SITE}/og.png" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="NexaFusion — embedded software, security engineered in" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:image" content="{SITE}/og.png" />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-  <link rel="manifest" href="/site.webmanifest" />
-  <link rel="alternate" type="application/rss+xml" title="NexaFusion Field notes" href="/insights/feed.xml" />
-  <link rel="preload" href="/fonts/sora.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="/assets/site.css" />
-  <script src="/assets/theme-init.js"></script>
-  <script src="/assets/site.js" defer></script>
-  <script src="/assets/ui.js" defer></script>{ld_html}
-  <noscript><style>.top{{position:static;flex-wrap:wrap}}.nav{{display:flex;position:static;width:100%;flex-direction:row;flex-wrap:wrap;padding:0;border:0;box-shadow:none;background:none}}.nav a{{padding:8px 0;margin-right:20px}}.top-actions{{display:none}}.scene-selector,.scene-hint,.boot-controls{{display:none}}</style></noscript>
-</head>
-<body>
-  <a class="skip" href="#main">Skip to content</a>
-  <div class="ambient" aria-hidden="true"><div class="aurora a"></div><div class="aurora b"></div></div>
-
-  <header class="top" id="top">
+    if home:
+        header = f'''  <header class="top" id="top">
+    <a class="logo" href="/" aria-label="NexaFusion home">{LOGO}<span>Nexa<b>Fusion</b></span></a>
+    <div class="top-actions"><a class="header-contact" href="#contact">Let’s talk <span aria-hidden="true">↗</span></a></div>
+  </header>'''
+        footer = '''  <footer>
+    <div class="wrap foot">
+      <a class="footer-brand" href="/">NexaFusion</a>
+      <nav aria-label="Footer"><a href="/engineering/">How we work</a><a href="/insights/">Field notes</a></nav>
+      <span class="footer-meta">© 2026 NexaFusion · UK</span>
+    </div>
+  </footer>'''
+        assets = '<link rel="stylesheet" href="/assets/home.css" />\n  <script src="/assets/home.js" defer></script>'
+        no_script = ""
+    else:
+        header = f'''  <header class="top" id="top">
     <a class="logo" href="/" aria-label="NexaFusion home">
       {LOGO}
       <span>Nexa<b>Fusion</b></span>
@@ -296,13 +272,8 @@ def page(*, path: str, title: str, desc: str, body: str, active: str = "", ld: l
       </button>
       <a class="btn small" href="/#contact">Start a project {ARROW}</a>
     </div>
-  </header>
-
-  <main id="main">
-{body}
-  </main>
-
-  <footer>
+  </header>'''
+        footer = f'''  <footer>
     <div class="wrap foot">
       <a class="footer-brand" href="/">NexaFusion<span>Embedded software. Security engineered in.</span></a>
       <nav aria-label="Footer">
@@ -310,7 +281,57 @@ def page(*, path: str, title: str, desc: str, body: str, active: str = "", ld: l
       </nav>
       <span class="footer-meta">© 2026 NexaFusion · UK</span>
     </div>
-  </footer>
+  </footer>'''
+        assets = '''<script src="/assets/theme-init.js"></script>
+  <script src="/assets/site.js" defer></script>
+  <script src="/assets/ui.js" defer></script>'''
+        no_script = '<noscript><style>.top{position:static;flex-wrap:wrap}.nav{display:flex;position:static;width:100%;flex-direction:row;flex-wrap:wrap;padding:0;border:0;box-shadow:none;background:none}.nav a{padding:8px 0;margin-right:20px}.top-actions{display:none}.scene-selector,.scene-hint,.boot-controls{display:none}</style></noscript>'
+    if module:
+        assets += f'\n  <script src="{e(module)}" type="module"></script>'
+    return f'''<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta http-equiv="Content-Security-Policy" content="{CSP}" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <title>{e(title)} · NexaFusion</title>
+  <meta name="description" content="{e(desc)}" />
+  <link rel="canonical" href="{url}" />
+  <meta name="theme-color" content="#080c0c" />
+  <meta name="color-scheme" content="{'dark' if home else 'dark light'}" />
+  <meta property="og:type" content="{og_type}" />
+  <meta property="og:site_name" content="NexaFusion" />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:url" content="{url}" />
+  <meta property="og:title" content="{e(title)}" />
+  <meta property="og:description" content="{e(desc)}" />
+  <meta property="og:image" content="{SITE}/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="NexaFusion — we engineer secure embedded software" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="{SITE}/og.png" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="alternate" type="application/rss+xml" title="NexaFusion Field notes" href="/insights/feed.xml" />
+  <link rel="preload" href="/fonts/sora.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/assets/site.css" />
+  {assets}{ld_html}
+{no_script}
+</head>
+<body{' class="home"' if home else ""}>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="ambient" aria-hidden="true"><div class="aurora a"></div><div class="aurora b"></div></div>
+
+{header}
+
+  <main id="main">
+{body}
+  </main>
+
+{footer}
 </body>
 </html>
 '''
@@ -347,7 +368,7 @@ def post_card(a: dict) -> str:
 
 
 def build_service(s: dict) -> str:
-    bc, bc_ld = crumbs(("Home", "/"), ("Expertise", "/#services"), (s["name"], None))
+    bc, bc_ld = crumbs(("Home", "/"), ("Expertise", "/engineering/#services"), (s["name"], None))
     what = "".join(f'<div class="mini"><h3>{e(h)}</h3><p>{e(p)}</p></div>' for h, p in s["what"])
     fit = "".join(f"<li>{e(x)}</li>" for x in s["fit"])
     deliver = "".join(f"<li>{e(x)}</li>" for x in s["deliver"])
@@ -539,16 +560,16 @@ def build_feed() -> str:
 
 
 def build_sitemap() -> str:
-    paths = ["/", "/cra-readiness/", "/insights/"] + [f"/services/{s['slug']}/" for s in SERVICES] + [f"/insights/{a['slug']}/" for a in ARTICLES]
+    paths = ["/", "/engineering/", "/cra-readiness/", "/insights/"] + [f"/services/{s['slug']}/" for s in SERVICES] + [f"/insights/{a['slug']}/" for a in ARTICLES]
     urls = "".join(f"\n  <url><loc>{SITE}{p}</loc><lastmod>{TODAY}</lastmod></url>" for p in paths)
     return f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}\n</urlset>\n'
 
 
 LEGACY_REDIRECTS = {
-    "services/ai-compilers/index.html": "/#services",
-    "services/ai-agents/index.html": "/#services",
-    "services/cloud-platform/index.html": "/#services",
-    "services/fractional-cto/index.html": "/#services",
+    "services/ai-compilers/index.html": "/engineering/#services",
+    "services/ai-agents/index.html": "/engineering/#services",
+    "services/cloud-platform/index.html": "/engineering/#services",
+    "services/fractional-cto/index.html": "/engineering/#services",
     "services/rust-cpp/index.html": "/services/embedded-software/",
     "insights/inference-cost-compilers/index.html": "/insights/",
 }
@@ -576,7 +597,7 @@ def build_redirect(destination: str) -> str:
 def build_home() -> str:
     body = (ROOT / "tools/home.html").read_text(encoding="utf-8")
     body = body.replace("<!-- DEVICE -->", (ROOT / "tools/device.svg").read_text(encoding="utf-8"))
-    markup = page(path="/", title="Embedded software. Security engineered in.",
+    return page(path="/", title="We engineer secure embedded software.", home=True,
                   desc="NexaFusion: embedded software development, product cyber security and the engineering evidence behind EU Cyber Resilience Act readiness.",
                   body=body, ld=[{
                       "@context": "https://schema.org", "@type": "ProfessionalService",
@@ -584,9 +605,14 @@ def build_home() -> str:
                       "description": "Embedded software engineering, product cyber security and CRA engineering readiness.",
                       "areaServed": "GB", "knowsAbout": ["Embedded software", "Firmware", "Product cyber security", "EU Cyber Resilience Act"],
                   }])
-    return markup.replace("<body>", '<body class="home">').replace(
-        '<script src="/assets/ui.js" defer></script>',
-        '<script src="/assets/ui.js" defer></script>\n  <script src="/assets/explorer.js" type="module"></script>')
+
+
+def build_engineering() -> str:
+    body = (ROOT / "tools/engineering.html").read_text(encoding="utf-8")
+    body = body.replace("<!-- DEVICE -->", (ROOT / "tools/device.svg").read_text(encoding="utf-8"))
+    return page(path="/engineering/", title="Embedded engineering, from firmware to evidence",
+                desc="Explore NexaFusion’s embedded software, product security and CRA engineering approach, with an interactive device architecture and live signature verification.",
+                body=body, active="Engineering", module="/assets/explorer.js")
 
 
 def write(rel: str, text: str) -> None:
@@ -598,6 +624,7 @@ def write(rel: str, text: str) -> None:
 
 def main() -> None:
     write("index.html", build_home())
+    write("engineering/index.html", build_engineering())
     for old, destination in LEGACY_REDIRECTS.items():
         write(old, build_redirect(destination))
     for s in SERVICES:

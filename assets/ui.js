@@ -28,13 +28,13 @@
     {
       title: 'Explore the system',
       type: 'Interactive',
-      url: '/#explorer',
+      url: '/engineering/#explorer',
       keywords: 'device architecture hardware firmware security evidence demo boot',
     },
     {
       title: 'How we work',
       type: 'Approach',
-      url: '/#approach',
+      url: '/engineering/#approach',
       keywords: 'process engagement handover ownership',
     },
     {
@@ -58,7 +58,7 @@
     {
       title: 'Frequently asked questions',
       type: 'Questions',
-      url: '/#faq',
+      url: '/engineering/#faq',
       keywords: 'faq legal existing product engagement ip ownership',
     },
     {

@@ -95,6 +95,7 @@ const server = http.createServer((req, res) => {
     await page.screenshot({ path: path.join(output, 'nexafusion-full.png'), fullPage: true });
     for (const route of [
       '/',
+      '/engineering/',
       '/services/embedded-software/',
       '/services/cyber-security/',
       '/services/cra-readiness/',
@@ -119,9 +120,11 @@ const server = http.createServer((req, res) => {
         assert.ok(overflow.actions <= width, `${route} header overflow at ${width}`);
       }
     }
-    console.log('PASS: eight routes across eight viewport widths, no page or header overflow');
-    await page.goto(base + '/');
+    console.log('PASS: nine routes across eight viewport widths, no page or header overflow');
+    await page.goto(base + '/engineering/');
     await page.setViewportSize({ width: 1440, height: 1000 });
+    await page.evaluate(() => document.fonts.ready);
+    await page.screenshot({ path: path.join(output, 'nexafusion-engineering.png'), fullPage: true });
     for (const layer of ['hardware', 'security', 'evidence', 'firmware']) {
       await page.locator(`.scene-selector [data-layer=${layer}]`).click();
       assert.equal(await page.locator(`#layer-${layer}`).isVisible(), true);
@@ -147,7 +150,7 @@ const server = http.createServer((req, res) => {
       await page.locator('.layer-tabs [aria-current=true]').getAttribute('data-select'),
       'firmware',
     );
-    await page.goto(base + '/#layer-security');
+    await page.goto(base + '/engineering/#layer-security');
     assert.equal(await page.locator('#layer-security').isVisible(), true);
     console.log(
       'PASS: all architecture layers, actual ECDSA verification and tampering rejection, keyboard navigation and deep links',
@@ -200,6 +203,7 @@ const server = http.createServer((req, res) => {
       path: path.join(output, 'nexafusion-mobile-full.png'),
       fullPage: true,
     });
+    await page.goto(base + '/engineering/');
     await page.locator('#menu').click();
     assert.equal(await page.locator('#nav').isVisible(), true);
     await page.keyboard.press('Escape');
@@ -211,14 +215,28 @@ const server = http.createServer((req, res) => {
     await page.screenshot({ path: path.join(output, 'nexafusion-inner-mobile.png') });
     await page.goto(base + '/');
     await page.setViewportSize({ width: 1440, height: 1000 });
-    await page.screenshot({ path: path.join(output, 'nexafusion-light.png') });
+    assert.equal(await page.locator('html').getAttribute('data-theme'), null);
+    assert.equal(await page.locator('main > section').count(), 3);
+    assert.equal(
+      await page.locator('main h1').innerText(),
+      'We engineer\nsecure embedded\nsoftware.',
+    );
+    await page.locator('.quiet-action').click();
+    await page.waitForURL('**/#contact');
+    assert.equal(await page.locator('#contact a[href^="mailto:"]').isVisible(), true);
+    await page.locator('.quiet-link').click();
+    await page.waitForURL('**/engineering/');
+    console.log('PASS: simplified homepage, contact and engineering navigation');
     const nojs = await browser.newPage({
       javaScriptEnabled: false,
       viewport: { width: 390, height: 844 },
     });
     await nojs.goto(base + '/');
-    assert.equal(await nojs.locator('.layer-panel:visible').count(), 4);
     assert.equal(await nojs.locator('#contact').isVisible(), true);
+    assert.equal(await nojs.locator('.quiet-link').isVisible(), true);
+    assert.equal(await nojs.locator('.header-contact').isVisible(), true);
+    await nojs.goto(base + '/engineering/');
+    assert.equal(await nojs.locator('.layer-panel:visible').count(), 4);
     assert.equal(
       await nojs
         .locator('.service-card')
@@ -233,7 +251,7 @@ const server = http.createServer((req, res) => {
     await fallback.addInitScript(() =>
       Object.defineProperty(window.crypto, 'subtle', { value: undefined }),
     );
-    await fallback.goto(base + '/');
+    await fallback.goto(base + '/engineering/');
     await fallback.locator('#explorer').scrollIntoViewIfNeeded();
     await fallback.waitForFunction(() =>
       document.getElementById('boot-note').textContent.includes('unavailable'),
@@ -243,8 +261,13 @@ const server = http.createServer((req, res) => {
     await nojs.goto(base + '/cra-readiness/');
     assert.equal(await nojs.locator('button[type=submit]').isDisabled(), true);
     console.log('PASS: no-JavaScript form cannot transmit answers');
+    await page.goto(base + '/#layer-security');
+    await page.waitForURL('**/engineering/#layer-security');
+    assert.equal(await page.locator('#layer-security').isVisible(), true);
+    await page.goto(base + '/#services');
+    await page.waitForURL('**/engineering/#services');
     await page.goto(base + '/services/ai-compilers/');
-    await page.waitForURL('**/#services');
+    await page.waitForURL('**/engineering/#services');
     await page.goto(base + '/insights/inference-cost-compilers/');
     await page.waitForURL('**/insights/');
     await page.goto(base + '/404.html');
