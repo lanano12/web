@@ -12,6 +12,8 @@ from __future__ import annotations
 
 import html
 import json
+from datetime import date, datetime, timezone
+from email.utils import format_datetime
 from urllib.parse import quote
 from pathlib import Path
 
@@ -21,9 +23,8 @@ EMAIL = "hello@nexafusion.io"
 TODAY = "2026-11-17"
 ARTICLE_DATE = "2026-11-16"
 
-CSP = ("default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; "
-       "img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; "
-       "base-uri 'self'; form-action 'self'; upgrade-insecure-requests")
+from security_policy import CSP, HEADERS, cloudflare_headers
+
 
 ARROW = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" '
          'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>')
@@ -219,6 +220,15 @@ ARTICLES = [
 ]
 
 
+ARTICLES.insert(0, {
+    "slug": "signed-update-verification",
+    "title": "A signature is not an update policy",
+    "desc": "An executable study of signed manifests, target checks, rollback rules and the bytes an installer actually consumes.",
+    "topic": "Engineering study", "read": "6 min read", "service": "cyber-security",
+    "date": TODAY,
+    "body": (ROOT / "tools/case-study.html").read_text(encoding="utf-8"),
+})
+
 NAV = [("/engineering/", "Engineering"), ("/cra-readiness/", "CRA check"), ("/insights/", "Field notes")]
 
 # --------------------------------------------------------------------------
@@ -246,7 +256,7 @@ def page(*, path: str, title: str, desc: str, body: str, active: str = "", ld: l
         footer = '''  <footer>
     <div class="wrap foot">
       <a class="footer-brand" href="/">NexaFusion</a>
-      <nav aria-label="Footer"><a href="/engineering/">How we work</a><a href="/insights/">Field notes</a></nav>
+      <nav aria-label="Footer"><a href="/engineering/">How we work</a><a href="/insights/">Field notes</a><a href="/security/">Security</a><a href="/privacy/">Privacy</a></nav>
       <span class="footer-meta">© 2026 NexaFusion · UK</span>
     </div>
   </footer>'''
@@ -277,7 +287,7 @@ def page(*, path: str, title: str, desc: str, body: str, active: str = "", ld: l
     <div class="wrap foot">
       <a class="footer-brand" href="/">NexaFusion<span>Embedded software. Security engineered in.</span></a>
       <nav aria-label="Footer">
-        <a href="/services/embedded-software/">Embedded</a><a href="/services/cyber-security/">Security</a><a href="/services/cra-readiness/">CRA readiness</a><a href="mailto:{EMAIL}">Contact</a>
+        <a href="/services/embedded-software/">Embedded</a><a href="/services/cyber-security/">Security</a><a href="/services/cra-readiness/">CRA readiness</a><a href="mailto:{EMAIL}">Contact</a><a href="/security/">Disclosure</a><a href="/privacy/">Privacy</a>
       </nav>
       <span class="footer-meta">© 2026 NexaFusion · UK</span>
     </div>
@@ -285,7 +295,8 @@ def page(*, path: str, title: str, desc: str, body: str, active: str = "", ld: l
         assets = '''<script src="/assets/theme-init.js"></script>
   <script src="/assets/site.js" defer></script>
   <script src="/assets/ui.js" defer></script>'''
-        no_script = '<noscript><style>.top{position:static;flex-wrap:wrap}.nav{display:flex;position:static;width:100%;flex-direction:row;flex-wrap:wrap;padding:0;border:0;box-shadow:none;background:none}.nav a{padding:8px 0;margin-right:20px}.top-actions{display:none}.scene-selector,.scene-hint,.boot-controls{display:none}</style></noscript>'
+        no_script = '<noscript><link rel="stylesheet" href="/assets/no-script.css" /></noscript>'
+    search = "" if home else (ROOT / "tools/search.html").read_text(encoding="utf-8")
     if module:
         assets += f'\n  <script src="{e(module)}" type="module"></script>'
     return f'''<!DOCTYPE html>
@@ -332,6 +343,7 @@ def page(*, path: str, title: str, desc: str, body: str, active: str = "", ld: l
   </main>
 
 {footer}
+{search}
 </body>
 </html>
 '''
@@ -360,9 +372,17 @@ ART = {a["slug"]: a for a in ARTICLES}
 SVC = {s["slug"]: s for s in SERVICES}
 
 
+def article_date(a: dict) -> str:
+    return a.get("date", ARTICLE_DATE)
+
+
+def article_date_label(a: dict) -> str:
+    return date.fromisoformat(article_date(a)).strftime("%d %b %Y").lstrip("0")
+
+
 def post_card(a: dict) -> str:
     return f'''<article class="post reveal">
-            <div><time datetime="{ARTICLE_DATE}">16 Nov 2026</time><span class="topic">{e(a["topic"])}</span></div>
+            <div><time datetime="{article_date(a)}">{article_date_label(a)}</time><span class="topic">{e(a["topic"])}</span></div>
             <div><h2><a href="/insights/{a["slug"]}/">{e(a["title"])}</a></h2><p>{e(a["desc"])}</p></div>
           </article>'''
 
@@ -395,7 +415,7 @@ def build_service(s: dict) -> str:
     </div>
     <section class="wrap" aria-labelledby="wwd">
       <div class="prose"><h2 id="wwd">What we do</h2></div>
-      <div class="grid-3" style="margin-top:24px">{what}</div>
+      <div class="grid-3 service-details">{what}</div>
     </section>
     <div class="wrap layout">
       <div class="prose">
@@ -424,7 +444,7 @@ def build_article(a: dict) -> str:
       <p class="eyebrow">{e(a["topic"])}</p>
       <h1>{e(a["title"])}</h1>
       <p class="lede">{e(a["desc"])}</p>
-      <div class="meta-row"><time datetime="{ARTICLE_DATE}">16 Nov 2026</time><span>{e(a["read"])}</span><span>NexaFusion</span></div>
+      <div class="meta-row"><time datetime="{article_date(a)}">{article_date_label(a)}</time><span>{e(a["read"])}</span><span>NexaFusion</span></div>
     </section>
 
     <div class="wrap layout">
@@ -438,7 +458,7 @@ def build_article(a: dict) -> str:
       <div class="post-list">{"".join(post_card(x) for x in others)}</div>
     </section>'''
     ld = [bc_ld, {"@context": "https://schema.org", "@type": "Article", "headline": a["title"], "description": a["desc"],
-                  "datePublished": ARTICLE_DATE, "dateModified": TODAY, "image": SITE + "/og.png",
+                  "datePublished": article_date(a), "dateModified": TODAY, "image": SITE + "/og.png",
                   "author": {"@type": "Organization", "name": "NexaFusion", "url": SITE + "/"},
                   "publisher": {"@type": "Organization", "name": "NexaFusion", "url": SITE + "/"},
                   "mainEntityOfPage": f"{SITE}/insights/{a['slug']}/"}]
@@ -453,7 +473,7 @@ def build_insights_index() -> str:
       <h1>Under the <em class="grad-text">surface.</em></h1>
       <p class="lede">Notes on product security, memory safety and the engineering behind CRA readiness.</p>
     </section>
-    <section class="wrap" style="padding-bottom:40px" aria-label="Articles">
+    <section class="wrap article-index" aria-label="Articles">
       <div class="post-list">{"".join(post_card(a) for a in ARTICLES)}</div>
     </section>'''
     return page(path="/insights/", title="Field notes", desc="Practical writing on embedded product security, memory safety and CRA readiness from NexaFusion.",
@@ -505,8 +525,8 @@ def build_cra_check() -> str:
     body = f'''    <section class="wrap page-hero">
       {bc}
       <p class="eyebrow">Free tool</p>
-      <h1>How ready are you for the <em class="grad-text">Cyber Resilience Act</em>?</h1>
-      <p class="lede">Twelve quick questions, about three minutes. You’ll get an indicative readiness score and your biggest gaps — starting with vulnerability-reporting readiness.</p>
+      <h1>Your <em class="grad-text">CRA engineering</em> checklist.</h1>
+      <p class="lede">Twelve questions to organise your next engineering conversation. Review the practices you report in place and the topics that need investigation. This is a short self-assessment, not a compliance assessment.</p>
       <div class="meta-row"><span>Runs entirely in your browser</span><span>Your answers stay in this page</span><span>Not legal advice</span></div>
     </section>
 
@@ -518,7 +538,7 @@ def build_cra_check() -> str:
             <div class="opts">{radios("scope", [("yes", "Yes"), ("unsure", "Not sure"), ("no", "No")])}</div>
           </fieldset>{qs}
           <div class="cra-actions">
-            <button class="btn" type="submit" disabled>See my results {ARROW}</button>
+            <button class="btn" type="submit" disabled>Review my checklist {ARROW}</button>
             <button class="btn ghost" type="reset">Start again</button>
             <p class="cra-error" id="cra-error" role="alert"></p>
           </div>
@@ -532,7 +552,7 @@ def build_cra_check() -> str:
       <div class="post-list">{post_card(ART["eu-cyber-resilience-act"])}</div>
     </section>'''
     page_html = page(path="/cra-readiness/", title="CRA readiness check",
-                     desc="Free EU Cyber Resilience Act readiness check: twelve questions, an indicative score and your biggest gaps. Runs in your browser.",
+                     desc="A browser-only CRA engineering checklist: review self-reported practices and identify questions to investigate. No compliance score and no automatic transmission of answers.",
                      body=body, active="CRA check", ld=[bc_ld])
     return page_html.replace('<script src="/assets/site.js" defer></script>',
                              '<script src="/assets/site.js" defer></script>\n  <script src="/assets/cra-check.js" defer></script>')
@@ -544,7 +564,7 @@ def build_feed() -> str:
       <title>{e(a["title"])}</title>
       <link>{SITE}/insights/{a["slug"]}/</link>
       <guid>{SITE}/insights/{a["slug"]}/</guid>
-      <pubDate>Mon, 16 Nov 2026 09:00:00 +0000</pubDate>
+      <pubDate>{format_datetime(datetime.fromisoformat(article_date(a)).replace(hour=9, tzinfo=timezone.utc))}</pubDate>
       <description>{e(a["desc"])}</description>
     </item>''' for a in ARTICLES)
     return f'''<?xml version="1.0" encoding="UTF-8"?>
@@ -560,7 +580,7 @@ def build_feed() -> str:
 
 
 def build_sitemap() -> str:
-    paths = ["/", "/engineering/", "/cra-readiness/", "/insights/"] + [f"/services/{s['slug']}/" for s in SERVICES] + [f"/insights/{a['slug']}/" for a in ARTICLES]
+    paths = ["/", "/security/", "/privacy/", "/engineering/", "/cra-readiness/", "/insights/"] + [f"/services/{s['slug']}/" for s in SERVICES] + [f"/insights/{a['slug']}/" for a in ARTICLES]
     urls = "".join(f"\n  <url><loc>{SITE}{p}</loc><lastmod>{TODAY}</lastmod></url>" for p in paths)
     return f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}\n</urlset>\n'
 
@@ -585,7 +605,7 @@ def build_redirect(destination: str) -> str:
 <meta http-equiv="refresh" content="0;url={destination}">
 <link rel="canonical" href="{SITE}{destination.split('#')[0]}">
 <link rel="stylesheet" href="/assets/site.css">
-<title>Page moved · NexaFusion</title>  <noscript><style>.top{{position:static;flex-wrap:wrap}}.nav{{display:flex;position:static;width:100%;flex-direction:row;flex-wrap:wrap;padding:0;border:0;box-shadow:none;background:none}}.nav a{{padding:8px 0;margin-right:20px}}.top-actions{{display:none}}.scene-selector,.scene-hint,.boot-controls{{display:none}}</style></noscript>
+<title>Page moved · NexaFusion</title>
 </head>
 <body><main class="wrap page-hero"><p class="eyebrow">NexaFusion</p>
 <h1>Engineering close to the hardware.</h1>
@@ -615,6 +635,16 @@ def build_engineering() -> str:
                 body=body, active="Engineering", module="/assets/explorer.js")
 
 
+def build_information(slug: str) -> str:
+    info = {
+        "security": ("Report a security issue", "Private vulnerability reporting for the NexaFusion website and published code."),
+        "privacy": ("Website privacy", "How browsing, local preferences, checklist answers and private reports are handled."),
+    }
+    title, description = info[slug]
+    return page(path=f"/{slug}/", title=title, desc=description,
+                body=(ROOT / f"tools/{slug}.html").read_text(encoding="utf-8"))
+
+
 def write(rel: str, text: str) -> None:
     out = ROOT / rel
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -623,7 +653,11 @@ def write(rel: str, text: str) -> None:
 
 
 def main() -> None:
+    write("deployment/headers.json", json.dumps(HEADERS, indent=2) + "\n")
+    write("deployment/_headers", cloudflare_headers())
     write("index.html", build_home())
+    for slug in ("security", "privacy"):
+        write(f"{slug}/index.html", build_information(slug))
     write("engineering/index.html", build_engineering())
     for old, destination in LEGACY_REDIRECTS.items():
         write(old, build_redirect(destination))

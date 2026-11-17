@@ -1,4 +1,4 @@
-/* EU CRA readiness check — runs entirely in the browser; nothing is sent or stored. */
+/* Self-reported checklist coverage. No compliance score and no network requests. */
 (() => {
   const form = document.getElementById('cra-form');
   const out = document.getElementById('cra-result');
@@ -6,91 +6,104 @@
   const dataEl = document.getElementById('cra-data');
   if (!form || !out || !dataEl) return;
   const data = JSON.parse(dataEl.textContent);
-  const esc = (s) =>
-    String(s).replace(
-      /[&<>"]/g,
-      (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c],
-    );
-
-  const band = (pct) =>
-    pct >= 90
-      ? [
-          'Strong position',
-          'You have most of the foundations. Focus on evidence and keeping it current.',
-        ]
-      : pct >= 70
-        ? [
-            'Well on the way',
-            'Good foundations, with a few gaps worth closing before December 2027.',
-          ]
-        : pct >= 40
-          ? [
-              'Partly ready',
-              'Important pieces are missing. Start with the duties that already apply.',
-            ]
-          : [
-              'Early stage',
-              'There is real work to do — but a focused plan gets you a long way quickly.',
-            ];
-
-  form.addEventListener('submit', (ev) => {
-    ev.preventDefault();
+  const node = (tag, text, className) => {
+    const el = document.createElement(tag);
+    if (text) el.textContent = text;
+    if (className) el.className = className;
+    return el;
+  };
+  const link = (text, href, className) => {
+    const el = node('a', text, className);
+    el.href = href;
+    return el;
+  };
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
     err.textContent = '';
     const names = ['scope', ...data.questions.map((q) => q.id)];
-    const missing = names.find((n) => !form.querySelector(`input[name="${n}"]:checked`));
+    const missing = names.find((name) => !form.querySelector(`input[name="${name}"]:checked`));
     if (missing) {
-      err.textContent = 'Please answer every question to see your results.';
+      err.textContent = 'Please answer every question to see your summary.';
       form.querySelector(`input[name="${missing}"]`).focus();
       return;
     }
-    const val = (n) => form.querySelector(`input[name="${n}"]:checked`).value;
-    const scope = val('scope');
-    let got = 0;
-    const max = data.questions.length * 2;
-    const gaps = [];
-    for (const q of data.questions) {
-      const v = Number(val(q.id));
-      got += v;
-      if (v < 2) gaps.push({ ...q, partly: v === 1 });
+    const value = (name) => form.querySelector(`input[name="${name}"]:checked`).value;
+    const scope = value('scope');
+    const answers = data.questions.map((question) => ({ ...question, value: value(question.id) }));
+    const yes = answers.filter((answer) => answer.value === '2').length;
+    const partly = answers.filter((answer) => answer.value === '1').length;
+    const no = answers.filter((answer) => answer.value === '0').length;
+    const gaps = answers
+      .filter((answer) => answer.value !== '2')
+      .sort((a, b) => Number(b.live) - Number(a.live) || Number(a.value) - Number(b.value));
+    const summary = node('div', null, 'cra-summary');
+    summary.append(
+      node('p', 'Self-reported checklist', 'eyebrow'),
+      node('h2', 'Your next engineering questions'),
+    );
+    const counts = node('dl', null, 'cra-counts');
+    for (const [label, count] of [
+      ['In place', yes],
+      ['Partly in place', partly],
+      ['Not in place', no],
+    ]) {
+      const item = node('div');
+      item.append(node('dt', label), node('dd', String(count)));
+      counts.append(item);
     }
-    gaps.sort((a, b) => b.live - a.live || a.partly - b.partly);
-    const pct = Math.round((got / max) * 100);
-    const [title, summary] = band(pct);
-
-    const scopeNote =
+    summary.append(
+      counts,
+      node(
+        'p',
+        `${yes} of ${answers.length} practices reported in place. These answers have not been independently checked. This checklist does not determine legal scope, conformity or whether a product is secure.`,
+      ),
+    );
+    out.replaceChildren(summary);
+    const scopeMessage =
       scope === 'no'
-        ? `<p class="cra-scope">You said you don’t supply the EU market, so the CRA may not apply to you today — but these practices are increasingly expected by customers everywhere, and the UK is moving in a similar direction.</p>`
+        ? 'You reported no EU supply. This questionnaire does not decide whether your products fall within the CRA. Establish scope before relying on these priorities.'
         : scope === 'unsure'
-          ? `<p class="cra-scope">You’re not sure whether you’re in scope. That’s the first thing to settle: if you supply software or connected products to EU customers commercially, assume yes until checked.</p>`
-          : '';
-
-    const gapHtml = gaps.length
-      ? `<h3>Your priorities</h3><ol class="gaps">${gaps
-          .map(
-            (g) =>
-              `<li>${g.live ? '<span class="live-tag">Reporting priority</span> ' : ''}${esc(g.advice)}${g.partly ? ' <span class="partly">(partly in place)</span>' : ''}</li>`,
-          )
-          .join('')}</ol>`
-      : `<p>No gaps reported — impressive. The next step is making sure the evidence would stand up to scrutiny.</p>`;
-
-    const subject = `CRA readiness check — ${pct}%`;
-    const bodyText = `Hi NexaFusion,\n\nI took your CRA readiness check and scored ${pct}% (${title}).\n\nTop gaps:\n${
-      gaps
-        .slice(0, 5)
-        .map((g, i) => `${i + 1}. ${g.advice}`)
-        .join('\n') || 'None reported'
-    }\n\nCould we talk about next steps?\n`;
-    const mailto = `mailto:${data.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
-
-    out.innerHTML = `
-      <div class="cra-score" style="--pct:${pct}">
-        <div class="score-ring" role="img" aria-label="Readiness score ${pct} percent"><span>${pct}%</span></div>
-        <div><p class="eyebrow">Your indicative result</p><h2>${esc(title)}</h2><p>${esc(summary)}</p></div>
-      </div>
-      ${scopeNote}
-      ${gapHtml}
-      <div class="cta-row"><a class="btn" href="${mailto}">Send these results to us <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a><a class="btn ghost" href="/services/cra-readiness/">How we help</a></div>
-      <p class="note">Indicative only and not legal advice. Your answers never leave this page unless you choose to email them.</p>`;
+          ? 'Your scope is unresolved. Confirm which products and activities are covered before treating this as a readiness plan.'
+          : 'You reported EU supply. Confirm product scope, classification and applicable obligations with an appropriately qualified adviser.';
+    out.append(node('p', scopeMessage, 'cra-scope'));
+    if (gaps.length) {
+      out.append(node('h3', 'Topics to investigate'));
+      const list = node('ol', null, 'gaps');
+      for (const gap of gaps) {
+        const item = node('li');
+        if (gap.live)
+          item.append(node('span', 'Reporting priority', 'live-tag'), document.createTextNode(' '));
+        item.append(document.createTextNode(gap.advice));
+        if (gap.value === '1') item.append(node('span', ' (partly in place)', 'partly'));
+        list.append(item);
+      }
+      out.append(list);
+    } else {
+      out.append(
+        node(
+          'p',
+          'All listed practices were reported in place. Validate the evidence, test the implementation and identify requirements this short checklist does not cover.',
+        ),
+      );
+    }
+    const body = `Hi NexaFusion,\n\nMy checklist reports ${yes} practices in place, ${partly} partly in place and ${no} not in place. This is a self-assessment, not a compliance result.\n\nTopics to investigate:\n${gaps.map((gap, i) => `${i + 1}. ${gap.advice}`).join('\n') || 'Validate evidence for the reported practices.'}\n\nCould we discuss next steps?\n`;
+    const actions = node('div', null, 'cta-row');
+    actions.append(
+      link(
+        'Email this summary ↗',
+        `mailto:${data.email}?subject=${encodeURIComponent('CRA engineering checklist')}&body=${encodeURIComponent(body)}`,
+        'btn',
+      ),
+      link('How we help', '/services/cra-readiness/', 'btn ghost'),
+    );
+    out.append(
+      actions,
+      node(
+        'p',
+        'Your answers stay in this page. Emailing opens your own mail application with a draft you can review before sending.',
+        'note',
+      ),
+    );
     out.hidden = false;
     out.focus({ preventScroll: true });
     out.scrollIntoView({
@@ -98,13 +111,12 @@
       block: 'start',
     });
   });
-
-  const clearResult = () => {
+  const clear = () => {
     out.hidden = true;
     out.replaceChildren();
     err.textContent = '';
   };
-  form.addEventListener('change', clearResult);
-  form.addEventListener('reset', clearResult);
+  form.addEventListener('change', clear);
+  form.addEventListener('reset', clear);
   form.querySelector('button[type="submit"]').disabled = false;
 })();

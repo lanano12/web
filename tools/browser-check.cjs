@@ -14,14 +14,23 @@ const fs = require('node:fs');
 const path = require('node:path');
 const http = require('node:http');
 const assert = require('node:assert/strict');
-const root = path.resolve(__dirname, '..');
+const sourceRoot = path.resolve(__dirname, '..');
+const root = process.argv.includes('--render-assets')
+  ? sourceRoot
+  : path.resolve(process.env.NEXAFUSION_SITE_DIR || path.join(sourceRoot, 'dist'));
+const securityHeaders = JSON.parse(
+  fs.readFileSync(path.join(sourceRoot, 'deployment/headers.json')),
+);
 const output =
   process.env.NEXAFUSION_PREVIEW_DIR ||
   path.join(require('node:os').tmpdir(), 'nexafusion-preview');
 fs.mkdirSync(output, { recursive: true });
 const server = http.createServer((req, res) => {
   let p = path.join(root, decodeURIComponent(new URL(req.url, 'http://localhost').pathname));
-  if (!p.startsWith(root + '/') || p.includes('/.')) {
+  if (!process.argv.includes('--render-assets')) {
+    for (const [name, value] of Object.entries(securityHeaders)) res.setHeader(name, value);
+  }
+  if (!p.startsWith(root + '/') || (p.includes('/.') && !p.endsWith('/.well-known/security.txt'))) {
     res.writeHead(403).end();
     return;
   }
@@ -96,6 +105,9 @@ const server = http.createServer((req, res) => {
     for (const route of [
       '/',
       '/engineering/',
+      '/security/',
+      '/privacy/',
+      '/insights/signed-update-verification/',
       '/services/embedded-software/',
       '/services/cyber-security/',
       '/services/cra-readiness/',
@@ -120,11 +132,14 @@ const server = http.createServer((req, res) => {
         assert.ok(overflow.actions <= width, `${route} header overflow at ${width}`);
       }
     }
-    console.log('PASS: nine routes across eight viewport widths, no page or header overflow');
+    console.log('PASS: twelve routes across eight viewport widths, no page or header overflow');
     await page.goto(base + '/engineering/');
     await page.setViewportSize({ width: 1440, height: 1000 });
     await page.evaluate(() => document.fonts.ready);
-    await page.screenshot({ path: path.join(output, 'nexafusion-engineering.png'), fullPage: true });
+    await page.screenshot({
+      path: path.join(output, 'nexafusion-engineering.png'),
+      fullPage: true,
+    });
     for (const layer of ['hardware', 'security', 'evidence', 'firmware']) {
       await page.locator(`.scene-selector [data-layer=${layer}]`).click();
       assert.equal(await page.locator(`#layer-${layer}`).isVisible(), true);
@@ -168,7 +183,7 @@ const server = http.createServer((req, res) => {
     await page.locator('.kbar-close').click();
     assert.equal(await page.locator('.kbar').isVisible(), false);
     await page.locator('[data-kbar]').click();
-    await page.locator('.kbar input').fill('zzzzzz');
+    await page.locator('.kbar input').fill('<img src=x onerror=alert(1)>');
     await page.keyboard.press('ArrowDown');
     await page.keyboard.press('Enter');
     assert.match(await page.locator('.kbar-list').innerText(), /No results/);
@@ -181,20 +196,33 @@ const server = http.createServer((req, res) => {
     for (const input of await page.locator('fieldset:not(.scope) input[value="2"]').all())
       await input.check();
     await page.locator('button[type=submit]').click();
-    assert.equal(await page.locator('.score-ring span').innerText(), '100%');
+    assert.deepEqual(await page.locator('.cra-counts dd').allTextContents(), ['11', '0', '0']);
+    assert.match(await page.locator('#cra-result').innerText(), /does not determine legal scope/);
     await page.locator('input[name=report][value="0"]').check();
     assert.equal(await page.locator('#cra-result').isHidden(), true);
     assert.equal(await page.locator('#cra-result a').count(), 0);
     await page.locator('button[type=submit]').click();
-    assert.equal(await page.locator('.score-ring span').innerText(), '91%');
+    assert.deepEqual(await page.locator('.cra-counts dd').allTextContents(), ['10', '0', '1']);
     assert.match(
       decodeURIComponent(await page.locator('#cra-result a[href^="mailto:"]').getAttribute('href')),
-      /91%/,
+      /10 practices in place/,
     );
+    await page.locator('input[name=scope][value=unsure]').check();
+    await page.locator('button[type=submit]').click();
+    assert.match(await page.locator('.cra-scope').innerText(), /scope is unresolved/);
+    await page.locator('input[name=scope][value=no]').check();
+    await page.locator('button[type=submit]').click();
+    assert.match(await page.locator('.cra-scope').innerText(), /does not decide/);
+    await page.locator('input[name=report][value="1"]').check();
+    await page.locator('button[type=submit]').click();
+    assert.deepEqual(await page.locator('.cra-counts dd').allTextContents(), ['10', '1', '0']);
+    await page.screenshot({ path: path.join(output, 'nexafusion-checklist.png'), fullPage: true });
     await page.locator('button[type=reset]').click();
     assert.equal(await page.locator('#cra-result').isHidden(), true);
     assert.equal(await page.locator('input:checked').count(), 0);
-    console.log('PASS: CRA validation, scoring, stale result invalidation, email and reset');
+    console.log(
+      'PASS: CRA checklist counts, limitations, stale result invalidation, email and reset',
+    );
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(base + '/');
     await page.evaluate(() => document.fonts.ready);
@@ -273,6 +301,39 @@ const server = http.createServer((req, res) => {
     await page.goto(base + '/404.html');
     assert.equal(await page.getByRole('link', { name: 'Back to NexaFusion' }).isVisible(), true);
     console.log('PASS: retired routes and 404 recovery');
+    for (const url of ['/tools/build.py', '/package.json', '/.git/config', '/SECURITY.md']) {
+      const response = await page.request.get(base + url);
+      assert.ok([403, 404].includes(response.status()), `${url} must not be served`);
+    }
+    const response = await page.request.get(base + '/');
+    for (const [name, value] of Object.entries(securityHeaders))
+      assert.equal(response.headers()[name.toLowerCase()], value);
+    const isolated = await browser.newPage();
+    await isolated.goto(base);
+    assert.equal(
+      await isolated.evaluate(() => {
+        try {
+          document.createElement('div').innerHTML = '<p>untrusted</p>';
+          return false;
+        } catch (error) {
+          return error instanceof TypeError;
+        }
+      }),
+      true,
+    );
+    assert.equal(
+      await isolated.evaluate(async () => {
+        try {
+          await fetch('/security.txt');
+          return false;
+        } catch {
+          return true;
+        }
+      }),
+      true,
+    );
+    await isolated.close();
+    console.log('PASS: artifact boundary, intended HTTP policy, Trusted Types and blocked fetch');
     console.log('Preview images: ' + output);
   } finally {
     await browser.close();

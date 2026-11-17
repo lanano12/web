@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; style-src-attr 'none'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests; require-trusted-types-for 'script'; trusted-types 'none'" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <title>Report a security issue · NexaFusion</title>
+  <meta name="description" content="Private vulnerability reporting for the NexaFusion website and published code." />
+  <link rel="canonical" href="https://www.nexafusion.io/security/" />
+  <meta name="theme-color" content="#080c0c" />
+  <meta name="color-scheme" content="dark light" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="NexaFusion" />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:url" content="https://www.nexafusion.io/security/" />
+  <meta property="og:title" content="Report a security issue" />
+  <meta property="og:description" content="Private vulnerability reporting for the NexaFusion website and published code." />
+  <meta property="og:image" content="https://www.nexafusion.io/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="NexaFusion — we engineer secure embedded software" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://www.nexafusion.io/og.png" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="alternate" type="application/rss+xml" title="NexaFusion Field notes" href="/insights/feed.xml" />
+  <link rel="preload" href="/fonts/sora.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/assets/site.css" />
+  <script src="/assets/theme-init.js"></script>
+  <script src="/assets/site.js" defer></script>
+  <script src="/assets/ui.js" defer></script>
+<noscript><link rel="stylesheet" href="/assets/no-script.css" /></noscript>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="ambient" aria-hidden="true"><div class="aurora a"></div><div class="aurora b"></div></div>
+
+  <header class="top" id="top">
+    <a class="logo" href="/" aria-label="NexaFusion home">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b5ff68"/><stop offset=".55" stop-color="#74e2bb"/><stop offset="1" stop-color="#6bcfe2"/></linearGradient></defs>
+        <rect x="2" y="2" width="60" height="60" rx="16" fill="none" stroke="url(#lg)" stroke-width="3" opacity=".5"/>
+        <path d="M20 44V20l24 24V20" fill="none" stroke="url(#lg)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Nexa<b>Fusion</b></span>
+    </a>
+    <nav class="nav" id="nav" aria-label="Primary"><a href="/engineering/">Engineering</a><a href="/cra-readiness/">CRA check</a><a href="/insights/">Field notes</a></nav>
+    <div class="top-actions">
+      <button class="kbar-btn" type="button" data-kbar aria-label="Search and jump">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <span class="kbar-label">Find</span><kbd class="kbar-hint">Ctrl K</kbd>
+      </button>
+      <button class="icon-btn" id="theme" type="button" aria-label="Switch colour theme">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="icon-btn menu-btn" id="menu" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+      </button>
+      <a class="btn small" href="/#contact">Start a project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+  </header>
+
+  <main id="main">
+<section class="wrap page-hero">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a> / <span aria-current="page">Security</span>
+  </nav>
+  <p class="eyebrow">Vulnerability disclosure</p>
+  <h1>Report a <em class="grad-text">security issue.</em></h1>
+  <p class="lede">
+    A private route for reports affecting this website and its published source code.
+  </p>
+</section>
+<section class="wrap article-index">
+  <div class="prose">
+    <h2>Send a private report</h2>
+    <p>
+      Use
+      <a href="https://github.com/lanano12/web/security/advisories/new"
+        >GitHub’s private vulnerability reporting</a
+      >. You will need a GitHub account. Please avoid public issues or discussions for details that
+      could expose people or enable abuse.
+    </p>
+    <p>
+      Include the affected URL or file, a clear description of the impact, the smallest safe
+      reproduction and any relevant browser or version information. Redact passwords, access tokens
+      and personal information.
+    </p>
+    <h2>Scope and coordination</h2>
+    <p>
+      This reporting route covers nexafusion.io, www.nexafusion.io and the lanano12/web repository.
+      It does not grant permission to test client systems, GitHub infrastructure or other
+      third-party services.
+    </p>
+    <p>
+      Keep testing limited to demonstrating the issue safely. Do not access other people’s
+      information, disrupt availability, use social engineering or run high-volume scanning. If you
+      encounter personal information, stop and describe the exposure without copying or publishing
+      it.
+    </p>
+    <p>
+      The private report thread provides a place to clarify impact, discuss remediation and
+      coordinate disclosure. There is no guaranteed response time or paid bounty programme.
+    </p>
+    <h2>Technical examples</h2>
+    <p>
+      The device architecture and update-verification examples use synthetic data. They are
+      educational studies with explicit assumptions and limitations, not audited production
+      implementations.
+    </p>
+    <p>
+      <a href="/.well-known/security.txt">Machine-readable security contact</a> ·
+      <a href="/insights/signed-update-verification/">Signed-update engineering study</a> ·
+      <a href="/privacy/">Website privacy</a>
+    </p>
+  </div>
+</section>
+
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <a class="footer-brand" href="/">NexaFusion<span>Embedded software. Security engineered in.</span></a>
+      <nav aria-label="Footer">
+        <a href="/services/embedded-software/">Embedded</a><a href="/services/cyber-security/">Security</a><a href="/services/cra-readiness/">CRA readiness</a><a href="mailto:hello@nexafusion.io">Contact</a><a href="/security/">Disclosure</a><a href="/privacy/">Privacy</a>
+      </nav>
+      <span class="footer-meta">© 2026 NexaFusion · UK</span>
+    </div>
+  </footer>
+<dialog class="kbar" aria-label="Find your way">
+  <div class="kbar-input">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      aria-hidden="true"
+    >
+      <circle cx="10" cy="10" r="7" />
+      <path d="m15 15 6 6" />
+    </svg>
+    <input
+      type="text"
+      role="combobox"
+      aria-label="Search NexaFusion"
+      aria-expanded="true"
+      aria-controls="kbar-list"
+      aria-autocomplete="list"
+      placeholder="Firmware, product security, CRA…"
+      autocomplete="off"
+      spellcheck="false"
+    />
+    <button type="button" class="kbar-close" aria-label="Close search">Close</button>
+  </div>
+  <ul id="kbar-list" class="kbar-list" role="listbox" aria-label="Search results"></ul>
+  <p class="kbar-foot">
+    <span>↑ ↓ to move · Enter to open · Esc to close</span><span>NexaFusion</span>
+  </p>
+</dialog>
+
+</body>
+</html>

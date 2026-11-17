@@ -15,6 +15,7 @@ import re
 import runpy
 import struct
 import sys
+from datetime import datetime, timezone
 from collections import Counter
 from html.parser import HTMLParser
 from pathlib import Path
@@ -23,6 +24,7 @@ from xml.etree import ElementTree
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.dont_write_bytecode = True
+sys.path.insert(0, str(ROOT / "tools"))
 build = runpy.run_path(str(ROOT / "tools/build.py"))
 
 
@@ -33,10 +35,15 @@ class Page(HTMLParser):
         self.refs: list[str] = []
         self.scripts: list[dict] = []
         self.meta: dict[str, str] = {}
+        self.unsafe: list[str] = []
         self.feed(source)
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
+        if tag == 'style' or 'style' in attrs or any(key.startswith('on') for key in attrs):
+            self.unsafe.append(f'inline style or event handler on {tag}')
+        if any(str(value).strip().lower().startswith('javascript:') for value in attrs.values()):
+            self.unsafe.append(f'executable URL on {tag}')
         if attrs.get("id"):
             self.ids.append(attrs["id"])
         for key in ("href", "src", "data" if tag == "object" else ""):
@@ -52,11 +59,15 @@ class Page(HTMLParser):
 def main():
     expected = {
         "index.html": build["build_home"](),
+        "security/index.html": build["build_information"]("security"),
+        "privacy/index.html": build["build_information"]("privacy"),
         "engineering/index.html": build["build_engineering"](),
         "insights/index.html": build["build_insights_index"](),
         "cra-readiness/index.html": build["build_cra_check"](),
         "insights/feed.xml": build["build_feed"](),
         "sitemap.xml": build["build_sitemap"](),
+        "deployment/headers.json": json.dumps(build["HEADERS"], indent=2) + "\n",
+        "deployment/_headers": build["cloudflare_headers"](),
     }
     for service in build["SERVICES"]:
         expected[f"services/{service['slug']}/index.html"] = build["build_service"](service)
@@ -78,8 +89,11 @@ def main():
         duplicates = [key for key, count in Counter(page.ids).items() if count > 1]
         if duplicates:
             errors.append(f"{name}: duplicate IDs: {duplicates}")
-        if "default-src 'self'" not in page.meta.get("content-security-policy", ""):
+        errors.extend(f'{name}: {item}' for item in page.unsafe)
+        if "default-src 'none'" not in page.meta.get("content-security-policy", ""):
             errors.append(f"{name}: missing Content Security Policy")
+        if page.meta.get('content-security-policy') != build['CSP']:
+            errors.append(f'{name}: policy differs from the reviewed browser policy')
         for script in page.scripts:
             if not script.get("src") and script.get("type") not in (
                 "application/ld+json", "application/json"
@@ -92,6 +106,22 @@ def main():
                 errors.append(f"{name}: invalid JSON: {error}")
 
     references = 0
+    for path in (ROOT / 'assets').glob('*.js'):
+        if re.search(r'\.innerHTML\s*=|insertAdjacentHTML\s*\(|\beval\s*\(|new\s+Function\s*\(', path.read_text()):
+            errors.append(f'{path.relative_to(ROOT)}: unsafe HTML or script construction')
+    disclosure = (ROOT / '.well-known/security.txt').read_text()
+    if disclosure != (ROOT / 'security.txt').read_text() or 'TODO' in disclosure:
+        errors.append('Disclosure contacts differ or contain an unfinished TODO')
+    fields = dict(line.split(': ', 1) for line in disclosure.splitlines() if ': ' in line and not line.startswith('#'))
+    if fields.get('Contact') != 'https://github.com/lanano12/web/security/advisories/new' or fields.get('Policy') != build['SITE'] + '/security/':
+        errors.append('Disclosure contact or policy is missing')
+    try:
+        expiry = datetime.fromisoformat(fields['Expires'].replace('Z', '+00:00'))
+        days = (expiry - datetime.now(timezone.utc)).days
+        if not 0 < days <= 366:
+            errors.append('security.txt expiry is stale or more than one year away')
+    except (KeyError, ValueError, TypeError):
+        errors.append('security.txt expiry is invalid')
     for source, page in pages.items():
         for ref in page.refs:
             url = urlparse(ref)

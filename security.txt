@@ -1,6 +1,6 @@
-# Security contact for nexafusion.io — see https://securitytxt.org/ (RFC 9116)
-# TODO: point Contact at a real, monitored mailbox before relying on this.
-Contact: mailto:hello@nexafusion.io
-Expires: 2027-11-16T00:00:00.000Z
+# Vulnerability reporting for the NexaFusion website and published code
+Contact: https://github.com/lanano12/web/security/advisories/new
+Expires: 2027-05-17T00:00:00Z
 Preferred-Languages: en
 Canonical: https://www.nexafusion.io/.well-known/security.txt
+Policy: https://www.nexafusion.io/security/

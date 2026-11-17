@@ -2,6 +2,24 @@
 (() => {
   const items = [
     {
+      title: 'Signed-update engineering study',
+      type: 'Engineering study',
+      url: '/insights/signed-update-verification/',
+      keywords: 'signature rollback device manifest testing threat model case study',
+    },
+    {
+      title: 'Report a security issue privately',
+      type: 'Disclosure',
+      url: '/security/',
+      keywords: 'vulnerability report disclosure security contact',
+    },
+    {
+      title: 'Website privacy',
+      type: 'Privacy',
+      url: '/privacy/',
+      keywords: 'data collection browser local storage',
+    },
+    {
       title: 'Embedded software engineering',
       type: 'Expertise',
       url: '/services/embedded-software/',
@@ -23,7 +41,7 @@
       title: 'CRA readiness check',
       type: 'Free tool',
       url: '/cra-readiness/',
-      keywords: 'assessment score questions gaps reporting readiness',
+      keywords: 'checklist self assessment questions gaps reporting readiness',
     },
     {
       title: 'Explore the system',
@@ -68,20 +86,11 @@
       keywords: 'email contact talk project hire quote enquiry',
     },
   ];
-  const dialog = document.createElement('dialog');
-  if (typeof dialog.showModal !== 'function') {
+  const dialog = document.querySelector('.kbar');
+  if (!dialog || typeof dialog.showModal !== 'function') {
     document.querySelectorAll('[data-kbar]').forEach((button) => (button.hidden = true));
     return;
   }
-  dialog.className = 'kbar';
-  dialog.setAttribute('aria-label', 'Find your way');
-  dialog.innerHTML = `<div class="kbar-input">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m15 15 6 6"/></svg>
-    <input type="text" role="combobox" aria-label="Search NexaFusion" aria-expanded="true" aria-controls="kbar-list" aria-autocomplete="list" placeholder="Firmware, product security, CRA…" autocomplete="off" spellcheck="false">
-    <button type="button" class="kbar-close" aria-label="Close search">Close</button>
-    </div><ul id="kbar-list" class="kbar-list" role="listbox" aria-label="Search results"></ul>
-    <p class="kbar-foot"><span>↑ ↓ to move · Enter to open · Esc to close</span><span>NexaFusion</span></p>`;
-  document.body.append(dialog);
   const input = dialog.querySelector('input');
   const list = dialog.querySelector('ul');
   let results = [];

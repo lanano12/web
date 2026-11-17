@@ -1,0 +1,101 @@
+<p class="note">
+  An executable engineering study using synthetic data. This is not client work, production firmware
+  or a certification claim.
+</p>
+<h2>A valid signature is one decision.</h2>
+<p>
+  Imagine a device receiving an update over a channel an attacker can control. Authenticity matters,
+  but a correctly signed image can still belong to another board or contain an older, vulnerable
+  version. An update admission decision needs to connect the signed metadata, the exact payload and
+  trusted device state.
+</p>
+<h2>The trust boundary</h2>
+<p>
+  The example assumes an attacker can replace, truncate, replay or alter the incoming manifest,
+  payload and signature. The verifier receives a trusted public key, device identifier, installed
+  version and minimum permitted version from its caller. An attacker who controls those trusted
+  values is outside this model.
+</p>
+<p>
+  The manifest contains five fields: schema version, target device, release version, payload length
+  and SHA-256 digest. ECDSA P-256 authenticates the exact UTF-8 manifest bytes. The implementation
+  delegates cryptography to Web Crypto.
+</p>
+<p>
+  The demonstration defines one JSON encoding: those five fields in that order, with the compact
+  serialization shown in the verifier. Duplicate keys, extra fields and alternate encodings are
+  refused, avoiding disagreement between parsers about which value was authenticated. This encoding
+  rule is part of this example’s format.
+</p>
+<h2>The admission sequence</h2>
+<ol>
+  <li>
+    Require cryptographic verification and a valid trust context. Refuse the update if either is
+    unavailable.
+  </li>
+  <li>
+    Limit the manifest to 1 KiB, the demonstration payload to 1 MiB and the signature to 64 bytes
+    before expensive work.
+  </li>
+  <li>Copy the input bytes and trusted state before the first asynchronous operation.</li>
+  <li>
+    Verify the manifest signature against the trusted key, then parse its bytes as strict UTF-8 and
+    validate the supported schema.
+  </li>
+  <li>
+    Check the target device and require a release newer than the installed version and no older than
+    the minimum permitted version.
+  </li>
+  <li>
+    Check the payload length and digest. Return the verified payload snapshot for the caller to
+    consume.
+  </li>
+</ol>
+<h2>A subtle failure: checking one buffer, using another</h2>
+<p>
+  Verification is asynchronous. If the caller can change a shared input buffer while verification is
+  pending, a successful check may refer to bytes that differ from the bytes later installed. This
+  example snapshots the inputs and returns the verified payload. Its concurrency test changes the
+  original buffers and context immediately after starting verification, then checks that the
+  returned bytes remain the authenticated bytes.
+</p>
+<p>
+  An installer must use that returned snapshot. Copying inputs inside a verifier does not protect a
+  caller that subsequently flashes an unrelated or mutable buffer.
+</p>
+<h2>Evidence you can reproduce</h2>
+<p>
+  The test suite generates temporary signing keys in memory and exercises acceptance, signature and
+  payload tampering, an unrelated public key, a different device, replay and rollback, the
+  minimum-version floor, length mismatch, unknown fields, malformed JSON and UTF-8, size limits,
+  missing trusted state, crypto failures and buffer mutation.
+</p>
+<pre><code>git clone https://github.com/lanano12/web.git
+cd web
+node --test examples/update-verifier.test.mjs</code></pre>
+<p>
+  Use Node.js 24 or newer. These tests use the Node standard library and need no package
+  installation. The fixture bytes are deliberately not executable firmware.
+</p>
+<p>
+  <a href="/assets/update-verifier.js">Inspect the verifier</a> ·
+  <a href="/examples/update-verifier.test.mjs">Inspect the tests</a> ·
+  <a href="/engineering/#layer-firmware">Try the smaller signature demonstration</a>
+</p>
+<h2>What this does not establish</h2>
+<p>
+  This is an admission-check model, not a secure boot implementation. A production device still
+  needs a protected trust anchor and version state, signing-key lifecycle management, authenticated
+  recovery, power-failure-safe installation, boot-time verification and a design appropriate to its
+  hardware. The illustrative size limits and rollback rule are explicit design choices, not
+  universal firmware requirements.
+</p>
+<p>
+  It does not defend against a compromised browser, a compromised signing key, physical attacks or a
+  caller that supplies attacker-controlled trust state. It also does not demonstrate CRA conformity.
+  Those boundaries are part of the engineering evidence.
+</p>
+<p class="note">
+  API references: <a href="https://www.w3.org/TR/WebCryptoAPI/">W3C Web Cryptography API</a> and the
+  <a href="https://nodejs.org/api/webcrypto.html">Node.js Web Crypto documentation</a>.
+</p>

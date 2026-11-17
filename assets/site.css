@@ -1308,6 +1308,26 @@ footer {
   padding: 2px 5px;
   border-radius: 3px;
 }
+.prose pre {
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--panel);
+}
+.prose pre code {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  line-height: 1.9;
+}
+.study-link {
+  margin-top: 32px;
+}
 .prose blockquote {
   margin: 28px 0;
   padding: 16px 22px;
@@ -1569,41 +1589,48 @@ footer {
 .cra-result:focus {
   outline: none;
 }
-.cra-score {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 28px;
-  align-items: center;
-  margin-bottom: 24px;
+.cra-summary h2 {
+  font-size: clamp(26px, 4vw, 38px);
+  margin: 12px 0 28px;
 }
-.cra-score h2 {
-  font-size: 34px;
-  margin-bottom: 12px;
-}
-.cra-score p:not(.eyebrow) {
+.cra-summary p {
   color: var(--dim);
-  font-size: 13px;
+  max-width: 720px;
 }
-.cra-score .eyebrow {
-  font-size: 10px;
-  margin-bottom: 12px;
+.cra-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 35px;
+  padding-block: 15px;
+  margin: 20px 0;
+  border-block: 1px solid var(--line);
 }
-.score-ring {
-  width: 120px;
-  height: 120px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: conic-gradient(var(--accent) 0, var(--violet) calc(var(--pct) * 1%), var(--line) 0);
+.cra-counts div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 4px;
 }
-.score-ring span {
-  width: 100px;
-  height: 100px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: var(--bg-2);
-  font: 500 26px var(--mono);
+.cra-counts dt {
+  color: var(--dim);
+  font-size: 12px;
+}
+.cra-counts dd {
+  margin: 0;
+  font: 400 38px var(--mono);
+  color: var(--accent);
+}
+.service-details {
+  margin-top: 24px;
+}
+.article-index {
+  padding-bottom: 40px;
+}
+.missing-page {
+  min-height: 90svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
 }
 .cra-scope {
   border-left: 2px solid var(--accent);

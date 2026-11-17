@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; style-src-attr 'none'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests; require-trusted-types-for 'script'; trusted-types 'none'" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <title>A signature is not an update policy · NexaFusion</title>
+  <meta name="description" content="An executable study of signed manifests, target checks, rollback rules and the bytes an installer actually consumes." />
+  <link rel="canonical" href="https://www.nexafusion.io/insights/signed-update-verification/" />
+  <meta name="theme-color" content="#080c0c" />
+  <meta name="color-scheme" content="dark light" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="NexaFusion" />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:url" content="https://www.nexafusion.io/insights/signed-update-verification/" />
+  <meta property="og:title" content="A signature is not an update policy" />
+  <meta property="og:description" content="An executable study of signed manifests, target checks, rollback rules and the bytes an installer actually consumes." />
+  <meta property="og:image" content="https://www.nexafusion.io/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="NexaFusion — we engineer secure embedded software" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://www.nexafusion.io/og.png" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="alternate" type="application/rss+xml" title="NexaFusion Field notes" href="/insights/feed.xml" />
+  <link rel="preload" href="/fonts/sora.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/assets/site.css" />
+  <script src="/assets/theme-init.js"></script>
+  <script src="/assets/site.js" defer></script>
+  <script src="/assets/ui.js" defer></script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.nexafusion.io/"}, {"@type": "ListItem", "position": 2, "name": "Field notes", "item": "https://www.nexafusion.io/insights/"}, {"@type": "ListItem", "position": 3, "name": "A signature is not an update policy"}]}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "A signature is not an update policy", "description": "An executable study of signed manifests, target checks, rollback rules and the bytes an installer actually consumes.", "datePublished": "2026-11-17", "dateModified": "2026-11-17", "image": "https://www.nexafusion.io/og.png", "author": {"@type": "Organization", "name": "NexaFusion", "url": "https://www.nexafusion.io/"}, "publisher": {"@type": "Organization", "name": "NexaFusion", "url": "https://www.nexafusion.io/"}, "mainEntityOfPage": "https://www.nexafusion.io/insights/signed-update-verification/"}</script>
+<noscript><link rel="stylesheet" href="/assets/no-script.css" /></noscript>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="ambient" aria-hidden="true"><div class="aurora a"></div><div class="aurora b"></div></div>
+
+  <header class="top" id="top">
+    <a class="logo" href="/" aria-label="NexaFusion home">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b5ff68"/><stop offset=".55" stop-color="#74e2bb"/><stop offset="1" stop-color="#6bcfe2"/></linearGradient></defs>
+        <rect x="2" y="2" width="60" height="60" rx="16" fill="none" stroke="url(#lg)" stroke-width="3" opacity=".5"/>
+        <path d="M20 44V20l24 24V20" fill="none" stroke="url(#lg)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Nexa<b>Fusion</b></span>
+    </a>
+    <nav class="nav" id="nav" aria-label="Primary"><a href="/engineering/">Engineering</a><a href="/cra-readiness/">CRA check</a><a href="/insights/" class="active" aria-current="page">Field notes</a></nav>
+    <div class="top-actions">
+      <button class="kbar-btn" type="button" data-kbar aria-label="Search and jump">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <span class="kbar-label">Find</span><kbd class="kbar-hint">Ctrl K</kbd>
+      </button>
+      <button class="icon-btn" id="theme" type="button" aria-label="Switch colour theme">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="icon-btn menu-btn" id="menu" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+      </button>
+      <a class="btn small" href="/#contact">Start a project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="wrap page-hero">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> / <a href="/insights/">Field notes</a> / <span aria-current="page">A signature is not an update policy</span></nav>
+      <p class="eyebrow">Engineering study</p>
+      <h1>A signature is not an update policy</h1>
+      <p class="lede">An executable study of signed manifests, target checks, rollback rules and the bytes an installer actually consumes.</p>
+      <div class="meta-row"><time datetime="2026-11-17">17 Nov 2026</time><span>6 min read</span><span>NexaFusion</span></div>
+    </section>
+
+    <div class="wrap layout">
+      <article class="prose"><p class="note">
+  An executable engineering study using synthetic data. This is not client work, production firmware
+  or a certification claim.
+</p>
+<h2>A valid signature is one decision.</h2>
+<p>
+  Imagine a device receiving an update over a channel an attacker can control. Authenticity matters,
+  but a correctly signed image can still belong to another board or contain an older, vulnerable
+  version. An update admission decision needs to connect the signed metadata, the exact payload and
+  trusted device state.
+</p>
+<h2>The trust boundary</h2>
+<p>
+  The example assumes an attacker can replace, truncate, replay or alter the incoming manifest,
+  payload and signature. The verifier receives a trusted public key, device identifier, installed
+  version and minimum permitted version from its caller. An attacker who controls those trusted
+  values is outside this model.
+</p>
+<p>
+  The manifest contains five fields: schema version, target device, release version, payload length
+  and SHA-256 digest. ECDSA P-256 authenticates the exact UTF-8 manifest bytes. The implementation
+  delegates cryptography to Web Crypto.
+</p>
+<p>
+  The demonstration defines one JSON encoding: those five fields in that order, with the compact
+  serialization shown in the verifier. Duplicate keys, extra fields and alternate encodings are
+  refused, avoiding disagreement between parsers about which value was authenticated. This encoding
+  rule is part of this example’s format.
+</p>
+<h2>The admission sequence</h2>
+<ol>
+  <li>
+    Require cryptographic verification and a valid trust context. Refuse the update if either is
+    unavailable.
+  </li>
+  <li>
+    Limit the manifest to 1 KiB, the demonstration payload to 1 MiB and the signature to 64 bytes
+    before expensive work.
+  </li>
+  <li>Copy the input bytes and trusted state before the first asynchronous operation.</li>
+  <li>
+    Verify the manifest signature against the trusted key, then parse its bytes as strict UTF-8 and
+    validate the supported schema.
+  </li>
+  <li>
+    Check the target device and require a release newer than the installed version and no older than
+    the minimum permitted version.
+  </li>
+  <li>
+    Check the payload length and digest. Return the verified payload snapshot for the caller to
+    consume.
+  </li>
+</ol>
+<h2>A subtle failure: checking one buffer, using another</h2>
+<p>
+  Verification is asynchronous. If the caller can change a shared input buffer while verification is
+  pending, a successful check may refer to bytes that differ from the bytes later installed. This
+  example snapshots the inputs and returns the verified payload. Its concurrency test changes the
+  original buffers and context immediately after starting verification, then checks that the
+  returned bytes remain the authenticated bytes.
+</p>
+<p>
+  An installer must use that returned snapshot. Copying inputs inside a verifier does not protect a
+  caller that subsequently flashes an unrelated or mutable buffer.
+</p>
+<h2>Evidence you can reproduce</h2>
+<p>
+  The test suite generates temporary signing keys in memory and exercises acceptance, signature and
+  payload tampering, an unrelated public key, a different device, replay and rollback, the
+  minimum-version floor, length mismatch, unknown fields, malformed JSON and UTF-8, size limits,
+  missing trusted state, crypto failures and buffer mutation.
+</p>
+<pre><code>git clone https://github.com/lanano12/web.git
+cd web
+node --test examples/update-verifier.test.mjs</code></pre>
+<p>
+  Use Node.js 24 or newer. These tests use the Node standard library and need no package
+  installation. The fixture bytes are deliberately not executable firmware.
+</p>
+<p>
+  <a href="/assets/update-verifier.js">Inspect the verifier</a> ·
+  <a href="/examples/update-verifier.test.mjs">Inspect the tests</a> ·
+  <a href="/engineering/#layer-firmware">Try the smaller signature demonstration</a>
+</p>
+<h2>What this does not establish</h2>
+<p>
+  This is an admission-check model, not a secure boot implementation. A production device still
+  needs a protected trust anchor and version state, signing-key lifecycle management, authenticated
+  recovery, power-failure-safe installation, boot-time verification and a design appropriate to its
+  hardware. The illustrative size limits and rollback rule are explicit design choices, not
+  universal firmware requirements.
+</p>
+<p>
+  It does not defend against a compromised browser, a compromised signing key, physical attacks or a
+  caller that supplies attacker-controlled trust state. It also does not demonstrate CRA conformity.
+  Those boundaries are part of the engineering evidence.
+</p>
+<p class="note">
+  API references: <a href="https://www.w3.org/TR/WebCryptoAPI/">W3C Web Cryptography API</a> and the
+  <a href="https://nodejs.org/api/webcrypto.html">Node.js Web Crypto documentation</a>.
+</p>
+</article>
+      <aside class="aside">
+          <h2>Need help with this?</h2>
+          <p>Our Embedded product security service covers exactly this ground.</p>
+          <a class="btn" href="mailto:hello@nexafusion.io?subject=Need%20help%20with%20this%3F">Start a conversation <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <div class="tags"><span>Threat modelling</span><span>Firmware security</span><span>Secure updates</span><span>SBOM</span><span>Fuzzing</span></div>
+        </aside>
+    </div>
+    <div class="wrap"><p class="prose"><a href="/services/cyber-security/">More about Embedded product security →</a></p></div>
+
+    <section class="wrap related" aria-labelledby="more">
+      <h2 id="more">More insights</h2>
+      <div class="post-list"><article class="post reveal">
+            <div><time datetime="2026-11-16">16 Nov 2026</time><span class="topic">Rust &amp; C++</span></div>
+            <div><h2><a href="/insights/memory-safety-roadmaps/">Memory-safety roadmaps: Rust without the rewrite</a></h2><p>Why memory safety moved from a security talking point to a customer question, and how to build a roadmap that pairs hardened C++ with targeted Rust.</p></div>
+          </article><article class="post reveal">
+            <div><time datetime="2026-11-16">16 Nov 2026</time><span class="topic">Cyber security</span></div>
+            <div><h2><a href="/insights/eu-cyber-resilience-act/">The EU Cyber Resilience Act: what UK software firms need to know</a></h2><p>Reporting duties started in September 2026 and the main obligations follow in December 2027. A practical guide for UK companies selling software into the EU.</p></div>
+          </article></div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <a class="footer-brand" href="/">NexaFusion<span>Embedded software. Security engineered in.</span></a>
+      <nav aria-label="Footer">
+        <a href="/services/embedded-software/">Embedded</a><a href="/services/cyber-security/">Security</a><a href="/services/cra-readiness/">CRA readiness</a><a href="mailto:hello@nexafusion.io">Contact</a><a href="/security/">Disclosure</a><a href="/privacy/">Privacy</a>
+      </nav>
+      <span class="footer-meta">© 2026 NexaFusion · UK</span>
+    </div>
+  </footer>
+<dialog class="kbar" aria-label="Find your way">
+  <div class="kbar-input">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      aria-hidden="true"
+    >
+      <circle cx="10" cy="10" r="7" />
+      <path d="m15 15 6 6" />
+    </svg>
+    <input
+      type="text"
+      role="combobox"
+      aria-label="Search NexaFusion"
+      aria-expanded="true"
+      aria-controls="kbar-list"
+      aria-autocomplete="list"
+      placeholder="Firmware, product security, CRA…"
+      autocomplete="off"
+      spellcheck="false"
+    />
+    <button type="button" class="kbar-close" aria-label="Close search">Close</button>
+  </div>
+  <ul id="kbar-list" class="kbar-list" role="listbox" aria-label="Search results"></ul>
+  <p class="kbar-foot">
+    <span>↑ ↓ to move · Enter to open · Esc to close</span><span>NexaFusion</span>
+  </p>
+</dialog>
+
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; style-src-attr 'none'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests; require-trusted-types-for 'script'; trusted-types 'none'" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>Embedded product security · NexaFusion</title>
   <meta name="description" content="Product cyber security grounded in the device: its firmware, interfaces, update mechanism and the people who maintain it." />
@@ -33,7 +33,7 @@
   <script src="/assets/ui.js" defer></script>
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.nexafusion.io/"}, {"@type": "ListItem", "position": 2, "name": "Expertise", "item": "https://www.nexafusion.io/engineering/#services"}, {"@type": "ListItem", "position": 3, "name": "Embedded product security"}]}</script>
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Service", "name": "Embedded product security", "description": "Product cyber security grounded in the device: its firmware, interfaces, update mechanism and the people who maintain it.", "provider": {"@type": "ProfessionalService", "name": "NexaFusion", "url": "https://www.nexafusion.io/"}, "areaServed": "GB", "url": "https://www.nexafusion.io/services/cyber-security/"}</script>
-<noscript><style>.top{position:static;flex-wrap:wrap}.nav{display:flex;position:static;width:100%;flex-direction:row;flex-wrap:wrap;padding:0;border:0;box-shadow:none;background:none}.nav a{padding:8px 0;margin-right:20px}.top-actions{display:none}.scene-selector,.scene-hint,.boot-controls{display:none}</style></noscript>
+<noscript><link rel="stylesheet" href="/assets/no-script.css" /></noscript>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -86,7 +86,7 @@
     </div>
     <section class="wrap" aria-labelledby="wwd">
       <div class="prose"><h2 id="wwd">What we do</h2></div>
-      <div class="grid-3" style="margin-top:24px"><div class="mini"><h3>Threat modelling</h3><p>Map assets, entry points and trust boundaries. Connect each significant risk to an engineering decision.</p></div><div class="mini"><h3>Firmware hardening</h3><p>Review exposed interfaces, input handling and privilege boundaries, then address the findings in code.</p></div><div class="mini"><h3>Update security</h3><p>Review authentication, version policy, recovery and failure behaviour across the product’s update path.</p></div><div class="mini"><h3>Supply-chain visibility</h3><p>Identify software dependencies and build a maintainable SBOM and vulnerability review process.</p></div><div class="mini"><h3>Security verification</h3><p>Use focused tests, static analysis and fuzzing where they provide useful evidence for the risks identified.</p></div><div class="mini"><h3>Vulnerability handling</h3><p>Connect security intake, triage, remediation and release records so reports have an owner and a path to resolution.</p></div></div>
+      <div class="grid-3 service-details"><div class="mini"><h3>Threat modelling</h3><p>Map assets, entry points and trust boundaries. Connect each significant risk to an engineering decision.</p></div><div class="mini"><h3>Firmware hardening</h3><p>Review exposed interfaces, input handling and privilege boundaries, then address the findings in code.</p></div><div class="mini"><h3>Update security</h3><p>Review authentication, version policy, recovery and failure behaviour across the product’s update path.</p></div><div class="mini"><h3>Supply-chain visibility</h3><p>Identify software dependencies and build a maintainable SBOM and vulnerability review process.</p></div><div class="mini"><h3>Security verification</h3><p>Use focused tests, static analysis and fuzzing where they provide useful evidence for the risks identified.</p></div><div class="mini"><h3>Vulnerability handling</h3><p>Connect security intake, triage, remediation and release records so reports have an owner and a path to resolution.</p></div></div>
     </section>
     <div class="wrap layout">
       <div class="prose">
@@ -116,10 +116,41 @@
     <div class="wrap foot">
       <a class="footer-brand" href="/">NexaFusion<span>Embedded software. Security engineered in.</span></a>
       <nav aria-label="Footer">
-        <a href="/services/embedded-software/">Embedded</a><a href="/services/cyber-security/">Security</a><a href="/services/cra-readiness/">CRA readiness</a><a href="mailto:hello@nexafusion.io">Contact</a>
+        <a href="/services/embedded-software/">Embedded</a><a href="/services/cyber-security/">Security</a><a href="/services/cra-readiness/">CRA readiness</a><a href="mailto:hello@nexafusion.io">Contact</a><a href="/security/">Disclosure</a><a href="/privacy/">Privacy</a>
       </nav>
       <span class="footer-meta">© 2026 NexaFusion · UK</span>
     </div>
   </footer>
+<dialog class="kbar" aria-label="Find your way">
+  <div class="kbar-input">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      aria-hidden="true"
+    >
+      <circle cx="10" cy="10" r="7" />
+      <path d="m15 15 6 6" />
+    </svg>
+    <input
+      type="text"
+      role="combobox"
+      aria-label="Search NexaFusion"
+      aria-expanded="true"
+      aria-controls="kbar-list"
+      aria-autocomplete="list"
+      placeholder="Firmware, product security, CRA…"
+      autocomplete="off"
+      spellcheck="false"
+    />
+    <button type="button" class="kbar-close" aria-label="Close search">Close</button>
+  </div>
+  <ul id="kbar-list" class="kbar-list" role="listbox" aria-label="Search results"></ul>
+  <p class="kbar-foot">
+    <span>↑ ↓ to move · Enter to open · Esc to close</span><span>NexaFusion</span>
+  </p>
+</dialog>
+
 </body>
 </html>

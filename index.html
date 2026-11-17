@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; style-src-attr 'none'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests; require-trusted-types-for 'script'; trusted-types 'none'" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>We engineer secure embedded software. · NexaFusion</title>
   <meta name="description" content="NexaFusion: embedded software development, product cyber security and the engineering evidence behind EU Cyber Resilience Act readiness." />
@@ -72,19 +72,6 @@
     An illustrative circuit board, firmware plane, trust boundary and release evidence. Use the
     layer controls to explore each part.
   </desc>
-  <style>
-    .device-annotation {
-      fill: #a8bb9f;
-      stroke: none;
-      font: 9px monospace;
-      letter-spacing: 1px;
-    }
-    .device-annotation path {
-      fill: none;
-      stroke: #708a6b;
-      stroke-width: 1;
-    }
-  </style>
   <defs>
     <linearGradient id="board-face" x1="0" y1="0" x2="1" y2="1">
       <stop stop-color="#233c34" />
@@ -268,8 +255,8 @@
       <circle cx="268" cy="158" r="4" fill="#b5ff68" />
       <circle cx="268" cy="158" r="9" fill="#b5ff68" opacity=".4" filter="url(#led-glow)" />
     </g>
-    <g class="device-annotation">
-      <path d="M116 429H55v24" />
+    <g class="device-annotation" fill="#a8bb9f" stroke="none" font-size="9" font-family="monospace" letter-spacing="1">
+      <path fill="none" stroke="#708a6b" stroke-width="1" d="M116 429H55v24" />
       <text x="54" y="473">01 / HARDWARE</text>
     </g>
   </g>
@@ -319,8 +306,8 @@
         <circle cx="240" cy="120" r="3" />
       </g>
     </g>
-    <g class="device-annotation">
-      <path d="M590 325h65v-30" />
+    <g class="device-annotation" fill="#a8bb9f" stroke="none" font-size="9" font-family="monospace" letter-spacing="1">
+      <path fill="none" stroke="#708a6b" stroke-width="1" d="M590 325h65v-30" />
       <text x="655" y="282" text-anchor="end">02 / FIRMWARE</text>
     </g>
   </g>
@@ -353,8 +340,8 @@
       <circle cx="65" cy="65" r="4" fill="#7dd5bc" />
       <circle cx="245" cy="245" r="4" fill="#7dd5bc" />
     </g>
-    <g class="device-annotation">
-      <path d="M116 228H55v-45" />
+    <g class="device-annotation" fill="#a8bb9f" stroke="none" font-size="9" font-family="monospace" letter-spacing="1">
+      <path fill="none" stroke="#708a6b" stroke-width="1" d="M116 228H55v-45" />
       <text x="54" y="169">03 / TRUST BOUNDARY</text>
     </g>
   </g>
@@ -370,7 +357,7 @@
       <path d="M53 75l6 6 11-13" fill="none" stroke="#b5ff68" stroke-width="2" />
     </g>
     <path d="M560 162l-35 30v65l-42 22" fill="none" stroke="#c9e8a5" stroke-dasharray="3 5" />
-    <g class="device-annotation"><text x="600" y="76" text-anchor="middle">04 / EVIDENCE</text></g>
+    <g class="device-annotation" fill="#a8bb9f" stroke="none" font-size="9" font-family="monospace" letter-spacing="1"><text x="600" y="76" text-anchor="middle">04 / EVIDENCE</text></g>
   </g>
   <g fill="#719482" font-family="monospace" font-size="9" letter-spacing="2">
     <text x="360" y="593" text-anchor="middle">HARDWARE → CODE → TRUST → EVIDENCE</text>
@@ -416,9 +403,10 @@
   <footer>
     <div class="wrap foot">
       <a class="footer-brand" href="/">NexaFusion</a>
-      <nav aria-label="Footer"><a href="/engineering/">How we work</a><a href="/insights/">Field notes</a></nav>
+      <nav aria-label="Footer"><a href="/engineering/">How we work</a><a href="/insights/">Field notes</a><a href="/security/">Security</a><a href="/privacy/">Privacy</a></nav>
       <span class="footer-meta">© 2026 NexaFusion · UK</span>
     </div>
   </footer>
+
 </body>
 </html>

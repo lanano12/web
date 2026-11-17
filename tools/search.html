@@ -1,0 +1,30 @@
+<dialog class="kbar" aria-label="Find your way">
+  <div class="kbar-input">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      aria-hidden="true"
+    >
+      <circle cx="10" cy="10" r="7" />
+      <path d="m15 15 6 6" />
+    </svg>
+    <input
+      type="text"
+      role="combobox"
+      aria-label="Search NexaFusion"
+      aria-expanded="true"
+      aria-controls="kbar-list"
+      aria-autocomplete="list"
+      placeholder="Firmware, product security, CRA…"
+      autocomplete="off"
+      spellcheck="false"
+    />
+    <button type="button" class="kbar-close" aria-label="Close search">Close</button>
+  </div>
+  <ul id="kbar-list" class="kbar-list" role="listbox" aria-label="Search results"></ul>
+  <p class="kbar-foot">
+    <span>↑ ↓ to move · Enter to open · Esc to close</span><span>NexaFusion</span>
+  </p>
+</dialog>

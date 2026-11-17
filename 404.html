@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests"
+      content="default-src 'none'; script-src 'self'; style-src 'self'; style-src-attr 'none'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests; require-trusted-types-for 'script'; trusted-types 'none'"
     />
     <meta name="robots" content="noindex" />
     <meta name="theme-color" content="#080c0c" />
@@ -14,16 +14,7 @@
     <link rel="stylesheet" href="/assets/site.css" />
   </head>
   <body>
-    <main
-      class="wrap page-hero"
-      style="
-        min-height: 90svh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: start;
-      "
-    >
+    <main class="wrap page-hero missing-page">
       <p class="eyebrow">NexaFusion / 404</p>
       <h1>Off the map.<br /><em>Still in good company.</em></h1>
       <p class="lede">

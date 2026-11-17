@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; style-src-attr 'none'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests; require-trusted-types-for 'script'; trusted-types 'none'" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>Memory-safety roadmaps: Rust without the rewrite · NexaFusion</title>
   <meta name="description" content="Why memory safety moved from a security talking point to a customer question, and how to build a roadmap that pairs hardened C++ with targeted Rust." />
@@ -33,7 +33,7 @@
   <script src="/assets/ui.js" defer></script>
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.nexafusion.io/"}, {"@type": "ListItem", "position": 2, "name": "Field notes", "item": "https://www.nexafusion.io/insights/"}, {"@type": "ListItem", "position": 3, "name": "Memory-safety roadmaps: Rust without the rewrite"}]}</script>
   <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Memory-safety roadmaps: Rust without the rewrite", "description": "Why memory safety moved from a security talking point to a customer question, and how to build a roadmap that pairs hardened C++ with targeted Rust.", "datePublished": "2026-11-16", "dateModified": "2026-11-17", "image": "https://www.nexafusion.io/og.png", "author": {"@type": "Organization", "name": "NexaFusion", "url": "https://www.nexafusion.io/"}, "publisher": {"@type": "Organization", "name": "NexaFusion", "url": "https://www.nexafusion.io/"}, "mainEntityOfPage": "https://www.nexafusion.io/insights/memory-safety-roadmaps/"}</script>
-<noscript><style>.top{position:static;flex-wrap:wrap}.nav{display:flex;position:static;width:100%;flex-direction:row;flex-wrap:wrap;padding:0;border:0;box-shadow:none;background:none}.nav a{padding:8px 0;margin-right:20px}.top-actions{display:none}.scene-selector,.scene-hint,.boot-controls{display:none}</style></noscript>
+<noscript><link rel="stylesheet" href="/assets/no-script.css" /></noscript>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -129,6 +129,9 @@
     <section class="wrap related" aria-labelledby="more">
       <h2 id="more">More insights</h2>
       <div class="post-list"><article class="post reveal">
+            <div><time datetime="2026-11-17">17 Nov 2026</time><span class="topic">Engineering study</span></div>
+            <div><h2><a href="/insights/signed-update-verification/">A signature is not an update policy</a></h2><p>An executable study of signed manifests, target checks, rollback rules and the bytes an installer actually consumes.</p></div>
+          </article><article class="post reveal">
             <div><time datetime="2026-11-16">16 Nov 2026</time><span class="topic">Cyber security</span></div>
             <div><h2><a href="/insights/eu-cyber-resilience-act/">The EU Cyber Resilience Act: what UK software firms need to know</a></h2><p>Reporting duties started in September 2026 and the main obligations follow in December 2027. A practical guide for UK companies selling software into the EU.</p></div>
           </article></div>
@@ -139,10 +142,41 @@
     <div class="wrap foot">
       <a class="footer-brand" href="/">NexaFusion<span>Embedded software. Security engineered in.</span></a>
       <nav aria-label="Footer">
-        <a href="/services/embedded-software/">Embedded</a><a href="/services/cyber-security/">Security</a><a href="/services/cra-readiness/">CRA readiness</a><a href="mailto:hello@nexafusion.io">Contact</a>
+        <a href="/services/embedded-software/">Embedded</a><a href="/services/cyber-security/">Security</a><a href="/services/cra-readiness/">CRA readiness</a><a href="mailto:hello@nexafusion.io">Contact</a><a href="/security/">Disclosure</a><a href="/privacy/">Privacy</a>
       </nav>
       <span class="footer-meta">© 2026 NexaFusion · UK</span>
     </div>
   </footer>
+<dialog class="kbar" aria-label="Find your way">
+  <div class="kbar-input">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      aria-hidden="true"
+    >
+      <circle cx="10" cy="10" r="7" />
+      <path d="m15 15 6 6" />
+    </svg>
+    <input
+      type="text"
+      role="combobox"
+      aria-label="Search NexaFusion"
+      aria-expanded="true"
+      aria-controls="kbar-list"
+      aria-autocomplete="list"
+      placeholder="Firmware, product security, CRA…"
+      autocomplete="off"
+      spellcheck="false"
+    />
+    <button type="button" class="kbar-close" aria-label="Close search">Close</button>
+  </div>
+  <ul id="kbar-list" class="kbar-list" role="listbox" aria-label="Search results"></ul>
+  <p class="kbar-foot">
+    <span>↑ ↓ to move · Enter to open · Esc to close</span><span>NexaFusion</span>
+  </p>
+</dialog>
+
 </body>
 </html>

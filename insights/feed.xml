@@ -6,6 +6,13 @@
     <description>Practical writing on embedded product security, memory safety and CRA readiness.</description>
     <language>en-gb</language>
     <item>
+      <title>A signature is not an update policy</title>
+      <link>https://www.nexafusion.io/insights/signed-update-verification/</link>
+      <guid>https://www.nexafusion.io/insights/signed-update-verification/</guid>
+      <pubDate>Tue, 17 Nov 2026 09:00:00 +0000</pubDate>
+      <description>An executable study of signed manifests, target checks, rollback rules and the bytes an installer actually consumes.</description>
+    </item>
+    <item>
       <title>Memory-safety roadmaps: Rust without the rewrite</title>
       <link>https://www.nexafusion.io/insights/memory-safety-roadmaps/</link>
       <guid>https://www.nexafusion.io/insights/memory-safety-roadmaps/</guid>
