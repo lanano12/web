@@ -35,6 +35,10 @@ jobs:
         with:
           path: dist
           retention-days: 1
+          include-hidden-files: true
+      - name: Verify the exact uploaded file set
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/develop'
+        run: python3 tools/check_archive.py "$RUNNER_TEMP/artifact.tar"
   deploy:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/develop'
     needs: verify
